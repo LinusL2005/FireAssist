@@ -38,6 +38,9 @@ Die Seite enthält nur die App, **niemals Einsatzdaten**. Die Daten kommen in Sc
 
 Einmalig am PC. Du brauchst ein GitHub-Konto mit Admin-Zugriff auf dieses Repository.
 
+Vorbereitet ist schon alles: Solange das Repository privat ist, baut GitHub die Seite bei jedem Push nur zur Probe
+und veröffentlicht nichts. Das Ergebnis lässt sich beim jeweiligen Lauf unter **Actions** → **Artifacts** herunterladen.
+
 1. Auf github.com das Repository **FireAssist** öffnen.
 2. Das Repository öffentlich machen, denn GitHub Pages ist nur für öffentliche Repositories kostenlos:
    **Settings** → ganz unten **Danger Zone** → **Change visibility** → **Change to public** → bestätigen.
