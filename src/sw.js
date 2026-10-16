@@ -1,10 +1,13 @@
 /* FireAssist Service Worker (Build __BUILD__)
    - App startet auch ohne Netz (zuletzt geladene Version aus dem Speicher, Aktualisierung im Hintergrund)
-   - Kartenkacheln von basemap.de werden gespeichert (Offline-Karte)
+   - Kartenkacheln von basemap.de: über „Offline-Karte speichern“ geladene Gebiete (TILES_SAVED) und, sofern
+     der Schalter „Angesehene Kartenausschnitte offline behalten“ an ist, alles, was die Karte anzeigt (TILES_SEEN)
    - Alle anderen externen Anfragen (z. B. Adresssuche) gehen unverändert ans Netz und werden nicht gespeichert */
 
 const SHELL = 'fireassist-shell';
-const TILES = 'fireassist-tiles-v1';
+const TILES_SAVED = 'fireassist-tiles-saved';
+const TILES_SEEN = 'fireassist-tiles-v1'; /* Name aus der ersten Version, in der alles automatisch gespeichert wurde */
+const SETTINGS = 'fireassist-settings';
 const SHELL_FILES = ['./', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 const TILE_HOSTS = ['sgx.geodatenzentrum.de'];
 const MAX_TILES = 25000;
@@ -57,15 +60,29 @@ async function notifyUpdate() {
 
 let puts = 0;
 
+/* Schalter „Angesehene Kartenausschnitte offline behalten“: Die Seite legt ihn in SETTINGS ab
+   (der Service Worker kann jederzeit neu starten) und meldet Änderungen zusätzlich per Nachricht. */
+let keepSeen = null;
+async function keepSeenTiles() {
+  if (keepSeen === null) {
+    const r = await (await caches.open(SETTINGS)).match('./__fa/keep-tiles');
+    keepSeen = !r || (await r.text()) !== '0';
+  }
+  return keepSeen;
+}
+self.addEventListener('message', e => { if (e.data && e.data.type === 'keep-tiles') keepSeen = !!e.data.value; });
+
 async function tile(req) {
-  const cache = await caches.open(TILES);
-  const hit = await cache.match(req.url);
+  const saved = await caches.open(TILES_SAVED), seen = await caches.open(TILES_SEEN);
+  const hit = (await saved.match(req.url)) || (await seen.match(req.url));
   if (hit) return hit;
+  const keep = await keepSeenTiles();
   try {
-    const res = await fetch(req.url, { mode: 'cors', credentials: 'omit' });
-    if (res.ok) {
-      await cache.put(req.url, res.clone());
-      if (++puts % 250 === 0) trim(cache);
+    /* Schalter aus: auch nicht im normalen Browser-Cache ablegen (basemap.de erlaubt dort 3 Tage) */
+    const res = await fetch(req.url, { mode: 'cors', credentials: 'omit', cache: keep ? 'default' : 'no-store' });
+    if (res.ok && keep) {
+      await seen.put(req.url, res.clone());
+      if (++puts % 250 === 0) trim(seen);
     }
     return res;
   } catch (err) {
