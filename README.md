@@ -20,7 +20,7 @@ Die Einsatzdaten bleiben auf den Geräten und werden nie ins Internet hochgelade
 
 **Inhalt:** [Installation](#installation) · [Beispiele ausprobieren](#beispiele-ausprobieren) · [Funktionen](#funktionen) ·
 [Datenformat](#datenformat-für-den-import) · [Datenschutz](#externe-dienste-datenschutz) · [Entwicklung](#entwicklung) ·
-[Haftungsausschluss](#haftungsausschluss) · [Lizenz](#lizenz)
+[Mitmachen](#mitmachen) · [Haftungsausschluss](#haftungsausschluss) · [Lizenz](#lizenz)
 
 ## Installation
 
@@ -46,9 +46,14 @@ und veröffentlicht nichts. Das Ergebnis lässt sich beim jeweiligen Lauf unter 
    **Settings** → ganz unten **Danger Zone** → **Change visibility** → **Change to public** → bestätigen.
    Öffentlich wird dabei nur der Quellcode, Daten liegen nie im Repository (siehe [GitHub-Repository](#github-repository)).
 3. **Settings** → links **Pages** → unter *Build and deployment* bei **Source** den Eintrag **GitHub Actions** wählen.
-4. Oben auf **Actions** → links **GitHub Pages** → rechts **Run workflow** → grüner Knopf **Run workflow**.
-5. Etwa eine Minute warten, bis der Lauf einen grünen Haken hat.
-6. Die App ist jetzt erreichbar unter **https://linusl2005.github.io/FireAssist/**
+4. Zwei Sicherheits-Einstellungen, die es erst für öffentliche Repositories gibt:
+   - **Settings** → **Actions** → **General** → bei den Pull-Request-Workflows aus Forks **Require approval for all outside collaborators** wählen → **Save**.
+     So läuft Code aus fremden Pull Requests nie ohne deine Freigabe.
+   - **Settings** → **Advanced Security** (bei manchen Konten **Code security**) → **Private vulnerability reporting** → **Enable**.
+     So können Sicherheitslücken vertraulich gemeldet werden.
+5. Oben auf **Actions** → links **GitHub Pages** → rechts **Run workflow** → grüner Knopf **Run workflow**.
+6. Etwa eine Minute warten, bis der Lauf einen grünen Haken hat.
+7. Die App ist jetzt erreichbar unter **https://linusl2005.github.io/FireAssist/**
    Den Link einmal am PC öffnen und prüfen, ob die Karte erscheint. Diesen Link bekommen die Einsatzkräfte.
 
 Ab jetzt wird jede Änderung am Quellcode automatisch neu veröffentlicht.
@@ -283,6 +288,14 @@ Im Repository liegt nur der **Quellcode**. Diese Dateien werden nie hochgeladen 
 
 Eigene Daten am besten im Ordner **`daten/`** ablegen, z. B. `daten/FireAssist_Sicherung.json`.
 Vor jedem Commit mit `git status` prüfen, dass keine Daten dabei sind.
+
+## Mitmachen
+
+Fehlermeldungen und Ideen gerne als **Issue**. Jede Änderung am Projekt wird vorher mit [@LinusL2005](https://github.com/LinusL2005) abgesprochen:
+erst ein Issue, dann nach Zustimmung ein Pull Request. Übernommen wird nur, was freigegeben ist. Details in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+Direkt ändern kann das Projekt nur @LinusL2005. Für `main` gilt zusätzlich: Änderungen nur über Pull Requests
+und nur mit Freigabe durch @LinusL2005 (`.github/CODEOWNERS`).
 
 ## Entwicklung
 
