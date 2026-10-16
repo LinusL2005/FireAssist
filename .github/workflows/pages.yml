@@ -1,7 +1,10 @@
-# Veröffentlicht die Web-Version auf GitHub Pages.
-# Gebaut wird hier immer OHNE Daten – Einsatzdaten landen so nie auf der öffentlichen Seite.
-# Läuft nur, solange das Repository öffentlich ist (Pages ist im kostenlosen Tarif nur dafür verfügbar)
-# und unter Settings → Pages als Quelle „GitHub Actions“ eingestellt ist.
+# Web-Version für GitHub Pages bauen und veröffentlichen.
+# Gebaut wird hier immer OHNE Daten – Einsatzdaten landen so nie auf der Seite.
+#
+# build:  läuft bei jedem Push auf main, baut die fertige Seite und prüft sie.
+#         Das Ergebnis liegt beim jeweiligen Lauf unter Actions → Artifacts („github-pages“).
+# deploy: veröffentlicht erst, wenn das Repository öffentlich ist und unter
+#         Settings → Pages als Quelle „GitHub Actions“ eingestellt ist (siehe README, Schritt 1).
 name: GitHub Pages
 
 on:
@@ -11,29 +14,36 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
-    if: ${{ !github.event.repository.private }}
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v5
       - name: App bauen (ohne Daten)
         run: python3 build.py
       - name: Prüfen, dass keine Daten eingebaut sind
         run: grep -q '<script id="fa-data" type="application/json">null</script>' web/index.html
-      - uses: actions/configure-pages@v5
+      - name: Prüfen, dass nur die App-Dateien veröffentlicht werden
+        run: test "$(ls -A web | tr '\n' ' ')" = "apple-touch-icon.png icon-192.png icon-512.png index.html manifest.webmanifest sw.js "
       - uses: actions/upload-pages-artifact@v4
         with:
           path: web
+
+  deploy:
+    needs: build
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
