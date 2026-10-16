@@ -4,13 +4,17 @@ Unterstützungs-App für die Feuerwehr: Hydrantenplan mit Leitungsnetz und Umkre
 FireAssist läuft im Browser, lässt sich auf Android und iPhone wie eine App installieren und funktioniert auch ohne Netz.
 Die Einsatzdaten bleiben auf den Geräten und werden nie ins Internet hochgeladen.
 
+**➜ Zur App: [linusl2005.github.io/FireAssist](https://linusl2005.github.io/FireAssist/)**
+
 > [!NOTE]
 > **Ohne echte Daten.** FireAssist wird ohne reale Daten ausgeliefert. Weder dieses Repository noch die veröffentlichte App
 > enthalten echte Hydranten, Leitungsnetze oder Funkrufnamen einer Feuerwehr.
 > Beigelegt sind nur **ausgedachte Beispieldaten** (Ordner [`beispiel/`](beispiel/) und „Beispieldaten laden“ in der App) rund um die erfundene „Musterstadt“.
 > Die Beispiel-Hydranten liegen zwar auf einer echten Karte, ihre Lage, Leitungen und Werte sind aber frei erfunden.
+> Alle Beispiele sind gekennzeichnet: Nummern beginnen mit `BSP-`, Bemerkungen mit „Beispiel“, Orte heißen „Muster…“,
+> und solange Beispieldaten geladen sind, zeigt die App oben einen gelben Hinweis **Beispieldaten**.
 > Die Gefahrstoff-Beispielliste enthält gängige Stoffe aus dem Gefahrgutrecht, aber keine Angaben zu realen Betrieben.
-> Die eigenen Daten importiert jede Feuerwehr selbst (siehe [Schritt 3](#schritt-3-daten-aufs-handy-bringen)).
+> Die eigenen Daten importiert jede Feuerwehr selbst (siehe [Schritt 2](#schritt-2-daten-aufs-handy-bringen)).
 
 > [!WARNING]
 > **Alle Angaben ohne Gewähr.** FireAssist ist ein Hilfsmittel und ersetzt weder Ortskenntnis noch Erkundung oder amtliche Pläne.
@@ -19,78 +23,53 @@ Die Einsatzdaten bleiben auf den Geräten und werden nie ins Internet hochgelade
 > Mehr dazu unter [Haftungsausschluss](#haftungsausschluss).
 
 **Inhalt:** [Installation](#installation) · [Beispiele ausprobieren](#beispiele-ausprobieren) · [Funktionen](#funktionen) ·
-[Datenformat](#datenformat-für-den-import) · [Datenschutz](#externe-dienste-datenschutz) · [Entwicklung](#entwicklung) ·
-[Mitmachen](#mitmachen) · [Haftungsausschluss](#haftungsausschluss) · [Lizenz](#lizenz)
+[Datenformat](#datenformat-für-den-import) · [Datenschutz](#externe-dienste-datenschutz) · [Mitmachen](#mitmachen) · [Haftungsausschluss](#haftungsausschluss) · [Lizenz](#lizenz)
 
 ## Installation
 
-FireAssist wird kostenlos über **GitHub Pages** veröffentlicht, ein eigener Server ist nicht nötig.
-Die Seite enthält nur die App, **niemals Einsatzdaten**. Die Daten kommen in Schritt 3 getrennt auf die Geräte.
+FireAssist ist eine Web-App. Sie wird nicht aus einem App-Store installiert, sondern direkt aus dem Browser:
+**https://linusl2005.github.io/FireAssist/**
+
+Die Seite enthält nur die App, **niemals Einsatzdaten**. Die Daten eurer Feuerwehr kommen in Schritt 2 getrennt auf die Geräte.
 
 | Schritt | Wer | Wie oft |
 |---|---|---|
-| [1. App veröffentlichen](#schritt-1-app-veröffentlichen) | Admin am PC | einmalig |
-| [2. App aufs Handy installieren](#schritt-2-app-aufs-handy-installieren) | jede Einsatzkraft | einmalig |
-| [3. Daten aufs Handy bringen](#schritt-3-daten-aufs-handy-bringen) | Admin → Einsatzkräfte | bei jedem neuen Datenstand |
-| [4. Offline-Karte speichern (optional)](#schritt-4-offline-karte-speichern-optional) | jede Einsatzkraft | einmalig |
+| [1. App aufs Handy installieren](#schritt-1-app-aufs-handy-installieren) | jede Einsatzkraft | einmalig |
+| [2. Daten aufs Handy bringen](#schritt-2-daten-aufs-handy-bringen) | wer die Daten pflegt → alle Einsatzkräfte | bei jedem neuen Datenstand |
+| [3. Offline-Karte speichern (optional)](#schritt-3-offline-karte-speichern-optional) | jede Einsatzkraft | einmalig |
 
-### Schritt 1: App veröffentlichen
-
-Einmalig am PC. Du brauchst ein GitHub-Konto mit Admin-Zugriff auf dieses Repository.
-
-Vorbereitet ist schon alles: Solange das Repository privat ist, baut GitHub die Seite bei jedem Push nur zur Probe
-und veröffentlicht nichts. Das Ergebnis lässt sich beim jeweiligen Lauf unter **Actions** → **Artifacts** herunterladen.
-
-1. Auf github.com das Repository **FireAssist** öffnen.
-2. Das Repository öffentlich machen, denn GitHub Pages ist nur für öffentliche Repositories kostenlos:
-   **Settings** → ganz unten **Danger Zone** → **Change visibility** → **Change to public** → bestätigen.
-   Öffentlich wird dabei nur der Quellcode, Daten liegen nie im Repository (siehe [GitHub-Repository](#github-repository)).
-3. **Settings** → links **Pages** → unter *Build and deployment* bei **Source** den Eintrag **GitHub Actions** wählen.
-4. Zwei Sicherheits-Einstellungen, die es erst für öffentliche Repositories gibt:
-   - **Settings** → **Actions** → **General** → bei den Pull-Request-Workflows aus Forks **Require approval for all outside collaborators** wählen → **Save**.
-     So läuft Code aus fremden Pull Requests nie ohne deine Freigabe.
-   - **Settings** → **Advanced Security** (bei manchen Konten **Code security**) → **Private vulnerability reporting** → **Enable**.
-     So können Sicherheitslücken vertraulich gemeldet werden.
-5. Oben auf **Actions** → links **GitHub Pages** → rechts **Run workflow** → grüner Knopf **Run workflow**.
-6. Etwa eine Minute warten, bis der Lauf einen grünen Haken hat.
-7. Die App ist jetzt erreichbar unter **https://linusl2005.github.io/FireAssist/**
-   Den Link einmal am PC öffnen und prüfen, ob die Karte erscheint. Diesen Link bekommen die Einsatzkräfte.
-
-Ab jetzt wird jede Änderung am Quellcode automatisch neu veröffentlicht.
-GitHub baut die App dafür selbst, immer ohne Daten (`.github/workflows/pages.yml`).
-
-### Schritt 2: App aufs Handy installieren
+### Schritt 1: App aufs Handy installieren
 
 Das macht jede Einsatzkraft einmal auf ihrem Handy.
 
 **Android (Chrome):**
 
-1. Den Link in **Chrome** öffnen (einmal mit Internet).
+1. [linusl2005.github.io/FireAssist](https://linusl2005.github.io/FireAssist/) in **Chrome** öffnen (einmal mit Internet).
 2. Oben rechts Menü **⋮** → **App installieren** (auf manchen Geräten „Zum Startbildschirm hinzufügen“) → **Installieren**.
 3. FireAssist ab jetzt über das neue Symbol auf dem Startbildschirm öffnen.
 
 **iPhone (Safari):**
 
-1. Den Link in **Safari** öffnen (einmal mit Internet).
+1. [linusl2005.github.io/FireAssist](https://linusl2005.github.io/FireAssist/) in **Safari** öffnen (einmal mit Internet).
 2. Unten auf das **Teilen-Symbol** (Quadrat mit Pfeil nach oben) → **Zum Home-Bildschirm** → **Hinzufügen**.
 3. FireAssist ab jetzt **nur noch über das Symbol** auf dem Home-Bildschirm öffnen, nicht mehr in Safari.
    Die installierte App hat ihren eigenen Speicher. Was in Safari importiert wurde, ist in der App nicht zu sehen.
 
 **PC oder Laptop:** Den Link in Chrome oder Edge öffnen. Über das Installieren-Symbol rechts in der Adressleiste lässt sich FireAssist auch dort als App anlegen.
 
-### Schritt 3: Daten aufs Handy bringen
+### Schritt 2: Daten aufs Handy bringen
 
-Die Daten (Hydranten, Leitungen, Funkrufnamen, Gefahrstoffe) gehen **nie über GitHub**, sondern als Datei direkt von dir an die Einsatzkräfte.
+Die Daten (Hydranten, Leitungen, Funkrufnamen, Gefahrstoffe) kommen **nie aus dem Internet**, sondern als Datei von der Person, die bei euch die Daten pflegt.
 
-**Am PC, einmal pro Datenstand:**
+**Wer die Daten pflegt (am PC, einmal pro Datenstand):**
 
-1. FireAssist am PC öffnen (Link aus Schritt 1).
+1. FireAssist am PC öffnen: [linusl2005.github.io/FireAssist](https://linusl2005.github.io/FireAssist/).
 2. Menü **☰** → **Importieren** → eure Excel- oder CSV-Dateien auswählen (Aufbau siehe [Datenformat](#datenformat-für-den-import)).
 3. Im Fenster „Daten importieren“ prüfen, ob die Spalten richtig erkannt wurden → **Importieren**.
 4. Menü **☰** → **Sicherung speichern**. Es entsteht eine Datei wie `FireAssist_Sicherung_2026-10-16.json`.
-5. Diese Datei an die Einsatzkräfte geben, z. B. per USB-Stick, interner E-Mail oder Messenger. **Nie auf GitHub hochladen.**
+5. Diese Datei an die Einsatzkräfte geben, z. B. per USB-Stick, interner E-Mail oder Messenger. **Nie öffentlich ins Internet stellen.**
 
-**Am Handy:**
+**Alle Einsatzkräfte (am Handy):**
 
 1. Die Datei speichern.
    - **iPhone:** in der Nachricht bzw. Mail auf die Datei tippen → Teilen-Symbol → **In Dateien sichern**.
@@ -100,12 +79,12 @@ Die Daten (Hydranten, Leitungen, Funkrufnamen, Gefahrstoffe) gehen **nie über G
 
 Bei einem neuen Datenstand diese Schritte wiederholen.
 
-### Schritt 4: Offline-Karte speichern (Optional)
+### Schritt 3: Offline-Karte speichern (optional)
 
 Damit die Karte auch im Einsatz ohne Netz erscheint. Am besten im WLAN machen.
 
 1. FireAssist öffnen → Menü **☰** → **Offline-Karte** → **Einsatzgebiet speichern**.
-   Gespeichert werden alle Hydranten mit Umgebung, deshalb erst nach Schritt 3. Die Größe (bis ca. 160 MB) steht vorher dabei.
+   Gespeichert werden alle Hydranten mit Umgebung, deshalb erst nach Schritt 2. Die Größe (bis ca. 160 MB) steht vorher dabei.
 2. Warten, bis „Offline-Karte gespeichert“ erscheint.
 
 Danach startet FireAssist auch **ohne Netz**, mit Karte für das ganze Einsatzgebiet.
@@ -113,19 +92,20 @@ Danach startet FireAssist auch **ohne Netz**, mit Karte für das ganze Einsatzge
 ### Updates
 
 - **App:** kommt automatisch. Beim nächsten Start mit Internet lädt FireAssist die neue Version im Hintergrund und zeigt **Neu laden**.
-- **Daten:** eine neue Sicherung verteilen und auf den Handys importieren (Schritt 3).
+- **Daten:** Eine neue Sicherungsdatei wird verteilt und auf den Handys importiert (Schritt 2).
 
 ### Gut zu wissen
 
 - Die Daten liegen nur auf dem jeweiligen Gerät. Wer dort etwas ändert, sollte regelmäßig über Menü → **Sicherung speichern** sichern.
-- iPhone: Daten von Seiten, die nur in Safari geöffnet werden, löscht iOS nach 7 Tagen ohne Besuch. Die installierte App aus Schritt 2 ist davon nicht betroffen.
+- iPhone: Daten von Seiten, die nur in Safari geöffnet werden, löscht iOS nach 7 Tagen ohne Besuch. Die installierte App aus Schritt 1 ist davon nicht betroffen.
 - Ohne Internet funktionieren Hydranten, Leitungen, Suche nach Nummer, Umkreissuche, Funkrufnamen und Gefahrstoffe.
   Die Karte erscheint nur dort, wo sie offline gespeichert ist. Sonst ist statt der Karte ein Raster zu sehen.
 - Entfernungen sind Luftlinie. Alle Angaben ohne Gewähr, siehe [Haftungsausschluss](#haftungsausschluss).
 
 ## Beispiele ausprobieren
 
-Zum Kennenlernen gibt es fiktive Beispieldaten rund um „Musterstadt“. Sie ersetzen vorhandene Daten,
+Zum Kennenlernen gibt es fiktive Beispieldaten rund um „Musterstadt“. Sie sind überall als Beispiel erkennbar
+(Nummern `BSP-…`, gelber Hinweis **Beispieldaten** auf der Karte). Sie ersetzen vorhandene Daten,
 jeder Schritt lässt sich aber mit **Rückgängig** zurücknehmen.
 
 ### Schnell: Beispiele direkt in der App laden
@@ -137,7 +117,7 @@ Dafür braucht man keine Dateien, das geht auch auf dem Handy.
 2. Ausprobieren:
    - Einen **Hydranten antippen**: Nennweite, Druck, Durchfluss, Zustand und Navigation dorthin.
    - **Umkreis** antippen, dann eine Stelle auf der Karte antippen: Alle Entnahmestellen im Umkreis, sortiert nach Entfernung.
-   - Oben in die **Suche** `H-012` eingeben.
+   - Oben in die **Suche** `BSP-H-012` eingeben.
    - Menü **☰** → **Legende**: Was die Symbole, Farben und Linien bedeuten.
    - Menü **☰** → **Bearbeitungsmodus**: Hydranten verschieben, neue anlegen und mit **Verbinden** Leitungen ziehen.
 3. **Funkrufnamen:** Menü **☰** → **Funkrufnamen** → **Beispiel ansehen**.
@@ -165,7 +145,7 @@ So funktioniert später auch der Import eurer echten Daten. Die Dateien liegen i
 
 Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure eigenen Listen.
 
-**Aufräumen:** Vor dem Import der echten Daten Menü **☰** → **Alle Daten löschen**.
+**Aufräumen:** Vor dem Import der echten Daten Menü **☰** → **Alle Daten löschen**. Danach verschwindet auch der Hinweis **Beispieldaten**.
 
 ## Funktionen
 
@@ -201,7 +181,7 @@ Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure e
 - **Suche oben auf der Karte** findet Hydranten, Adressen, Funkrufnamen und Gefahrstoffe. Auch „33/1203“ wird als Warntafel erkannt.
 - **Import:** CSV, Excel (.xlsx/.xls/.ods), FireAssist-Sicherung (.json) und GeoJSON-Punkte. Du kannst die Datei auch einfach ins Fenster ziehen.
 - **Export:** Excel (Blätter „Entnahmestellen“, „Leitungen“, „Funkrufnamen“, „Gefahrstoffe“), CSV, JSON-Sicherung und eine Excel-Vorlage.
-- **App-Datei mit Daten erstellen:** Das erzeugt eine Kopie von `FireAssist.html`, in der der aktuelle Datenstand fest eingebaut ist.
+- **App-Datei mit Daten erstellen:** Das erzeugt eine Kopie der App als einzelne HTML-Datei, in der der aktuelle Datenstand fest eingebaut ist.
   Diese eine Datei kann an die Einsatzkräfte verteilt werden. Ist auf einem Gerät schon ein älterer, selbst geänderter Stand gespeichert, fragt die App vorher nach.
 - Hell- und Dunkelmodus, Karte abdunkeln für die Nacht, Navigation zum Hydranten (Karten-App des Handys).
 
@@ -241,8 +221,8 @@ Beispieldateien liegen in `beispiel/`. Eine Excel-Vorlage gibt es in der App unt
 |---|---|---|---|---|
 | Löschverbund Nord | Musterstadt | HLF 20 | Florian Musterstadt 17-46-1 | |
 | | | DLK 23/12 | Florian Musterstadt 17-33-1 | leere Zelle = wie Zeile darüber |
-| | Neudorf | LF 10 | Florian Musterstadt 18-43-1 | |
-| Löschverbund Süd | Talhausen | TSF-W | Florian Musterstadt 20-48-1 | |
+| | Musterdorf | LF 10 | Florian Musterstadt 18-43-1 | |
+| Löschverbund Süd | Mustertal | TSF-W | Florian Musterstadt 20-48-1 | |
 
 Ohne Spalte „Löschverbund“ wird nur nach Ortschaft gruppiert. Sortiert wird alphabetisch nach Löschverbund, dann Ortschaft, dann Funkname.
 
@@ -276,72 +256,14 @@ Nur diese Verbindungen gibt es:
 
 Mit „Keine Hintergrundkarte“ (Ebenen-Symbol) und ausgeschalteter Adresssuche arbeitet die App nach dem Laden **komplett ohne externe Verbindungen**.
 
-## GitHub-Repository
-
-Im Repository liegt nur der **Quellcode**. Diese Dateien werden nie hochgeladen (festgelegt in `.gitignore`):
-
-| Was | Warum |
-|---|---|
-| `daten/`, Excel-, CSV- und GeoJSON-Dateien, Sicherungen, Exporte mit Datum | eigene Daten (Leitungsnetz, Funkrufnamen …). Nur `beispiel/` wird hochgeladen. |
-| `FireAssist.html`, `web/`, `FireAssist.apk` | gebaute Dateien, können mit `--daten` eingebaute Einsatzdaten enthalten |
-| `android/signing/` (Signaturschlüssel und Passwort) | Wer ihn hat, kann „echte“ Updates der Android-App bauen. Getrennt sichern! |
-
-Eigene Daten am besten im Ordner **`daten/`** ablegen, z. B. `daten/FireAssist_Sicherung.json`.
-Vor jedem Commit mit `git status` prüfen, dass keine Daten dabei sind.
-
 ## Mitmachen
 
 Fehlermeldungen und Ideen gerne als **Issue**. Jede Änderung am Projekt wird vorher mit [@LinusL2005](https://github.com/LinusL2005) abgesprochen:
-erst ein Issue, dann nach Zustimmung ein Pull Request. Übernommen wird nur, was freigegeben ist. Details in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+erst ein Issue, dann nach Zustimmung ein Pull Request. Übernommen wird nur, was freigegeben ist. Details in [`CONTRIBUTING.md`](CONTRIBUTING.md),
+Aufbau des Projekts und Bauen der App in [`ENTWICKLUNG.md`](ENTWICKLUNG.md).
 
 Direkt ändern kann das Projekt nur @LinusL2005. Für `main` gilt zusätzlich: Änderungen nur über Pull Requests
 und nur mit Freigabe durch @LinusL2005 (`.github/CODEOWNERS`).
-
-## Entwicklung
-
-```
-src/index.html      Grundgerüst
-src/style.css       Gestaltung
-src/js/*.js         App-Logik (util, coords, data, map, importer, exporter, ui, pages, hazmat, pwa, main)
-src/sw.js           Service Worker der Web-App (Offline-Start, Offline-Karte)
-vendor/             Leaflet 1.9.4 (BSD-2), SheetJS 0.20.3 (Apache 2.0), lokal, damit die App offline startet; Lizenzen in vendor/LICENSE-*.txt
-build.py            baut FireAssist.html und den Ordner web/ (das veröffentlicht GitHub Pages)
-beispiel/           fiktive Beispieldateien
-android/            Android-App (Java, ohne Gradle), optional
-ios/                iPhone-App (Xcode-Projekt), optional
-.github/workflows/  GitHub Pages (Web-App, ohne Daten)
-```
-
-Nach Änderungen in `src/` einmal neu bauen und das Ergebnis lokal testen:
-
-```bash
-python3 build.py
-```
-
-Dabei entstehen `FireAssist.html` (zum Doppelklicken, läuft ohne Server) und `web/` (die Web-App, wie sie GitHub Pages veröffentlicht).
-`src/index.html` lässt sich zum Entwickeln auch direkt öffnen, „App-Datei mit Daten erstellen“ gibt es aber nur in der gebauten Datei.
-OpenStreetMap als Hintergrundkarte gibt es nur in der Web-App, weil OpenStreetMap Zugriffe aus lokal geöffneten Dateien sperrt.
-
-Ist Xcode installiert, aber dessen Lizenz noch nicht bestätigt, verweigert macOS den Befehl `python3`.
-Dann entweder Xcode einmal öffnen und der Lizenz zustimmen, oder Python direkt aufrufen:
-
-```bash
-/Library/Developer/CommandLineTools/usr/bin/python3 build.py
-```
-
-### Native Apps (optional)
-
-Für die normale Nutzung reicht die Web-App aus der [Installation](#installation).
-Das Projekt enthält zusätzlich zwei App-Hüllen um dieselbe Oberfläche. Die Offline-Karte gibt es darin nicht.
-
-- **Android** (`android/`): `python3 build.py`, dann `python3 android/build_apk.py` erzeugt `FireAssist.apk`.
-  Benötigt das Android-SDK (`platforms;android-34`, `build-tools`) und ein JDK. Exporte landen unter Downloads/FireAssist.
-  ⚠ Beim ersten Bauen entsteht `android/signing/` mit Schlüssel und Passwort. Sichern und nie weitergeben,
-  Updates lassen sich nur mit genau diesem Schlüssel über eine installierte App installieren.
-- **iPhone** (`ios/`): `python3 build.py`, dann `ios/FireAssist.xcodeproj` in Xcode öffnen und auf ▶ klicken.
-  Auf dem eigenen iPhone läuft die App mit einer kostenlosen Apple-ID 7 Tage. Zum Verteilen braucht es ein Apple-Entwicklerkonto und TestFlight.
-- `python3 build.py --daten daten/FireAssist_Sicherung.json` baut einen Datenstand fest in `FireAssist.html` und die Apps ein.
-  Solche Dateien nur direkt weitergeben, **nie hochladen**.
 
 ## Haftungsausschluss
 
@@ -370,6 +292,6 @@ Die App wird ohne Gewähr bereitgestellt (Artikel 7 und 8 der EUPL).
 
 Enthaltene Bibliotheken mit eigener Lizenz: Leaflet 1.9.4 (BSD 2-Clause, [`vendor/LICENSE-leaflet.txt`](vendor/LICENSE-leaflet.txt)),
 SheetJS 0.20.3 (Apache 2.0, [`vendor/LICENSE-sheetjs.txt`](vendor/LICENSE-sheetjs.txt)).
-`build.py` baut alle drei Lizenztexte in die App ein, sie stehen dort unter Menü → Über FireAssist.
+Alle drei Lizenztexte stehen auch in der App unter Menü → Über FireAssist.
 
 Einsatzdaten (Hydranten, Leitungsnetz, Funkrufnamen) gehören nicht zum Projekt und fallen nicht unter diese Lizenz.

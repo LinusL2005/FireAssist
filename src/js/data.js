@@ -175,6 +175,10 @@ function nextId(typ) {
 
 function onDataChange(fn) { changeListeners.push(fn); }
 
+/* Beispieldaten (src/js/demo.js, beispiel/, Vorlagen) haben Nummern mit diesem Präfix */
+const DEMO_PREFIX = 'BSP-';
+function hasDemoSources() { return state.sources.some(s => String(s.id).startsWith(DEMO_PREFIX)); }
+
 /* Nach jeder Änderung aufrufen: Index, Speichern, Neuzeichnen */
 function commit({ local = true } = {}) {
   state.meta.updated = new Date().toISOString();

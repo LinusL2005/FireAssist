@@ -4,7 +4,7 @@
 # build:  läuft bei jedem Push auf main, baut die fertige Seite und prüft sie.
 #         Das Ergebnis liegt beim jeweiligen Lauf unter Actions → Artifacts („github-pages“).
 # deploy: veröffentlicht erst, wenn das Repository öffentlich ist und unter
-#         Settings → Pages als Quelle „GitHub Actions“ eingestellt ist (siehe README, Schritt 1).
+#         Settings → Pages als Quelle „GitHub Actions“ eingestellt ist.
 name: GitHub Pages
 
 on:

@@ -25,6 +25,7 @@ async function init() {
   bindUI();
   onDataChange(() => {
     renderAll();
+    renderPills();
     if (sheet.name && sheet.live) renderSheet();
     const page = currentPage();
     if (page) PAGES[page].render();
