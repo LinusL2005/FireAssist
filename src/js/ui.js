@@ -36,6 +36,8 @@ const IC = {
   route: icon('<circle cx="5" cy="18" r="2"/><circle cx="19" cy="6" r="2"/><path d="M7 18h5a3 3 0 0 0 0-6h-1a3 3 0 0 1 0-6h6"/>'),
   plus: icon('<path d="M12 5v14M5 12h14"/>'),
   sliders: icon('<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>'),
+  code: icon('<path d="m8 7-5 5 5 5M16 7l5 5-5 5"/>'),
+  external: icon('<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'),
 };
 
 const LOGO = `<svg viewBox="0 0 32 32" width="40" height="40" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#c8102e"/><path d="M12.2 11.5a3.8 3.8 0 0 1 7.6 0h1v2.2h-1V23h1.2v2.3h-9.9V23h1.1v-9.3h-1v-2.2z" fill="#fff"/><path d="M8.6 15.4h3.6v3.4H8.6zM19.8 15.4h3.6v3.4h-3.6z" fill="#fff"/><circle cx="16" cy="17.2" r="1.6" fill="#c8102e"/></svg>`;
@@ -176,6 +178,7 @@ function initSheetDrag() {
 function renderPills() {
   const out = [];
   if (ui.offline) out.push(`<div class="pill pill-off">${IC.offline}<span>Offline – keine Hintergrundkarte. Hydranten und Leitungen bleiben verfügbar.</span></div>`);
+  if (hasDemoSources()) out.push(`<div class="pill pill-demo">${IC.sparkle}<span><b>Beispieldaten</b> – frei erfunden, nicht für den Einsatz</span></div>`);
   if (ui.mode === 'pickRadius') {
     out.push(`<div class="pill pill-act">${IC.target}<span>Einsatzstelle auf der Karte antippen</span><button data-act="radius-gps">Mein Standort</button><button data-act="mode-cancel">Abbrechen</button></div>`);
   } else if (ui.mode === 'connect') {
@@ -855,10 +858,12 @@ function menuHtml() {
     </div>
     <div class="menu-group">
       ${item('open-about', IC.info, 'Über FireAssist <small>Version, Lizenz, Haftung</small>', IC.chevron)}
+      <a class="menu-item" href="${APP_REPO}" target="_blank" rel="noopener">${IC.code}<span>FireAssist auf GitHub <small>Quellcode, Fehler melden, Ideen</small></span>${IC.external}</a>
     </div>`;
 }
 
 const APP_COPYRIGHT = '© 2026 LinusL2005';
+const APP_REPO = 'https://github.com/LinusL2005/FireAssist';
 let licenseTexts;
 
 /* Lizenztext aufklappbar; in der ungebauten src/index.html stehen die Texte nicht drin, dann Link */
@@ -881,6 +886,7 @@ function aboutHtml() {
       <button class="icon-btn" data-act="close-sheet" aria-label="Schließen">${IC.close}</button>
     </div>
     <p class="muted small">Digitaler Hydrantenplan, Funkrufnamen und Gefahrstoffe für die Feuerwehr.</p>
+    <p class="small">Quellcode, Fehlermeldungen und Ideen: <a href="${APP_REPO}" target="_blank" rel="noopener">github.com/LinusL2005/FireAssist</a></p>
     <div class="section-title">Lizenz</div>
     <div class="info-text small">
       <p>${APP_COPYRIGHT}<br>Lizenziert unter der EUPL v. 1.2 (Open-Source-Lizenz für die Europäische Union).</p>
