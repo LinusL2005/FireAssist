@@ -208,6 +208,7 @@ ul.issues { max-height: 40vh; overflow: auto; }
 .pill-off { background: #3d4048; color: #fff; padding-right: 14px; }
 .pill-act { background: var(--accent); color: #fff; }
 .pill-edit { background: #1e3a66; color: #fff; }
+.pill-demo { background: #f5c518; color: #1b1b1b; padding-right: 14px; }
 
 /* ---------- Schaltflächen rechts unten ---------- */
 
@@ -373,6 +374,7 @@ ul.issues { max-height: 40vh; overflow: auto; }
   border: none; background: transparent; text-align: left; border-bottom: 1px solid var(--border);
 }
 .menu-item:last-child { border-bottom: none; }
+a.menu-item { color: inherit; text-decoration: none; }
 .menu-item:hover { background: var(--surface-3); }
 .menu-item > .ic:first-child { color: var(--accent); }
 .menu-item > span:not(.switch) { flex: 1; display: flex; flex-direction: column; }

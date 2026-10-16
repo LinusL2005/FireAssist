@@ -1,25 +1,25 @@
 ﻿UN-Nummer;Bezeichnung;Gefahrnummer;Klasse;Hinweise
-1001;Acetylen, gelöst;239;2.1;Gasflaschen bei Erwärmung zerfallsgefährdet: aus Deckung kühlen, Fachberatung hinzuziehen.
-1005;Ammoniak, wasserfrei;268;2.3 + 8;Giftiges, ätzendes Gas, leichter als Luft, stechender Geruch. Wasserschleier zum Niederschlagen.
-1011;Butan;23;2.1;Entzündbares Gas, schwerer als Luft, sammelt sich in Senken und Kellern.
-1017;Chlor;265;2.3 + 5.1 + 8;Gelbgrünes, giftiges Gas, schwerer als Luft, brandfördernd.
-1049;Wasserstoff, verdichtet;23;2.1;Viel leichter als Luft, sehr weiter Explosionsbereich, Flamme kaum sichtbar.
-1066;Stickstoff, verdichtet;20;2.2;Erstickend (verdrängt Sauerstoff), geruchlos.
-1072;Sauerstoff, verdichtet;25;2.2 + 5.1;Stark brandfördernd. Fett und Öl fernhalten.
-1073;Sauerstoff, tiefgekühlt, flüssig;225;2.2 + 5.1;Tiefkalt (Kälteverbrennungen), stark brandfördernd.
-1090;Aceton;33;3;Leicht entzündbar, Dämpfe schwerer als Luft.
-1202;Dieselkraftstoff oder Gasöl oder Heizöl, leicht;30;3;Entzündbar, Gewässer schützen (Kanaleinläufe abdichten).
-1203;Benzin oder Ottokraftstoff;33;3;Leicht entzündbar, Dämpfe schwerer als Luft, Explosionsgefahr. Zündquellen fernhalten.
-1230;Methanol;336;3 + 6.1;Leicht entzündbar und giftig, brennt mit kaum sichtbarer Flamme.
-1294;Toluen (Toluol);33;3;Leicht entzündbar, Dämpfe schwerer als Luft, gesundheitsschädlich.
-1789;Chlorwasserstoffsäure (Salzsäure);80;8;Ätzend, stechende Dämpfe.
-1824;Natriumhydroxidlösung (Natronlauge);80;8;Stark ätzend (alkalisch), besonders gefährlich für die Augen.
-1830;Schwefelsäure;80;8;Stark ätzend, reagiert mit Wasser unter starker Wärmeentwicklung.
-1965;Kohlenwasserstoffgas, Gemisch, verflüssigt (Flüssiggas, LPG);23;2.1;Entzündbares Gas, schwerer als Luft, sammelt sich in Senken. Behälter kühlen.
-1971;Methan, verdichtet, oder Erdgas, verdichtet;23;2.1;Entzündbares Gas, leichter als Luft.
-1972;Methan, tiefgekühlt, flüssig, oder Erdgas, tiefgekühlt, flüssig (LNG);223;2.1;Tiefkalt (Kälteverbrennungen), entzündbar.
-1977;Stickstoff, tiefgekühlt, flüssig;22;2.2;Tiefkalt, erstickend (verdrängt Sauerstoff).
-1978;Propan;23;2.1;Entzündbares Gas, schwerer als Luft, sammelt sich in Senken und Kellern.
-2014;Wasserstoffperoxid, wässerige Lösung (20 bis 60 %);58;5.1 + 8;Brandfördernd und ätzend.
-3077;Umweltgefährdender Stoff, fest, n.a.g.;90;9;Gewässer und Boden schützen.
-3082;Umweltgefährdender Stoff, flüssig, n.a.g.;90;9;Gewässer und Boden schützen, Kanaleinläufe abdichten.
+1001;Acetylen, gelöst;239;2.1;Beispielliste, vor Verwendung prüfen – Gasflaschen bei Erwärmung zerfallsgefährdet: aus Deckung kühlen, Fachberatung hinzuziehen.
+1005;Ammoniak, wasserfrei;268;2.3 + 8;Beispielliste, vor Verwendung prüfen – Giftiges, ätzendes Gas, leichter als Luft, stechender Geruch. Wasserschleier zum Niederschlagen.
+1011;Butan;23;2.1;Beispielliste, vor Verwendung prüfen – Entzündbares Gas, schwerer als Luft, sammelt sich in Senken und Kellern.
+1017;Chlor;265;2.3 + 5.1 + 8;Beispielliste, vor Verwendung prüfen – Gelbgrünes, giftiges Gas, schwerer als Luft, brandfördernd.
+1049;Wasserstoff, verdichtet;23;2.1;Beispielliste, vor Verwendung prüfen – Viel leichter als Luft, sehr weiter Explosionsbereich, Flamme kaum sichtbar.
+1066;Stickstoff, verdichtet;20;2.2;Beispielliste, vor Verwendung prüfen – Erstickend (verdrängt Sauerstoff), geruchlos.
+1072;Sauerstoff, verdichtet;25;2.2 + 5.1;Beispielliste, vor Verwendung prüfen – Stark brandfördernd. Fett und Öl fernhalten.
+1073;Sauerstoff, tiefgekühlt, flüssig;225;2.2 + 5.1;Beispielliste, vor Verwendung prüfen – Tiefkalt (Kälteverbrennungen), stark brandfördernd.
+1090;Aceton;33;3;Beispielliste, vor Verwendung prüfen – Leicht entzündbar, Dämpfe schwerer als Luft.
+1202;Dieselkraftstoff oder Gasöl oder Heizöl, leicht;30;3;Beispielliste, vor Verwendung prüfen – Entzündbar, Gewässer schützen (Kanaleinläufe abdichten).
+1203;Benzin oder Ottokraftstoff;33;3;Beispielliste, vor Verwendung prüfen – Leicht entzündbar, Dämpfe schwerer als Luft, Explosionsgefahr. Zündquellen fernhalten.
+1230;Methanol;336;3 + 6.1;Beispielliste, vor Verwendung prüfen – Leicht entzündbar und giftig, brennt mit kaum sichtbarer Flamme.
+1294;Toluen (Toluol);33;3;Beispielliste, vor Verwendung prüfen – Leicht entzündbar, Dämpfe schwerer als Luft, gesundheitsschädlich.
+1789;Chlorwasserstoffsäure (Salzsäure);80;8;Beispielliste, vor Verwendung prüfen – Ätzend, stechende Dämpfe.
+1824;Natriumhydroxidlösung (Natronlauge);80;8;Beispielliste, vor Verwendung prüfen – Stark ätzend (alkalisch), besonders gefährlich für die Augen.
+1830;Schwefelsäure;80;8;Beispielliste, vor Verwendung prüfen – Stark ätzend, reagiert mit Wasser unter starker Wärmeentwicklung.
+1965;Kohlenwasserstoffgas, Gemisch, verflüssigt (Flüssiggas, LPG);23;2.1;Beispielliste, vor Verwendung prüfen – Entzündbares Gas, schwerer als Luft, sammelt sich in Senken. Behälter kühlen.
+1971;Methan, verdichtet, oder Erdgas, verdichtet;23;2.1;Beispielliste, vor Verwendung prüfen – Entzündbares Gas, leichter als Luft.
+1972;Methan, tiefgekühlt, flüssig, oder Erdgas, tiefgekühlt, flüssig (LNG);223;2.1;Beispielliste, vor Verwendung prüfen – Tiefkalt (Kälteverbrennungen), entzündbar.
+1977;Stickstoff, tiefgekühlt, flüssig;22;2.2;Beispielliste, vor Verwendung prüfen – Tiefkalt, erstickend (verdrängt Sauerstoff).
+1978;Propan;23;2.1;Beispielliste, vor Verwendung prüfen – Entzündbares Gas, schwerer als Luft, sammelt sich in Senken und Kellern.
+2014;Wasserstoffperoxid, wässerige Lösung (20 bis 60 %);58;5.1 + 8;Beispielliste, vor Verwendung prüfen – Brandfördernd und ätzend.
+3077;Umweltgefährdender Stoff, fest, n.a.g.;90;9;Beispielliste, vor Verwendung prüfen – Gewässer und Boden schützen.
+3082;Umweltgefährdender Stoff, flüssig, n.a.g.;90;9;Beispielliste, vor Verwendung prüfen – Gewässer und Boden schützen, Kanaleinläufe abdichten.

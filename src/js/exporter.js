@@ -119,15 +119,15 @@ function exportTemplate() {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, sheetFrom([
     EXPORT_SRC_HEADERS,
-    ['H-001', 'Unterflurhydrant', 50.5515, 9.6755, 150, 5.5, 1600, '', 'in Ordnung', '14.03.2025', 'Hauptstraße 12', 'Vor Hausnummer 12', 'H-002'],
-    ['H-002', 'Überflurhydrant', 50.5521, 9.6768, 150, 5.2, 1400, '', 'eingeschränkt', '02.06.2025', 'Hauptstraße 30', '', 'H-001, H-003'],
-    ['H-003', 'Unterflurhydrant', 50.5530, 9.6771, 100, '', '', '', 'in Ordnung', '', 'Lindenweg 4', '', 'H-002'],
-    ['Z-01', 'Löschwasserbehälter', 50.5540, 9.6790, '', '', '', 100, 'in Ordnung', '12.06.2025', 'Schulhof', 'Saugrohr A', ''],
+    ['BSP-H-001', 'Unterflurhydrant', 50.5515, 9.6755, 150, 5.5, 1600, '', 'in Ordnung', '14.03.2025', 'Hauptstraße 12', 'Beispielzeile, bitte ersetzen – Vor Hausnummer 12', 'BSP-H-002'],
+    ['BSP-H-002', 'Überflurhydrant', 50.5521, 9.6768, 150, 5.2, 1400, '', 'eingeschränkt', '02.06.2025', 'Hauptstraße 30', 'Beispielzeile, bitte ersetzen', 'BSP-H-001, BSP-H-003'],
+    ['BSP-H-003', 'Unterflurhydrant', 50.5530, 9.6771, 100, '', '', '', 'in Ordnung', '', 'Lindenweg 4', 'Beispielzeile, bitte ersetzen', 'BSP-H-002'],
+    ['BSP-Z-01', 'Löschwasserbehälter', 50.5540, 9.6790, '', '', '', 100, 'in Ordnung', '12.06.2025', 'Schulhof', 'Beispielzeile, bitte ersetzen – Saugrohr A', ''],
   ], [10, 18, 12, 12, 10, 9, 15, 11, 13, 12, 28, 34, 24]), 'Entnahmestellen');
   XLSX.utils.book_append_sheet(wb, sheetFrom([
     ['Von', 'Nach', 'DN', 'Verlauf', 'Bemerkung'],
-    ['H-001', 'H-002', 150, '', ''],
-    ['H-002', 'H-003', 100, '50.552400 9.676900; 50.552700 9.677000', 'Abzweig Lindenweg, mit Knick'],
+    ['BSP-H-001', 'BSP-H-002', 150, '', 'Beispielzeile, bitte ersetzen'],
+    ['BSP-H-002', 'BSP-H-003', 100, '50.552400 9.676900; 50.552700 9.677000', 'Beispielzeile, bitte ersetzen – Abzweig Lindenweg, mit Knick'],
   ], [10, 10, 8, 40, 30]), 'Leitungen');
   XLSX.utils.book_append_sheet(wb, sheetFrom([
     ['Spalte', 'Pflicht', 'Beschreibung'],
@@ -149,15 +149,15 @@ function exportTemplate() {
 function exportListTemplate(kind) {
   if (kind === 'vehicles') {
     downloadBlob(csvBlob([EXPORT_VEH_HEADERS,
-      ['Löschverbund Nord', 'Musterstadt', 'HLF 20', 'Florian Musterstadt 17-46-1', ''],
-      ['Löschverbund Nord', 'Musterstadt', 'DLK 23/12', 'Florian Musterstadt 17-33-1', ''],
-      ['Löschverbund Nord', 'Neudorf', 'LF 10', 'Florian Musterstadt 18-43-1', ''],
-      ['Löschverbund Süd', 'Talhausen', 'TSF-W', 'Florian Musterstadt 20-48-1', ''],
+      ['Beispiel-Löschverbund Nord', 'Musterstadt', 'HLF 20', 'Florian Musterstadt 17-46-1', 'Beispielzeile, bitte ersetzen'],
+      ['Beispiel-Löschverbund Nord', 'Musterstadt', 'DLK 23/12', 'Florian Musterstadt 17-33-1', 'Beispielzeile, bitte ersetzen'],
+      ['Beispiel-Löschverbund Nord', 'Musterdorf', 'LF 10', 'Florian Musterstadt 18-43-1', 'Beispielzeile, bitte ersetzen'],
+      ['Beispiel-Löschverbund Süd', 'Mustertal', 'TSF-W', 'Florian Musterstadt 20-48-1', 'Beispielzeile, bitte ersetzen'],
     ]), 'Funkrufnamen_Vorlage.csv');
   } else {
     downloadBlob(csvBlob([EXPORT_HAZ_HEADERS,
-      ['1202', 'Dieselkraftstoff oder Gasöl oder Heizöl, leicht', '30', '3', 'Gewässer schützen'],
-      ['1203', 'Benzin oder Ottokraftstoff', '33', '3', 'Dämpfe schwerer als Luft, Explosionsgefahr'],
+      ['1202', 'Dieselkraftstoff oder Gasöl oder Heizöl, leicht', '30', '3', 'Beispielzeile, bitte ersetzen – Gewässer schützen'],
+      ['1203', 'Benzin oder Ottokraftstoff', '33', '3', 'Beispielzeile, bitte ersetzen – Dämpfe schwerer als Luft, Explosionsgefahr'],
     ]), 'Gefahrstoffe_Vorlage.csv');
   }
 }
