@@ -388,6 +388,10 @@ ul.issues { max-height: 40vh; overflow: auto; }
 .menu-check { margin-top: 10px; }
 .info-text p { color: var(--text-2); }
 
+.lic summary { cursor: pointer; font-weight: 600; color: var(--info); padding: 6px 0; font-size: .875rem; }
+.lic pre { white-space: pre-wrap; overflow-wrap: anywhere; font: .78rem/1.5 var(--font); color: var(--text-2);
+  max-height: 50vh; overflow: auto; margin: 4px 0 10px; padding: 10px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; }
+
 /* Legende */
 .lg { display: flex; flex-direction: column; gap: 6px; }
 .lg-row { display: flex; align-items: center; gap: 12px; min-height: 34px; }
