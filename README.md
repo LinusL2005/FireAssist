@@ -273,3 +273,18 @@ Dann entweder Xcode einmal öffnen und der Lizenz zustimmen, oder Python direkt 
 ```
 
 `src/index.html` lässt sich zum Entwickeln auch direkt öffnen. Die Funktion „App-Datei mit Daten erstellen“ gibt es aber nur in der gebauten Datei.
+
+## Lizenz
+
+© 2026 LinusL2005
+
+Lizenziert unter der **EUPL v. 1.2** (Open-Source-Lizenz für die Europäische Union): [`LIZENZ.txt`](LIZENZ.txt) (deutsch), [`LICENSE`](LICENSE) (englisch).
+Alle Sprachfassungen sind gleichwertig. FireAssist darf genutzt, weitergegeben und verändert werden.
+Wer eine veränderte Fassung weitergibt, muss deren Quellcode ebenfalls unter der EUPL bereitstellen.
+Die App wird ohne Gewähr bereitgestellt (Artikel 7 und 8 der EUPL).
+
+Enthaltene Bibliotheken mit eigener Lizenz: Leaflet 1.9.4 (BSD 2-Clause, [`vendor/LICENSE-leaflet.txt`](vendor/LICENSE-leaflet.txt)),
+SheetJS 0.20.3 (Apache 2.0, [`vendor/LICENSE-sheetjs.txt`](vendor/LICENSE-sheetjs.txt)).
+`build.py` baut alle drei Lizenztexte in die App ein, sie stehen dort unter Menü → Über FireAssist.
+
+Einsatzdaten (Hydranten, Leitungsnetz, Funkrufnamen) gehören nicht zum Projekt und fallen nicht unter diese Lizenz.

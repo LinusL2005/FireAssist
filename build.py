@@ -123,6 +123,20 @@ def build_web(html):
     print(f"web/ geschrieben (index.html {len(web_html) / 1024:.0f} KB, sw.js, manifest, Symbole)")
 
 
+LICENSES = {"eupl": "LIZENZ.txt", "leaflet": "vendor/LICENSE-leaflet.txt", "sheetjs": "vendor/LICENSE-sheetjs.txt"}
+
+
+def embed_licenses(html):
+    """Lizenztexte für Menü → Über FireAssist (die App wird oft als einzelne Datei weitergegeben)."""
+    texts = {k: (ROOT / f).read_text(encoding="utf-8").replace("\r\n", "\n").strip() for k, f in LICENSES.items()}
+    payload = json.dumps(texts, ensure_ascii=False).replace("<", "\\u003c")
+    html, n = re.subn(r'(<script id="fa-licenses" type="application/json">).*?(</script>)',
+                      lambda m: m.group(1) + payload + m.group(2), html, count=1, flags=re.S)
+    if n != 1:
+        raise SystemExit("Fehler: Platzhalter für Lizenztexte nicht gefunden")
+    return html
+
+
 def embed_data(html, path):
     """Baut eine Sicherung (Menü → Sicherung speichern) als Datenstand in die App ein."""
     obj = json.loads(pathlib.Path(path).read_text(encoding="utf-8-sig"))
@@ -147,6 +161,7 @@ def main():
     html = re.sub(r"<!-- build:js -->(.*?)<!-- /build:js -->", lambda m: inline_js(m.group(1)), html, flags=re.S)
     if "<script src=" in html or 'rel="stylesheet"' in html:
         raise SystemExit("Fehler: nicht alle Dateien wurden eingebettet")
+    html = embed_licenses(html)
     if "--daten" in sys.argv:
         i = sys.argv.index("--daten")
         if i + 1 >= len(sys.argv):

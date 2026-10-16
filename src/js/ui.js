@@ -852,6 +852,56 @@ function menuHtml() {
     <div class="info-text small">
       <p>Daten werden <b>nur lokal in diesem Browser</b> gespeichert. Regelmäßig eine Sicherung exportieren.</p>
       <p>Entfernungen sind Luftlinie. Angaben ohne Gewähr – vor Ort prüfen.</p>
+    </div>
+    <div class="menu-group">
+      ${item('open-about', IC.info, 'Über FireAssist <small>Version, Lizenz, Haftung</small>', IC.chevron)}
+    </div>`;
+}
+
+const APP_COPYRIGHT = '© 2026 LinusL2005';
+let licenseTexts;
+
+/* Lizenztext aufklappbar; in der ungebauten src/index.html stehen die Texte nicht drin, dann Link */
+function licenseHtml(key, label, url) {
+  if (licenseTexts === undefined) {
+    try { licenseTexts = JSON.parse($('#fa-licenses')?.textContent || 'null'); } catch (e) { licenseTexts = null; }
+  }
+  const text = licenseTexts?.[key];
+  return text
+    ? `<details class="lic"><summary>${label}</summary><pre>${esc(text)}</pre></details>`
+    : `<p class="small"><a href="${url}" target="_blank" rel="noopener">${label}</a></p>`;
+}
+
+function aboutHtml() {
+  return `
+    <div class="sh-head">
+      <div class="sh-icon">${LOGO}</div>
+      <div class="sh-title"><h2>Über FireAssist</h2><div class="sub">Version ${APP_VERSION}</div></div>
+      <button class="icon-btn" data-act="open-menu" aria-label="Zurück">${IC.back}</button>
+      <button class="icon-btn" data-act="close-sheet" aria-label="Schließen">${IC.close}</button>
+    </div>
+    <p class="muted small">Digitaler Hydrantenplan, Funkrufnamen und Gefahrstoffe für die Feuerwehr.</p>
+    <div class="section-title">Lizenz</div>
+    <div class="info-text small">
+      <p>${APP_COPYRIGHT}<br>Lizenziert unter der EUPL v. 1.2 (Open-Source-Lizenz für die Europäische Union).</p>
+      <p>FireAssist ist freie Software: Du darfst die App nutzen, weitergeben und verändern.
+        Wer eine veränderte Fassung weitergibt, muss deren Quellcode ebenfalls unter der EUPL bereitstellen.</p>
+    </div>
+    ${licenseHtml('eupl', 'Lizenztext (deutsch)', 'https://interoperable-europe.ec.europa.eu/collection/eupl/eupl-text-eupl-12')}
+    <div class="section-title">Ohne Gewähr</div>
+    <div class="info-text small">
+      <p>Die App wird ohne Gewährleistung bereitgestellt, die Haftung ist nach Artikel 7 und 8 der EUPL beschränkt.
+        Lage, Zustand und Leistung der Entnahmestellen vor Ort prüfen, Angaben zu Gefahrstoffen mit aktuellen Quellen abgleichen.</p>
+    </div>
+    <div class="section-title">Enthaltene Software</div>
+    <div class="info-text small"><p><b>Leaflet</b> 1.9.4 · © 2010–2023 Volodymyr Agafonkin, © 2010–2011 CloudMade · BSD 2-Clause</p></div>
+    ${licenseHtml('leaflet', 'Lizenztext Leaflet', 'https://github.com/Leaflet/Leaflet/blob/v1.9.4/LICENSE')}
+    <div class="info-text small"><p><b>SheetJS</b> 0.20.3 · © 2012–heute SheetJS LLC · Apache License 2.0</p></div>
+    ${licenseHtml('sheetjs', 'Lizenztext SheetJS', 'https://www.apache.org/licenses/LICENSE-2.0')}
+    <div class="section-title">Daten</div>
+    <div class="info-text small">
+      <p>Hydranten, Leitungen, Funkrufnamen und Stofflisten gehören nicht zur App und fallen nicht unter diese Lizenz.
+        Die Rechte an der Hintergrundkarte stehen unten rechts auf der Karte.</p>
     </div>`;
 }
 
@@ -1067,6 +1117,7 @@ const ACT = {
   'open-menu': () => { clearSelection(); openSheet('menu', menuHtml, { expand: true }); },
   'open-list': () => openSheet('list', listHtml, { live: false, expand: true }),
   'open-legend': () => openSheet('legend', legendHtml),
+  'open-about': () => openSheet('about', aboutHtml),
   'list-filter': d => { listState.f = d.f; $$('.chips [data-act="list-filter"]').forEach(b => b.classList.toggle('on', b.dataset.f === d.f)); $('#list-items').innerHTML = listItemsHtml(); },
   'fit-data': () => { closeSheet(); fitData(); },
   'import': () => $('#file-input').click(),
