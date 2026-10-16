@@ -32,7 +32,7 @@ const BASEMAPS = {
   },
 };
 
-const DEFAULT_SETTINGS = { basemap: 'bmde', showPipes: true, showLabels: true, dim: false, theme: 'auto', radius: 300, onlineSearch: true, hiddenOrte: [], view: null };
+const DEFAULT_SETTINGS = { basemap: 'bmde', showPipes: true, showLabels: true, dim: false, theme: 'auto', radius: 300, onlineSearch: true, keepTiles: true, hiddenOrte: [], view: null };
 let settings = Object.assign({}, DEFAULT_SETTINGS, (() => { try { return JSON.parse(lsGet(LS_SETTINGS) || '{}'); } catch (e) { return {}; } })());
 if (!BASEMAPS[settings.basemap] || (BASEMAPS[settings.basemap].httpOnly && location.protocol === 'file:')) settings.basemap = 'bmde';
 function saveSettings() { lsSet(LS_SETTINGS, JSON.stringify(settings)); }
