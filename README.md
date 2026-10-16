@@ -89,6 +89,10 @@ Damit die Karte auch im Einsatz ohne Netz erscheint. Am besten im WLAN machen.
 
 Danach startet FireAssist auch **ohne Netz**, mit Karte für das ganze Einsatzgebiet.
 
+Zusätzlich behält die App automatisch die Kartenausschnitte, die du dir angesehen hast. Deshalb ist die Karte dort
+auch im Flugmodus zu sehen. Abschalten lässt sich das unter Menü **☰** → **Offline-Karte** →
+**Angesehene Kartenausschnitte offline behalten**. Dann erscheint ohne Netz nur die Karte gespeicherter Gebiete.
+
 ### Updates
 
 - **App:** kommt automatisch. Beim nächsten Start mit Internet lädt FireAssist die neue Version im Hintergrund und zeigt **Neu laden**.
@@ -99,7 +103,7 @@ Danach startet FireAssist auch **ohne Netz**, mit Karte für das ganze Einsatzge
 - Die Daten liegen nur auf dem jeweiligen Gerät. Wer dort etwas ändert, sollte regelmäßig über Menü → **Sicherung speichern** sichern.
 - iPhone: Daten von Seiten, die nur in Safari geöffnet werden, löscht iOS nach 7 Tagen ohne Besuch. Die installierte App aus Schritt 1 ist davon nicht betroffen.
 - Ohne Internet funktionieren Hydranten, Leitungen, Suche nach Nummer, Umkreissuche, Funkrufnamen und Gefahrstoffe.
-  Die Karte erscheint nur dort, wo sie offline gespeichert ist. Sonst ist statt der Karte ein Raster zu sehen.
+  Die Karte erscheint nur dort, wo sie gespeichert ist (Schritt 3). Sonst ist statt der Karte ein Raster zu sehen.
 - Entfernungen sind Luftlinie. Alle Angaben ohne Gewähr, siehe [Haftungsausschluss](#haftungsausschluss).
 
 ## Beispiele ausprobieren

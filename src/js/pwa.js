@@ -5,7 +5,8 @@
 const PWA = {
   enabled: /^https?:$/.test(location.protocol) && 'serviceWorker' in navigator && 'caches' in window
     && !!document.querySelector('link[rel="manifest"]'),
-  tileCache: 'fireassist-tiles-v1',
+  savedCache: 'fireassist-tiles-saved', /* über „Offline-Karte speichern“ geladene Gebiete */
+  seenCache: 'fireassist-tiles-v1',     /* angesehene Ausschnitte (Schalter keepTiles), Namen wie in sw.js */
   maxTiles: 12000,
   cancel: null,
 };
@@ -13,6 +14,7 @@ const PWA = {
 function initPwa() {
   if (!PWA.enabled) return;
   navigator.serviceWorker.register('sw.js').catch(() => {});
+  syncKeepTiles();
   navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'update') notifyNewVersion(); });
   /* Der Service Worker holt neue Versionen im Hintergrund. Zusätzlich selbst nachsehen,
      weil seine Nachricht beim Start der Seite verloren gehen kann. */
@@ -34,6 +36,14 @@ function notifyNewVersion() {
   if (PWA.notified) return;
   PWA.notified = true;
   toast('Neue Version bzw. neuer Datenstand verfügbar.', { action: { label: 'Neu laden', fn: () => location.reload() }, ms: 30000 });
+}
+
+/* Schalter an den Service Worker weitergeben (Ablage für Neustarts + Nachricht für sofort) */
+async function syncKeepTiles() {
+  try {
+    await (await caches.open('fireassist-settings')).put('./__fa/keep-tiles', new Response(settings.keepTiles ? '1' : '0'));
+    navigator.serviceWorker.controller?.postMessage({ type: 'keep-tiles', value: settings.keepTiles });
+  } catch (e) { /* nicht kritisch */ }
 }
 
 function isInstalledApp() {
@@ -79,11 +89,10 @@ function offlinePlan(area) {
 
 async function tileCacheInfo() {
   try {
-    const c = await caches.open(PWA.tileCache);
-    const n = (await c.keys()).length;
+    const count = async name => (await (await caches.open(name)).keys()).length;
     const est = navigator.storage?.estimate ? await navigator.storage.estimate() : null;
-    return { n, mb: est ? Math.round(est.usage / 1048576) : null };
-  } catch (e) { return { n: 0, mb: null }; }
+    return { saved: await count(PWA.savedCache), seen: await count(PWA.seenCache), mb: est ? Math.round(est.usage / 1048576) : null };
+  } catch (e) { return { saved: 0, seen: 0, mb: null }; }
 }
 
 /* ---------- Dialog ---------- */
@@ -95,14 +104,15 @@ async function offlineDialogHtml() {
   const zoomNote = p => (p.maxZoom < 18 ? ` · bis Zoomstufe ${p.maxZoom}` : '');
   return `<div class="modal-head"><h2>Offline-Karte</h2><button class="icon-btn" data-act="modal-close" aria-label="Schließen">${IC.close}</button></div>
     <div class="modal-body">
-      <p>Kartenkacheln von <b>basemap.de</b> werden auf diesem Gerät gespeichert. So erscheint die Karte auch ohne Netz.
-        Bereits angesehene Kartenausschnitte werden automatisch gespeichert.</p>
-      <p class="muted small">Gespeichert: <b>${fmtNum(info.n, 0)}</b> Kacheln${info.mb != null ? ` · App-Speicher gesamt ca. ${fmtNum(info.mb, 0)} MB` : ''}</p>
+      <p>Kartenkacheln von <b>basemap.de</b> werden auf diesem Gerät gespeichert. So erscheint die Karte auch ohne Netz.</p>
+      <p class="muted small">Gespeichert: <b>${fmtNum(info.saved, 0)}</b> Kacheln aus gespeicherten Gebieten · <b>${fmtNum(info.seen, 0)}</b> angesehene Kacheln${info.mb != null ? ` · App-Speicher gesamt ca. ${fmtNum(info.mb, 0)} MB` : ''}</p>
+      <label class="check"><input type="checkbox" data-change="keep-tiles"${settings.keepTiles ? ' checked' : ''}>
+        <span>Angesehene Kartenausschnitte offline behalten<br><small class="muted">Aus: Ohne Netz erscheint nur die Karte gespeicherter Gebiete. Beim Ausschalten werden die angesehenen Kacheln gelöscht.</small></span></label>
       ${isInstalledApp() ? '' : '<p class="note small">Tipp: App vorher über „Zum Startbildschirm hinzufügen“ installieren. Sonst kann vor allem iOS gespeicherte Daten nach einigen Tagen ohne Nutzung löschen.</p>'}
       <div class="menu-group">
         ${data ? `<button class="menu-item" data-act="offline-run" data-area="data">${IC.download}<span>Einsatzgebiet speichern <small>alle Hydranten + Umgebung · ${fmtNum(data.urls.length, 0)} Kacheln, ca. ${data.mb} MB${zoomNote(data)}</small></span></button>` : ''}
         <button class="menu-item" data-act="offline-run" data-area="view">${IC.map}<span>Aktuellen Kartenausschnitt speichern <small>${fmtNum(view.urls.length, 0)} Kacheln, ca. ${view.mb} MB${zoomNote(view)}</small></span></button>
-        ${info.n ? `<button class="menu-item" data-act="offline-clear">${IC.trash}<span><span class="danger-text">Offline-Karte löschen</span></span></button>` : ''}
+        ${info.saved + info.seen ? `<button class="menu-item" data-act="offline-clear">${IC.trash}<span><span class="danger-text">Offline-Karte löschen</span></span></button>` : ''}
       </div>
     </div>`;
 }
@@ -112,7 +122,7 @@ async function runOfflinePrefetch(area) {
   if (!plan || !plan.urls.length) return;
   if (!navigator.onLine) { toast('Offline – zum Speichern der Karte wird Internet benötigt.'); return; }
   try { await navigator.storage?.persist?.(); } catch (e) { /* optional */ }
-  const cache = await caches.open(PWA.tileCache);
+  const cache = await caches.open(PWA.savedCache), seen = await caches.open(PWA.seenCache);
   const queue = plan.urls.slice();
   const total = queue.length;
   let done = 0, failed = 0, cancelled = false;
@@ -131,7 +141,8 @@ async function runOfflinePrefetch(area) {
       try {
         if (!(await cache.match(u))) {
           const r = await fetch(u, { mode: 'cors', credentials: 'omit' });
-          if (r.ok) await cache.put(u, r); else failed++;
+          /* Der Service Worker legt die Kachel evtl. schon unter „angesehen“ ab – nur einmal speichern */
+          if (r.ok) { await cache.put(u, r); await seen.delete(u); } else failed++;
         }
       } catch (e) { failed++; }
       done++;
@@ -150,8 +161,20 @@ Object.assign(ACT, {
   'offline-run': d => runOfflinePrefetch(d.area),
   'offline-cancel': () => { if (PWA.cancel) PWA.cancel(); },
   'offline-clear': async () => {
-    if (!(await confirmDialog({ title: 'Offline-Karte löschen?', text: '<p>Alle gespeicherten Kartenkacheln werden von diesem Gerät entfernt.</p>', ok: 'Löschen', danger: true }))) return;
-    await caches.delete(PWA.tileCache);
+    if (!(await confirmDialog({ title: 'Offline-Karte löschen?', text: '<p>Alle gespeicherten Kartenkacheln (Gebiete und angesehene Ausschnitte) werden von diesem Gerät entfernt.</p>', ok: 'Löschen', danger: true }))) return;
+    await caches.delete(PWA.savedCache);
+    await caches.delete(PWA.seenCache);
     toast('Offline-Karte gelöscht.');
+  },
+});
+
+Object.assign(CHG, {
+  'keep-tiles': async t => {
+    settings.keepTiles = t.checked;
+    saveSettings();
+    await syncKeepTiles();
+    if (!t.checked) await caches.delete(PWA.seenCache);
+    toast(t.checked ? 'Angesehene Kartenausschnitte werden offline behalten.' : 'Angesehene Kartenausschnitte werden nicht mehr gespeichert, die bisherigen sind gelöscht.');
+    openModal(await offlineDialogHtml());
   },
 });
