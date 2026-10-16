@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#c8102e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FireAssist">
+<title>FireAssist – Hydrantenplan</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8102e'/%3E%3Cpath d='M12.2 11.5a3.8 3.8 0 0 1 7.6 0h1v2.2h-1V23h1.2v2.3h-9.9V23h1.1v-9.3h-1v-2.2z' fill='%23fff'/%3E%3Cpath d='M8.6 15.4h3.6v3.4H8.6zM19.8 15.4h3.6v3.4h-3.6z' fill='%23fff'/%3E%3C/svg%3E">
+<!-- build:css -->
+<link rel="stylesheet" href="../vendor/leaflet.css">
+<link rel="stylesheet" href="style.css">
+<!-- /build:css -->
+<script id="fa-data" type="application/json">null</script>
+</head>
+<body>
+<div id="app">
+  <div id="map" aria-label="Karte"></div>
+
+  <header class="topbar">
+    <div class="search">
+      <button class="icon-btn" data-act="open-menu" aria-label="Menü">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <input id="search" type="search" placeholder="Adresse oder Hydrant suchen" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="Suche">
+      <button class="icon-btn" data-act="layers" aria-label="Kartenebenen">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/></svg>
+      </button>
+    </div>
+    <div id="search-results" class="search-results" hidden></div>
+    <div id="layer-pop" class="popover" hidden></div>
+    <div id="pills" class="pills" aria-live="polite"></div>
+  </header>
+
+  <div class="fabs">
+    <button class="fab fab-radius" data-act="radius-fab" aria-label="Umkreissuche">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></svg>
+      <span>Umkreis</span>
+    </button>
+    <button class="fab" data-act="locate" aria-label="Mein Standort">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 21 3l-8 18-2-8z"/></svg>
+    </button>
+  </div>
+
+  <section id="sheet" class="sheet" hidden aria-live="polite">
+    <div id="sheet-handle" class="sheet-handle" aria-hidden="true"><span></span></div>
+    <div id="sheet-body" class="sheet-body"></div>
+  </section>
+
+  <section id="page-funk" class="page" hidden aria-label="Funkrufnamen">
+    <header class="page-head">
+      <button class="icon-btn" data-act="page-close" aria-label="Zurück zur Karte"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+      <div class="page-title"><h1>Funkrufnamen</h1><span id="funk-count" class="muted small"></span></div>
+      <button class="icon-btn" data-act="funk-view" aria-label="Ansicht und Sortierung"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+      <button id="funk-edit-btn" class="icon-btn" data-act="funk-edit-toggle" aria-label="Fahrzeuge bearbeiten"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m14 6 4 4"/></svg></button>
+      <button class="icon-btn" data-act="funk-manage" aria-label="Liste verwalten"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg></button>
+    </header>
+    <div id="funk-tools" class="page-tools">
+      <div class="field-search"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="funk-q" type="search" placeholder="Suchen …" autocomplete="off" spellcheck="false" aria-label="Funkrufnamen durchsuchen"></div>
+      <button id="funk-orte-btn" class="btn sm ort-btn" data-act="funk-orte"></button>
+    </div>
+    <div id="funk-editbar" class="page-editbar" hidden>
+      <span>Bearbeiten: Fahrzeug oder Stift antippen</span>
+      <button data-act="funk-edit-toggle">Fertig</button>
+    </div>
+    <div id="funk-list" class="page-body"></div>
+  </section>
+
+  <section id="page-gefahr" class="page" hidden aria-label="Gefahrstoffe">
+    <header class="page-head">
+      <button class="icon-btn" data-act="page-close" aria-label="Zurück zur Karte"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+      <div class="page-title"><h1>Gefahrstoffe</h1><span id="gefahr-count" class="muted small"></span></div>
+      <button class="icon-btn" data-act="haz-manage" aria-label="Stoffliste verwalten"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg></button>
+    </header>
+    <div class="page-tabs" role="tablist">
+      <button data-act="gef-tab" data-tab="tafel" role="tab">Warntafel</button>
+      <button data-act="gef-tab" data-tab="liste" role="tab">Stoffliste</button>
+      <button data-act="gef-tab" data-tab="wissen" role="tab">Wissen</button>
+    </div>
+    <div id="gefahr-body" class="page-body"></div>
+  </section>
+
+  <div id="modal" class="modal" hidden><div class="modal-card" role="dialog" aria-modal="true"></div></div>
+  <div id="toast" class="toast" hidden role="status"></div>
+  <div class="drop-hint">Datei hier ablegen zum Importieren</div>
+  <input type="file" id="file-input" hidden multiple accept=".csv,.txt,.tsv,.xlsx,.xls,.xlsm,.ods,.json,.geojson">
+</div>
+
+<!-- build:js -->
+<script src="../vendor/leaflet.js"></script>
+<script src="../vendor/xlsx.mini.min.js"></script>
+<script src="js/util.js"></script>
+<script src="js/coords.js"></script>
+<script src="js/data.js"></script>
+<script src="js/demo.js"></script>
+<script src="js/map.js"></script>
+<script src="js/importer.js"></script>
+<script src="js/exporter.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/pages.js"></script>
+<script src="js/hazmat.js"></script>
+<script src="js/pwa.js"></script>
+<script src="js/main.js"></script>
+<!-- /build:js -->
+</body>
+</html>

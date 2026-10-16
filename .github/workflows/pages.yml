@@ -1,0 +1,39 @@
+# Veröffentlicht die Web-Version auf GitHub Pages.
+# Gebaut wird hier immer OHNE Daten – Einsatzdaten landen so nie auf der öffentlichen Seite.
+# Läuft nur, solange das Repository öffentlich ist (Pages ist im kostenlosen Tarif nur dafür verfügbar)
+# und unter Settings → Pages als Quelle „GitHub Actions“ eingestellt ist.
+name: GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: App bauen (ohne Daten)
+        run: python3 build.py
+      - name: Prüfen, dass keine Daten eingebaut sind
+        run: grep -q '<script id="fa-data" type="application/json">null</script>' web/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: web
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,36 @@
+# Signaturschlüssel der Android-App – niemals hochladen!
+android/signing/
+*.jks
+*.keystore
+
+# Gebaute Dateien (python3 build.py, android/build_apk.py).
+# Sie können mit --daten eingebaute Einsatzdaten enthalten und werden deshalb nicht hochgeladen.
+# Die Web-Version baut GitHub selbst, immer ohne Daten (.github/workflows/pages.yml).
+/FireAssist.html
+/web/
+*.apk
+*.idsig
+android/build/
+
+# Eigene Daten (Hydranten, Leitungen, Funkrufnamen …) gehören nicht ins Repository.
+# Am besten im Ordner daten/ ablegen.
+/daten/
+*.csv
+!beispiel/*.csv
+*.xlsx
+*.xls
+*.ods
+*.geojson
+*Sicherung*.json
+*_20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].*
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+ios/build/
+DerivedData/
+
+# Sonstiges
+.DS_Store
+__pycache__/
+.claude/
