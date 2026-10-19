@@ -398,15 +398,16 @@ function renderAll() {
 /* ---------- Sichtbereich (Bottom-Sheet / Seitenleiste berücksichtigen) ---------- */
 
 function isWide() { return matchMedia('(min-width: 900px)').matches; }
+function tabbarHeight() { return $('#tabbar')?.offsetHeight || 0; }
 
 function viewPadding() {
   const top = ($('.topbar')?.getBoundingClientRect().bottom || 0) + 12;
-  let left = 16, bottom = 16;
+  let left = 16, bottom = 16 + tabbarHeight();
   const sh = $('#sheet');
   if (sh && sh.classList.contains('open')) {
     /* Maße statt getBoundingClientRect: das Sheet kann gerade noch hereinfahren */
     if (isWide()) left = sh.offsetLeft + sh.offsetWidth + 16;
-    else bottom = sh.offsetHeight + 12;
+    else bottom += sh.offsetHeight - 4;
   }
   return { tl: L.point(left, top), br: L.point(16, bottom) };
 }
