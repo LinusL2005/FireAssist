@@ -1,5 +1,5 @@
 'use strict';
-/* Oberfläche: Bottom-Sheet, Dialoge, Auswahl, Bearbeiten, Umkreissuche, Suche, GPS, Menü */
+/* Oberfläche: Bottom-Sheet, Dialoge, Auswahl, Bearbeiten, Umkreissuche, Suche, GPS, Menü „Mehr“, untere Leiste */
 
 const icon = p => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
 const IC = {
@@ -116,6 +116,7 @@ function openSheet(name, build, { live = true, expand = false } = {}) {
   void sh.offsetHeight;
   sh.classList.add('open');
   updateSheetOffset();
+  renderTabbar();
 }
 
 function renderSheet(keepScroll = true) {
@@ -136,6 +137,7 @@ function closeSheet() {
   if (ui.draft) { ui.draft = null; layers.draft.clearLayers(); }
   clearSelection();
   updateSheetOffset();
+  renderTabbar();
   setTimeout(() => { if (!sh.classList.contains('open')) sh.hidden = true; }, 260);
 }
 
@@ -147,7 +149,7 @@ function updateSheetOffset() {
   const top = $('.topbar')?.getBoundingClientRect().bottom || 70;
   document.documentElement.style.setProperty('--top-h', Math.round(top + 10) + 'px');
   /* Bei hohem Panel ist über ihm kein Platz für die runden Knöpfe */
-  $('#app').classList.toggle('sheet-tall', h > 0 && window.innerHeight - h < top + 150);
+  $('#app').classList.toggle('sheet-tall', h > 0 && window.innerHeight - tabbarHeight() - h < top + 150);
 }
 
 function initSheetDrag() {
@@ -745,7 +747,7 @@ function renderSearchResults() {
   }
   if (searchState.geoMsg) parts.push(`<div class="sr-msg">${esc(searchState.geoMsg)}</div>`);
   else if (searchState.canGeo && !searchState.geo) {
-    if (!settings.onlineSearch) parts.push('<div class="sr-msg">Online-Adresssuche ist im Menü ausgeschaltet.</div>');
+    if (!settings.onlineSearch) parts.push('<div class="sr-msg">Online-Adresssuche ist unter Mehr → Einstellungen ausgeschaltet.</div>');
     else if (!navigator.onLine) parts.push('<div class="sr-msg">Offline – Adresssuche nicht verfügbar.</div>');
     else parts.push(`<button class="sr sr-online" data-act="sr-geocode">${IC.search}<span><b>Adresse „${esc(q)}“ suchen</b><small>Online über photon.komoot.io – überträgt nur den Suchtext</small></span></button>`);
   }
@@ -792,51 +794,86 @@ function clearSearch() {
   hideSearch();
 }
 
-/* ---------- Menü, Liste, Legende, Start ---------- */
+/* ---------- Mehr (Menü), Liste, Legende, Start ---------- */
+
+const menuItem = (act, ic, label, extra = '') => `<button class="menu-item" data-act="${act}">${ic}<span>${label}</span>${extra}</button>`;
+
+/* Unterseiten, die zum Reiter „Mehr“ gehören */
+const MEHR_SHEETS = ['menu', 'daten', 'settings', 'list', 'legend', 'about'];
+
+function subHead(title) {
+  return `
+    <div class="sh-head">
+      <div class="sh-title"><h2>${title}</h2></div>
+      <button class="icon-btn" data-act="open-menu" aria-label="Zurück">${IC.back}</button>
+      <button class="icon-btn" data-act="close-sheet" aria-label="Schließen">${IC.close}</button>
+    </div>`;
+}
 
 function menuHtml() {
   const n = state.sources.length;
   const defekt = state.sources.filter(s => s.status === 'defekt').length;
   const faellig = state.sources.filter(pruefungFaellig).length;
-  const item = (act, ic, label, extra = '') => `<button class="menu-item" data-act="${act}">${ic}<span>${label}</span>${extra}</button>`;
+  const status = n
+    ? [`${state.pipes.length} Leitungen`, defekt ? `<span class="danger-text">${defekt} defekt</span>` : '', faellig ? `<span class="warn-text">${faellig} Prüfung fällig</span>` : ''].filter(Boolean).join(' · ')
+    : 'Unter „Daten und Bearbeiten“ importieren';
   return `
     <div class="sh-head">
       <div class="sh-icon">${LOGO}</div>
-      <div class="sh-title"><h2>FireAssist</h2><div class="sub">Digitaler Hydrantenplan · v${APP_VERSION}</div></div>
+      <div class="sh-title"><h2>Mehr</h2><div class="sub">FireAssist · v${APP_VERSION}</div></div>
       <button class="icon-btn" data-act="close-sheet" aria-label="Schließen">${IC.close}</button>
     </div>
-    <div class="tiles">
-      <button class="tile on" data-act="close-sheet">${IC.map}<span>Karte</span></button>
-      <button class="tile" data-act="open-page" data-page="funk">${IC.radio}<span>Funkrufnamen</span></button>
-      <button class="tile" data-act="open-page" data-page="gefahr">${IC.hazard}<span>Gefahrstoffe</span></button>
+    <div class="status-card${n ? '' : ' empty'}">
+      <b>${n ? `${n} Entnahmestellen` : 'Noch keine Daten'}</b>
+      <span>${status}</span>
+      ${n ? `<span class="muted">Stand: ${fmtDateTime(state.meta.updated)}</span>` : ''}
     </div>
-    <div class="stats">
-      <div class="stat"><b>${n}</b><span>Entnahme&shy;stellen</span></div>
-      <div class="stat"><b>${state.pipes.length}</b><span>Leitungen</span></div>
-      <div class="stat${defekt ? ' bad' : ''}"><b>${defekt}</b><span>defekt</span></div>
-      <div class="stat${faellig ? ' warn' : ''}"><b>${faellig}</b><span>Prüfung fällig</span></div>
-    </div>
-    <p class="muted small">Zuletzt geändert: ${fmtDateTime(state.meta.updated)}</p>
+    <div class="menu-label">Schnellzugriff</div>
     <div class="menu-group">
-      ${item('toggle-edit', IC.edit, 'Bearbeitungsmodus', `<span class="switch${ui.editMode ? ' on' : ''}" aria-hidden="true"></span>`)}
-      ${item('open-list', IC.list, 'Alle Entnahmestellen', IC.chevron)}
-      ${item('open-legend', IC.legend, 'Legende', IC.chevron)}
-      ${n ? item('fit-data', IC.target, 'Alle Daten auf der Karte zeigen') : ''}
-      ${PWA.enabled ? item('offline-open', IC.download, 'Offline-Karte <small>Karte für Einsatz ohne Netz speichern</small>', IC.chevron) : ''}
+      ${menuItem('open-list', IC.list, 'Alle Entnahmestellen', IC.chevron)}
+      ${menuItem('open-legend', IC.legend, 'Legende', IC.chevron)}
+      ${n ? menuItem('fit-data', IC.target, 'Alle Daten auf der Karte zeigen') : ''}
+      ${PWA.enabled ? menuItem('offline-open', IC.download, 'Offline-Karte <small>Karte für Einsatz ohne Netz speichern</small>', IC.chevron) : ''}
     </div>
-    <div class="menu-label">Daten</div>
+    <div class="menu-label">Daten und Einstellungen</div>
+    <div class="menu-group quiet">
+      ${menuItem('open-daten', IC.table, 'Daten und Bearbeiten <small>Importieren, Exportieren, Karte bearbeiten</small>', IC.chevron)}
+      ${menuItem('open-settings', IC.sliders, 'Einstellungen <small>Farbschema, Online-Suche, Datenschutz</small>', IC.chevron)}
+    </div>
+    <div class="menu-group quiet">
+      ${menuItem('open-about', IC.info, 'Über FireAssist <small>Version, Lizenz, Haftung</small>', IC.chevron)}
+      <a class="menu-item" href="${APP_REPO}" target="_blank" rel="noopener">${IC.code}<span>FireAssist auf GitHub <small>Quellcode, Fehler melden, Ideen</small></span>${IC.external}</a>
+    </div>`;
+}
+
+function datenHtml() {
+  return `
+    ${subHead('Daten und Bearbeiten')}
     <div class="menu-group">
-      ${item('import', IC.upload, 'Importieren <small>CSV, Excel, JSON, GeoJSON</small>')}
-      ${item('export-xlsx', IC.table, 'Exportieren als Excel <small>alle Daten in einer Datei</small>')}
-      ${item('export-csv-src', IC.file, 'Exportieren als CSV <small>Entnahmestellen</small>')}
-      ${item('export-csv-pipes', IC.file, 'Exportieren als CSV <small>Leitungen</small>')}
-      ${item('export-json', IC.json, 'Sicherung speichern <small>JSON, enthält alles</small>')}
-      ${item('export-html', IC.app, 'App-Datei mit Daten erstellen <small>zum Verteilen an Einsatzkräfte</small>')}
-      ${item('export-template', IC.download, 'Excel-Vorlage herunterladen')}
-      ${item('load-demo', IC.sparkle, 'Beispieldaten laden')}
-      ${undoStack.length ? item('undo', IC.undo, `Rückgängig <small>${esc(undoStack[undoStack.length - 1].label)}</small>`) : ''}
-      ${hasAnyData() ? item('delete-all', IC.trash, '<span class="danger-text">Alle Daten löschen</span>') : ''}
+      ${menuItem('toggle-edit', IC.edit, ui.editMode ? 'Bearbeitungsmodus beenden' : 'Karte bearbeiten <small>Entnahmestellen anlegen, verschieben, verbinden</small>', `<span class="switch${ui.editMode ? ' on' : ''}" aria-hidden="true"></span>`)}
+      ${undoStack.length ? menuItem('undo', IC.undo, `Rückgängig <small>${esc(undoStack[undoStack.length - 1].label)}</small>`) : ''}
     </div>
+    <div class="menu-label">Importieren</div>
+    <div class="menu-group">
+      ${menuItem('import', IC.upload, 'Datei importieren <small>CSV, Excel, JSON, GeoJSON</small>')}
+      ${menuItem('export-template', IC.download, 'Excel-Vorlage herunterladen')}
+      ${menuItem('load-demo', IC.sparkle, 'Beispieldaten laden')}
+    </div>
+    <div class="menu-label">Exportieren und verteilen</div>
+    <div class="menu-group">
+      ${menuItem('export-json', IC.json, 'Sicherung speichern <small>JSON, enthält alles</small>')}
+      ${menuItem('export-html', IC.app, 'App-Datei mit Daten erstellen <small>zum Verteilen an Einsatzkräfte</small>')}
+      ${menuItem('export-xlsx', IC.table, 'Exportieren als Excel <small>alle Daten in einer Datei</small>')}
+      ${menuItem('export-csv-src', IC.file, 'Exportieren als CSV <small>Entnahmestellen</small>')}
+      ${menuItem('export-csv-pipes', IC.file, 'Exportieren als CSV <small>Leitungen</small>')}
+    </div>
+    <p class="muted small">Daten werden <b>nur lokal in diesem Browser</b> gespeichert. Regelmäßig eine Sicherung exportieren.</p>
+    ${hasAnyData() ? `<div class="menu-group">${menuItem('delete-all', IC.trash, '<span class="danger-text">Alle Daten löschen</span>')}</div>` : ''}`;
+}
+
+function settingsHtml() {
+  return `
+    ${subHead('Einstellungen')}
     <div class="menu-label">Darstellung</div>
     <div class="seg" role="group" aria-label="Farbschema">
       ${[['auto', 'Automatisch'], ['light', 'Hell'], ['dark', 'Dunkel']].map(([k, l]) => `<button class="${settings.theme === k ? 'on' : ''}" data-act="theme" data-theme="${k}">${l}</button>`).join('')}
@@ -853,13 +890,33 @@ function menuHtml() {
     <label class="check menu-check"><input type="checkbox" data-change="set-onlineSearch"${settings.onlineSearch ? ' checked' : ''}> Online-Adresssuche erlauben</label>
     <div class="menu-label">Hinweise</div>
     <div class="info-text small">
-      <p>Daten werden <b>nur lokal in diesem Browser</b> gespeichert. Regelmäßig eine Sicherung exportieren.</p>
       <p>Entfernungen sind Luftlinie. Angaben ohne Gewähr – vor Ort prüfen.</p>
-    </div>
-    <div class="menu-group">
-      ${item('open-about', IC.info, 'Über FireAssist <small>Version, Lizenz, Haftung</small>', IC.chevron)}
-      <a class="menu-item" href="${APP_REPO}" target="_blank" rel="noopener">${IC.code}<span>FireAssist auf GitHub <small>Quellcode, Fehler melden, Ideen</small></span>${IC.external}</a>
     </div>`;
+}
+
+/* ---------- Untere Leiste ---------- */
+
+function activeTab() {
+  const page = currentPage();
+  if (page) return page;
+  return MEHR_SHEETS.includes(sheet.name) ? 'mehr' : 'karte';
+}
+
+function renderTabbar() {
+  const cur = activeTab();
+  $$('#tabbar [data-tab]').forEach(b => {
+    const on = b.dataset.tab === cur;
+    b.classList.toggle('on', on);
+    if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+}
+
+function openTab(tab) {
+  if (tab === 'funk' || tab === 'gefahr') { if (sheet.name) closeSheet(); openPage(tab); return; }
+  const wasMehr = activeTab() === 'mehr';
+  closePage();
+  if (tab === 'mehr' && !wasMehr) ACT['open-menu']();
+  else if (MEHR_SHEETS.includes(sheet.name)) closeSheet();
 }
 
 const APP_COPYRIGHT = '© 2026 LinusL2005';
@@ -1119,8 +1176,11 @@ const ACT = {
   'locate': () => withPosition(p => focusLatLng([p.lat, p.lon], Math.max(map.getZoom(), 17))),
   'mode-cancel': () => endMode(),
   'edit-off': () => setEditMode(false),
-  'toggle-edit': () => { setEditMode(!ui.editMode); if (sheet.name === 'welcome') closeSheet(); },
+  'toggle-edit': () => { setEditMode(!ui.editMode); if (sheet.name === 'welcome' || sheet.name === 'daten') closeSheet(); },
+  'tab': d => openTab(d.tab),
   'open-menu': () => { clearSelection(); openSheet('menu', menuHtml, { expand: true }); },
+  'open-daten': () => openSheet('daten', datenHtml, { expand: true }),
+  'open-settings': () => openSheet('settings', settingsHtml, { expand: true }),
   'open-list': () => openSheet('list', listHtml, { live: false, expand: true }),
   'open-legend': () => openSheet('legend', legendHtml),
   'open-about': () => openSheet('about', aboutHtml),
@@ -1134,7 +1194,7 @@ const ACT = {
   'export-html': exportAppHtml,
   'export-template': exportTemplate,
   'load-demo': loadDemo,
-  'undo': () => { undo(); if (sheet.name === 'menu') renderSheet(); },
+  'undo': () => { undo(); if (sheet.name === 'daten') renderSheet(); },
   'delete-all': deleteAll,
   'theme': d => { settings.theme = d.theme; saveSettings(); applyTheme(); renderSheet(); },
   'modal-close': () => { imp = null; closeModal(null); },
@@ -1244,4 +1304,5 @@ function bindUI() {
   window.addEventListener('resize', debounce(updateSheetOffset, 100));
   if ('ResizeObserver' in window) new ResizeObserver(() => updateSheetOffset()).observe($('#sheet'));
   initSheetDrag();
+  renderTabbar();
 }
