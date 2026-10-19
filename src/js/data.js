@@ -190,7 +190,7 @@ function commit({ local = true } = {}) {
 
 const saveState = debounce(() => {
   if (!lsSet(LS_DATA, JSON.stringify(state))) {
-    toast('Speichern im Browser fehlgeschlagen. Bitte Daten exportieren (Menü → Sicherung).', { ms: 8000 });
+    toast('Speichern im Browser fehlgeschlagen. Bitte Daten exportieren (Mehr → Daten und Bearbeiten → Sicherung).', { ms: 8000 });
   }
 }, 250);
 
