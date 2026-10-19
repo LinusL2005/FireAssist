@@ -1,8 +1,8 @@
 # FireAssist – Hinweise für Claude
 
 FireAssist ist eine Web-App für die Feuerwehr: Hydrantenplan mit Leitungsnetz und Umkreissuche, Funkrufnamen und Gefahrstoffe.
-Sie läuft offline im Browser und als installierte App. Für Nutzer gilt das [README](README.md),
-für Mitarbeit [ENTWICKLUNG.md](ENTWICKLUNG.md) und [CONTRIBUTING.md](CONTRIBUTING.md).
+Sie läuft offline im Browser und als installierte App. Für Nutzer gilt das [README](../README.md),
+für Mitarbeit [ENTWICKLUNG.md](../ENTWICKLUNG.md) und [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Commits und Pull Requests
 

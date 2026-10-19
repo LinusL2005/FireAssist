@@ -33,4 +33,6 @@ DerivedData/
 # Sonstiges
 .DS_Store
 __pycache__/
-.claude/
+# Lokale Claude-Dateien; nur die Hinweise für Claude werden versioniert
+.claude/*
+!.claude/CLAUDE.md
