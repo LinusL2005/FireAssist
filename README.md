@@ -64,9 +64,9 @@ Die Daten (Hydranten, Leitungen, Funkrufnamen, Gefahrstoffe) kommen **nie aus de
 **Wer die Daten pflegt (am PC, einmal pro Datenstand):**
 
 1. FireAssist am PC öffnen: [linusl2005.github.io/FireAssist](https://linusl2005.github.io/FireAssist/).
-2. Menü **☰** → **Importieren** → eure Excel- oder CSV-Dateien auswählen (Aufbau siehe [Datenformat](#datenformat-für-den-import)).
+2. **Mehr** → **Daten und Bearbeiten** → **Datei importieren** → eure Excel- oder CSV-Dateien auswählen (Aufbau siehe [Datenformat](#datenformat-für-den-import)).
 3. Im Fenster „Daten importieren“ prüfen, ob die Spalten richtig erkannt wurden → **Importieren**.
-4. Menü **☰** → **Sicherung speichern**. Es entsteht eine Datei wie `FireAssist_Sicherung_2026-10-16.json`.
+4. **Mehr** → **Daten und Bearbeiten** → **Sicherung speichern**. Es entsteht eine Datei wie `FireAssist_Sicherung_2026-10-16.json`.
 5. Diese Datei an die Einsatzkräfte geben, z. B. per USB-Stick, interner E-Mail oder Messenger. **Nie öffentlich ins Internet stellen.**
 
 **Alle Einsatzkräfte (am Handy):**
@@ -74,7 +74,7 @@ Die Daten (Hydranten, Leitungen, Funkrufnamen, Gefahrstoffe) kommen **nie aus de
 1. Die Datei speichern.
    - **iPhone:** in der Nachricht bzw. Mail auf die Datei tippen → Teilen-Symbol → **In Dateien sichern**.
    - **Android:** Die Datei landet meist automatisch unter **Downloads**.
-2. FireAssist über das App-Symbol öffnen → Menü **☰** → **Importieren** → die Datei wählen.
+2. FireAssist über das App-Symbol öffnen → **Mehr** → **Daten und Bearbeiten** → **Datei importieren** → die Datei wählen.
 3. Fragt die App „Vorhandene Daten ersetzen oder ergänzen?“: **Ersetzen** wählen.
 
 Bei einem neuen Datenstand diese Schritte wiederholen.
@@ -83,14 +83,14 @@ Bei einem neuen Datenstand diese Schritte wiederholen.
 
 Damit die Karte auch im Einsatz ohne Netz erscheint. Am besten im WLAN machen.
 
-1. FireAssist öffnen → Menü **☰** → **Offline-Karte** → **Einsatzgebiet speichern**.
+1. FireAssist öffnen → **Mehr** → **Offline-Karte** → **Einsatzgebiet speichern**.
    Gespeichert werden alle Hydranten mit Umgebung, deshalb erst nach Schritt 2. Die Größe (bis ca. 160 MB) steht vorher dabei.
 2. Warten, bis „Offline-Karte gespeichert“ erscheint.
 
 Danach startet FireAssist auch **ohne Netz**, mit Karte für das ganze Einsatzgebiet.
 
 Zusätzlich behält die App automatisch die Kartenausschnitte, die du dir angesehen hast. Deshalb ist die Karte dort
-auch im Flugmodus zu sehen. Abschalten lässt sich das unter Menü **☰** → **Offline-Karte** →
+auch im Flugmodus zu sehen. Abschalten lässt sich das unter **Mehr** → **Offline-Karte** →
 **Angesehene Kartenausschnitte offline behalten**. Dann erscheint ohne Netz nur die Karte gespeicherter Gebiete.
 
 ### Updates
@@ -100,7 +100,7 @@ auch im Flugmodus zu sehen. Abschalten lässt sich das unter Menü **☰** → *
 
 ### Gut zu wissen
 
-- Die Daten liegen nur auf dem jeweiligen Gerät. Wer dort etwas ändert, sollte regelmäßig über Menü → **Sicherung speichern** sichern.
+- Die Daten liegen nur auf dem jeweiligen Gerät. Wer dort etwas ändert, sollte regelmäßig über **Mehr** → **Daten und Bearbeiten** → **Sicherung speichern** sichern.
 - iPhone: Daten von Seiten, die nur in Safari geöffnet werden, löscht iOS nach 7 Tagen ohne Besuch. Die installierte App aus Schritt 1 ist davon nicht betroffen.
 - Ohne Internet funktionieren Hydranten, Leitungen, Suche nach Nummer, Umkreissuche, Funkrufnamen und Gefahrstoffe.
   Die Karte erscheint nur dort, wo sie gespeichert ist (Schritt 3). Sonst ist statt der Karte ein Raster zu sehen.
@@ -116,17 +116,17 @@ jeder Schritt lässt sich aber mit **Rückgängig** zurücknehmen.
 
 Dafür braucht man keine Dateien, das geht auch auf dem Handy.
 
-1. **Hydrantenplan:** FireAssist öffnen. Beim ersten Start auf **Beispieldaten ansehen** tippen, sonst Menü **☰** → **Beispieldaten laden**.
+1. **Hydrantenplan:** FireAssist öffnen. Beim ersten Start auf **Beispieldaten ansehen** tippen, sonst **Mehr** → **Daten und Bearbeiten** → **Beispieldaten laden**.
    Die Karte springt zu 40 erfundenen Entnahmestellen mit 36 Leitungen.
 2. Ausprobieren:
    - Einen **Hydranten antippen**: Nennweite, Druck, Durchfluss, Zustand und Navigation dorthin.
    - **Umkreis** antippen, dann eine Stelle auf der Karte antippen: Alle Entnahmestellen im Umkreis, sortiert nach Entfernung.
    - Oben in die **Suche** `BSP-H-012` eingeben.
-   - Menü **☰** → **Legende**: Was die Symbole, Farben und Linien bedeuten.
-   - Menü **☰** → **Bearbeitungsmodus**: Hydranten verschieben, neue anlegen und mit **Verbinden** Leitungen ziehen.
-3. **Funkrufnamen:** Menü **☰** → **Funkrufnamen** → **Beispiel ansehen**.
+   - **Mehr** → **Legende**: Was die Symbole, Farben und Linien bedeuten.
+   - **Mehr** → **Daten und Bearbeiten** → **Karte bearbeiten**: Hydranten verschieben, neue anlegen und mit **Verbinden** Leitungen ziehen.
+3. **Funkrufnamen:** Reiter **Funk** (untere Leiste) → **Beispiel ansehen**.
    Mit dem Regler-Symbol die Gliederung umschalten, über **Ortschaften** einzelne Orte ausblenden.
-4. **Gefahrstoffe:** Menü **☰** → **Gefahrstoffe** → Reiter **Stoffliste** → **Beispielliste**.
+4. **Gefahrstoffe:** Reiter **Gefahrstoffe** (untere Leiste) → Reiter **Stoffliste** → **Beispielliste**.
    Dann im Reiter **Warntafel** oben `33` und unten `1203` eingeben: Die App erklärt die Gefahrnummer und zeigt den Stoff (Benzin).
 
 ### Gründlich: Import mit den Beispieldateien testen
@@ -142,14 +142,14 @@ So funktioniert später auch der Import eurer echten Daten. Die Dateien liegen i
 
 1. **Dateien herunterladen:** Auf GitHub den Ordner `beispiel` öffnen → Datei anklicken → rechts oben **Download raw file** (Pfeil nach unten).
    Am PC geht auch **Code** → **Download ZIP** für alles auf einmal.
-2. In FireAssist: Menü **☰** → **Importieren** → alle vier Dateien **gleichzeitig** auswählen.
+2. In FireAssist: **Mehr** → **Daten und Bearbeiten** → **Datei importieren** → alle vier Dateien **gleichzeitig** auswählen.
 3. Das Fenster „Daten importieren“ zeigt für jede Datei, was erkannt wurde (z. B. „36 Leitungen erkannt“) und welche Spalte wofür steht.
    → **Importieren**.
 4. Es erscheint „Import abgeschlossen“ mit 40 Entnahmestellen, 36 Leitungen, 18 Funkrufnamen und 24 Gefahrstoffen → **OK**.
 
 Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure eigenen Listen.
 
-**Aufräumen:** Vor dem Import der echten Daten Menü **☰** → **Alle Daten löschen**. Danach verschwindet auch der Hinweis **Beispieldaten**.
+**Aufräumen:** Vor dem Import der echten Daten **Mehr** → **Daten und Bearbeiten** → **Alle Daten löschen**. Danach verschwindet auch der Hinweis **Beispieldaten**.
 
 ## Funktionen
 
@@ -160,7 +160,7 @@ Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure e
   (100 m bis 1 km), sortiert nach Entfernung, mit Himmelsrichtung und Mindestanzahl B-Schläuche. Defekte Hydranten sind ausgegraut.
 - **Typ, Zustand, Leistungsdaten:** Über- und Unterflurhydrant, Status (in Ordnung, eingeschränkt, defekt), Druck, Durchfluss, Volumen und Prüfdatum.
   Wenn die letzte Prüfung länger als 12 Monate her ist, wird „Prüfung fällig“ angezeigt.
-- **Bearbeiten** (Menü → Bearbeitungsmodus): Karte antippen legt eine neue Entnahmestelle an, Symbole lassen sich verschieben.
+- **Bearbeiten** (Mehr → Daten und Bearbeiten → Karte bearbeiten): Karte antippen legt eine neue Entnahmestelle an, Symbole lassen sich verschieben.
   Mit „Verbinden“ legst du Leitungen an. Danach tippst du einfach die nächste Entnahmestelle an und die Kette geht weiter.
   Mit „Meinen Standort übernehmen“ kannst du Hydranten direkt vor Ort erfassen. Jede Änderung lässt sich rückgängig machen.
 - **Leitungsverlauf:** Leitungen können Knickpunkte haben, damit sie der Straße folgen oder quer durchs Gelände laufen.
@@ -168,7 +168,7 @@ Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure e
   - den gestrichelten Punkt ziehen oder antippen = neuer Knickpunkt
   - einen weißen Punkt ziehen = verschieben, antippen = löschen
   - „Verlauf begradigen“ = wieder eine gerade Linie
-- **Funkrufnamen** (Menü → Funkrufnamen): Fahrzeuge mit Fahrzeugart und Funkname, gruppiert nach **Löschverbund → Ortschaft**.
+- **Funkrufnamen** (Reiter Funk in der unteren Leiste): Fahrzeuge mit Fahrzeugart und Funkname, gruppiert nach **Löschverbund → Ortschaft**.
   - **Ansicht** (Regler-Symbol): Gliederung wählen – Löschverbund › Ortschaft, nur Ortschaft, nur Löschverbund oder ohne Gliederung –
     und Sortierung nach Funkname oder Fahrzeugart. Was nicht als Überschrift erscheint, steht klein am Eintrag.
   - **Ortschaften:** wählen, welche angezeigt werden – einzelne Ortschaften, ganze Löschverbünde oder mit „nur dieser“ genau einen Verbund.
@@ -177,7 +177,7 @@ Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure e
     Doppelte Funknamen werden abgelehnt, jede Änderung lässt sich rückgängig machen.
   - Ansicht und Auswahl werden pro Gerät gespeichert, die Fahrzeugliste selbst gehört zu den Daten (Sicherung, App-Datei, Excel).
   Die Suche durchsucht immer alle Ortschaften, auch ohne Schrägstrich („17442“ oder „44-2“ findet „17-44-2“).
-- **Gefahrstoffe** (Menü → Gefahrstoffe):
+- **Gefahrstoffe** (Reiter Gefahrstoffe in der unteren Leiste):
   - *Warntafel:* Gefahrnummer und UN-Nummer eingeben. Die App erklärt die Gefahrnummer Ziffer für Ziffer (inkl. X = reagiert gefährlich mit Wasser)
     und zeigt den Stoff, wenn er in der Stoffliste steht.
   - *Stoffliste:* wird per CSV/Excel eingerichtet, z. B. mit Stoffen aus Betrieben im Einsatzgebiet. Eine kleine Beispielliste mit gängigen Stoffen ist dabei.
@@ -217,7 +217,7 @@ Die Richtung wird automatisch erkannt. Punkte, die direkt auf den Hydranten lieg
 **Koordinaten:** WGS84 in Grad, UTM/ETRS89 (Zone 32 oder 33, auch mit vorangestellter Zone) oder Gauß-Krüger.
 Das Koordinatensystem wird automatisch erkannt. Gauß-Krüger wird mit dem bundesweiten Standardparametersatz umgerechnet (Genauigkeit ca. 1–3 m).
 
-Beispieldateien liegen in `beispiel/`. Eine Excel-Vorlage gibt es in der App unter Menü → Excel-Vorlage.
+Beispieldateien liegen in `beispiel/`. Eine Excel-Vorlage gibt es in der App unter Mehr → Daten und Bearbeiten → Excel-Vorlage herunterladen.
 
 ### Funkrufnamen
 
@@ -254,7 +254,7 @@ Nur diese Verbindungen gibt es:
 |---|---|---|---|
 | App laden | GitHub Pages | beim Öffnen mit Internet (Suche nach Updates) | IP-Adresse |
 | Hintergrundkarte | basemap.de (BKG, Bundesbehörde); optional Esri oder OpenStreetMap | beim Anzeigen der Karte (außer bei „Keine Hintergrundkarte“ oder wenn offline gespeichert) | IP-Adresse, angezeigter Kartenausschnitt |
-| Adresssuche | photon.komoot.io | nur wenn „Adresse … suchen“ angetippt wird; im Menü abschaltbar | der Suchtext (Kartenmitte nur grob, auf ca. 10 km gerundet) |
+| Adresssuche | photon.komoot.io | nur wenn „Adresse … suchen“ angetippt wird; unter Mehr → Einstellungen abschaltbar | der Suchtext (Kartenmitte nur grob, auf ca. 10 km gerundet) |
 | Navigation | Karten-App des Handys (Android), Apple Karten (iPhone), OpenStreetMap (PC) | nur beim Antippen von „Navigation“ | Ziel-Koordinate |
 | Links | GESTIS, ERICards, basemap.de, Leaflet | nur beim Antippen | – |
 
@@ -296,6 +296,6 @@ Die App wird ohne Gewähr bereitgestellt (Artikel 7 und 8 der EUPL).
 
 Enthaltene Bibliotheken mit eigener Lizenz: Leaflet 1.9.4 (BSD 2-Clause, [`vendor/LICENSE-leaflet.txt`](vendor/LICENSE-leaflet.txt)),
 SheetJS 0.20.3 (Apache 2.0, [`vendor/LICENSE-sheetjs.txt`](vendor/LICENSE-sheetjs.txt)).
-Alle drei Lizenztexte stehen auch in der App unter Menü → Über FireAssist.
+Alle drei Lizenztexte stehen auch in der App unter Mehr → Über FireAssist.
 
 Einsatzdaten (Hydranten, Leitungsnetz, Funkrufnamen) gehören nicht zum Projekt und fallen nicht unter diese Lizenz.

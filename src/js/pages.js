@@ -34,6 +34,7 @@ function syncPage() {
     if (el) el.hidden = name !== cur;
   }
   document.body.classList.toggle('page-open', !!cur);
+  renderTabbar();
   if (!cur) { pageOpenedInApp = false; return; }
   hideSearch();
   toggleLayerPop(false);
