@@ -478,7 +478,7 @@ function upsert(list, items, keyOf) {
 }
 
 async function importBackup(b) {
-  const n = b.state.sources.length;
+  const n = b.state.sources.filter(s => !isNode(s)).length;
   let mode = 'replace';
   if (state.sources.length || state.vehicles.length || state.hazmats.length) {
     mode = await choiceDialog({
@@ -570,7 +570,7 @@ function renderImportDialog() {
     </section>`;
   }).join('');
   const net = imp.tables.some(t => t.role === 'sources' || t.role === 'pipes');
-  const modeHtml = net && state.sources.length ? `<fieldset class="seg-field"><legend>Vorhandene Hydrantendaten (${state.sources.length} Entnahmestellen)</legend>
+  const modeHtml = net && state.sources.length ? `<fieldset class="seg-field"><legend>Vorhandene Hydrantendaten (${waterSources().length} Entnahmestellen)</legend>
       <label class="radio"><input type="radio" name="imp-mode" value="merge" data-change="imp-mode"${imp.mode === 'merge' ? ' checked' : ''}> <span><b>Ergänzen / aktualisieren</b><br><span class="muted small">Gleiche ID wird überschrieben, neue werden hinzugefügt</span></span></label>
       <label class="radio"><input type="radio" name="imp-mode" value="replace" data-change="imp-mode"${imp.mode === 'replace' ? ' checked' : ''}> <span><b>Alles ersetzen</b><br><span class="muted small">Bisherige Entnahmestellen und Leitungen werden gelöscht</span></span></label>
     </fieldset>` : '';
@@ -643,7 +643,8 @@ async function runImport() {
   if (netOk) {
     const parts = [`${r.added} neu`];
     if (r.updated) parts.push(`${r.updated} aktualisiert`);
-    lines.push(`<p><b>${state.sources.length}</b> Entnahmestellen (${parts.join(', ')}) und <b>${state.pipes.length}</b> Leitungen.</p>`);
+    const nodes = state.sources.length - waterSources().length;
+    lines.push(`<p><b>${waterSources().length}</b> Entnahmestellen${nodes ? `, <b>${nodes}</b> Leitungsknoten` : ''} (${parts.join(', ')}) und <b>${state.pipes.length}</b> Leitungen.</p>`);
   }
   if (v && v.items.length) {
     const orte = new Set(v.items.map(x => x.ort)).size;

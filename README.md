@@ -168,6 +168,11 @@ Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure e
   - den gestrichelten Punkt ziehen oder antippen = neuer Knickpunkt
   - einen weißen Punkt ziehen = verschieben, antippen = löschen
   - „Verlauf begradigen“ = wieder eine gerade Linie
+- **Leitungsknoten** für Abzweige und Kreuzungen ohne Hydrant: Im Bearbeitungsmodus die Leitung antippen, „Knoten einfügen“ wählen
+  und die Stelle auf der Leitung antippen. Die Leitung wird dort geteilt, mit „Verbinden“ geht vom Knoten ein Abzweig ab.
+  Schneller geht es beim Verbinden: statt einer Entnahmestelle eine Leitung antippen, dann entsteht dort ein Knoten mit Abzweig.
+  Knoten lassen sich verschieben. Beim Löschen eines Knotens mit zwei Leitungen werden sie wieder zu einer.
+  Knoten zählen nicht als Entnahmestelle und erscheinen nicht in Umkreissuche, Liste und Suche.
 - **Funkrufnamen** (Reiter Funk in der unteren Leiste): Fahrzeuge mit Fahrzeugart und Funkname, gruppiert nach **Löschverbund → Ortschaft**.
   - **Ansicht** (Regler-Symbol): Gliederung wählen – Löschverbund › Ortschaft, nur Ortschaft, nur Löschverbund oder ohne Gliederung –
     und Sortierung nach Funkname oder Fahrzeugart. Was nicht als Überschrift erscheint, steht klein am Eintrag.
@@ -197,7 +202,7 @@ Eine Tabelle, eine Zeile pro Entnahmestelle. Die Spaltennamen werden automatisch
 | Spalte | Pflicht | Beispiel |
 |---|---|---|
 | ID | empfohlen | `H-001` |
-| Typ | nein | `Unterflurhydrant`, `Überflurhydrant`, `Löschwasserbehälter`, `Offenes Gewässer`, `Löschwasserbrunnen` |
+| Typ | nein | `Unterflurhydrant`, `Überflurhydrant`, `Löschwasserbehälter`, `Offenes Gewässer`, `Löschwasserbrunnen`, `Leitungsknoten` |
 | Breitengrad / Längengrad | **ja** | `50,5515` / `9,6755` |
 | Leitung DN | nein | `150` |
 | Druck bar / Durchfluss l/min / Volumen m³ | nein | `5,5` / `1600` / `100` |
@@ -209,6 +214,7 @@ Eine Tabelle, eine Zeile pro Entnahmestelle. Die Spaltennamen werden automatisch
 **Verbindungen** gibst du entweder in der Spalte „Verbunden mit“ an (die DN der Leitung ist dann die kleinere der beiden Hydranten)
 oder in einer zweiten Tabelle bzw. einem zweiten Excel-Blatt **„Leitungen“** mit den Spalten `Von`, `Nach`, `DN`.
 Die Leitungstabelle hat Vorrang.
+Abzweige und Kreuzungen ohne Hydrant sind Zeilen mit dem Typ `Leitungsknoten` (nur ID und Koordinaten), die Leitungen führen dann zum Knoten.
 
 **Leitungsverlauf:** Optional kann die Leitungstabelle eine Spalte `Verlauf` mit den Knickpunkten haben, entweder als
 `50.5524 9.6769; 50.5527 9.6770` (Breite Länge, Punkte durch Semikolon getrennt) oder im GIS-Format `LINESTRING(9.6769 50.5524, 9.6770 50.5527)`.

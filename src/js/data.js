@@ -10,9 +10,11 @@ const TYPES = {
   TEICH: { label: 'Offenes Gewässer / Saugstelle', short: 'Gewässer', letter: 'S', hydrant: false, shape: 'triangle', color: '#0e7c8c' },
   BRUNNEN: { label: 'Löschwasserbrunnen', short: 'Brunnen', letter: 'B', hydrant: false, shape: 'diamond', color: '#2d7140' },
   SONST: { label: 'Sonstige Entnahmestelle', short: 'Sonstige', letter: '?', hydrant: false, shape: 'circle', color: '#6b6f78' },
+  /* keine Entnahmestelle: Abzweig oder Kreuzung im Leitungsnetz */
+  KNOTEN: { label: 'Leitungsknoten', short: 'Knoten', letter: '', hydrant: false, node: true, shape: 'node', color: '#3d4450' },
 };
 
-const ID_PREFIX = { UFH: 'H', OFH: 'H', ZIS: 'Z', TEICH: 'T', BRUNNEN: 'B', SONST: 'S' };
+const ID_PREFIX = { UFH: 'H', OFH: 'H', ZIS: 'Z', TEICH: 'T', BRUNNEN: 'B', SONST: 'S', KNOTEN: 'K' };
 
 const STATUS = {
   ok: { label: 'in Ordnung', cls: 'ok' },
@@ -42,6 +44,7 @@ function parseTyp(v) {
   if (s.includes('unterflur')) return 'UFH';
   if (['ofh', 'oh', 'ueh', 'ue', 'uefh', 'o'].includes(s)) return 'OFH';
   if (['ufh', 'uh', 'u', 'h'].includes(s)) return 'UFH';
+  if (/knoten|abzweig|kreuzung/.test(s)) return 'KNOTEN';
   if (/zistern|behaelter|lwb|tank|speicher|becken|reservoir/.test(s)) return 'ZIS';
   if (/teich|gewaesser|see|fluss|bach|saug|weiher|kanal|graben|wasserstelle/.test(s)) return 'TEICH';
   if (/brunnen/.test(s)) return 'BRUNNEN';
@@ -158,7 +161,10 @@ function derivedPipeDn(a, b) {
 }
 
 function isHydrant(s) { return !!TYPES[s.typ]?.hydrant; }
-function pruefungFaellig(s) { return daysSince(s.geprueft) > PRUEF_INTERVALL_TAGE; }
+function isNode(s) { return !!TYPES[s.typ]?.node; }
+function pruefungFaellig(s) { return !isNode(s) && daysSince(s.geprueft) > PRUEF_INTERVALL_TAGE; }
+/* Alle Punkte ohne Leitungsknoten */
+function waterSources() { return state.sources.filter(s => !isNode(s)); }
 
 function nextId(typ) {
   const prefix = ID_PREFIX[typ] || 'S';
@@ -282,5 +288,48 @@ function addPipe(a, b, dn) {
 
 function deletePipe(p) {
   state.pipes = state.pipes.filter(x => x !== p);
+  commit();
+}
+
+/* Teilt Leitung p im Abschnitt seg (0 = vom Start bis zum ersten Knickpunkt) mit einem neuen Knoten.
+   Beide Teile behalten DN und Bemerkung. Gibt die ID des Knotens zurück. */
+function splitPipe(p, seg, lat, lon) {
+  const id = nextId('KNOTEN');
+  const via = p.via || [];
+  state.sources.push(cleanSource({ id, typ: 'KNOTEN', lat, lon, status: 'ok' }));
+  state.pipes = state.pipes.filter(x => x !== p);
+  state.pipes.push(
+    { a: p.a, b: id, dn: p.dn, bemerkung: p.bemerkung, via: via.slice(0, seg) },
+    { a: id, b: p.b, dn: p.dn, bemerkung: p.bemerkung, via: via.slice(seg) },
+  );
+  commit();
+  return id;
+}
+
+/* Die beiden Leitungen an einem Knoten, falls er sich wieder auflösen lässt */
+function mergeablePipes(id) {
+  const ps = pipesOf(id);
+  if (ps.length !== 2) return null;
+  const [o1, o2] = ps.map(p => (p.a === id ? p.b : p.a));
+  return o1 !== o2 && !findPipe(o1, o2) ? ps : null;
+}
+
+/* Knoten löschen; hängen genau zwei Leitungen daran, werden sie zu einer, der Knoten wird zum Knickpunkt */
+function deleteNode(id) {
+  const n = byId.get(id), ps = mergeablePipes(id);
+  if (!n || !ps) { deleteSource(id); return; }
+  const [p1, p2] = ps;
+  const via1 = p1.b === id ? (p1.via || []) : (p1.via || []).slice().reverse();
+  const via2 = p2.a === id ? (p2.via || []) : (p2.via || []).slice().reverse();
+  /* verschiedene Nennweiten: die kleinere ist für die Wasserentnahme maßgeblich */
+  const dns = [p1.dn, p2.dn].filter(Boolean);
+  state.pipes = state.pipes.filter(x => x !== p1 && x !== p2);
+  state.pipes.push({
+    a: p1.a === id ? p1.b : p1.a, b: p2.a === id ? p2.b : p2.a,
+    dn: dns.length ? Math.min(...dns) : null,
+    bemerkung: p1.bemerkung || p2.bemerkung,
+    via: [...via1, [n.lat, n.lon], ...via2],
+  });
+  state.sources = state.sources.filter(s => s.id !== id);
   commit();
 }

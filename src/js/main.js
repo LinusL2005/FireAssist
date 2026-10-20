@@ -60,7 +60,7 @@ async function init() {
     const take = await choiceDialog({
       title: 'Neuer Datenstand in dieser Datei',
       text: `<p>Diese App-Datei enthält einen Datenstand vom <b>${fmtDateTime(emb.stamp)}</b> mit ${n} Entnahmestellen${nv ? `, ${nv} Funkrufnamen` : ''}${nh ? `, ${nh} Gefahrstoffen` : ''}.</p>
-        <p>Auf diesem Gerät sind eigene Änderungen gespeichert (${state.sources.length} Entnahmestellen). Datenstand aus der Datei übernehmen?</p>
+        <p>Auf diesem Gerät sind eigene Änderungen gespeichert (${waterSources().length} Entnahmestellen). Datenstand aus der Datei übernehmen?</p>
         <p class="muted small">Die bisherigen Daten lassen sich danach über „Rückgängig“ wiederherstellen.</p>`,
       buttons: [{ label: 'Eigene Daten behalten', value: false }, { label: 'Übernehmen', value: true, kind: 'primary' }],
     });

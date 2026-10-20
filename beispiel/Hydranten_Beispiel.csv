@@ -8,8 +8,8 @@ BSP-H-006;Unterflurhydrant;50,55163;9,675484;200;4,6;1600;;in Ordnung;27.09.2023
 BSP-H-007;Überflurhydrant;50,551803;9,676978;200;5,4;;;defekt;03.08.2025;Hauptstraße 13;Beispiel, frei erfunden – Außer Betrieb, an Wasserversorger gemeldet;BSP-H-006, BSP-H-008
 BSP-H-008;Unterflurhydrant;50,552036;9,678449;200;;;;in Ordnung;22.12.2025;Hauptstraße 15;Beispiel, frei erfunden;BSP-H-007, BSP-H-009
 BSP-H-009;Unterflurhydrant;50,552244;9,679929;200;5,5;1800;;in Ordnung;28.07.2024;Hauptstraße 17;Beispiel, frei erfunden;BSP-H-008, BSP-H-010, BSP-H-025, BSP-H-028
-BSP-H-010;Unterflurhydrant;50,552559;9,681368;200;4,6;2000;;in Ordnung;13.06.2025;Hauptstraße 19;Beispiel, frei erfunden;BSP-H-009, BSP-H-011, BSP-H-035
-BSP-H-011;Unterflurhydrant;50,552794;9,682837;200;4,8;2000;;in Ordnung;14.05.2025;Hauptstraße 21;Beispiel, frei erfunden;BSP-H-010
+BSP-H-010;Unterflurhydrant;50,552559;9,681368;200;4,6;2000;;in Ordnung;13.06.2025;Hauptstraße 19;Beispiel, frei erfunden;BSP-H-009, BSP-K-01
+BSP-H-011;Unterflurhydrant;50,552794;9,682837;200;4,8;2000;;in Ordnung;14.05.2025;Hauptstraße 21;Beispiel, frei erfunden;BSP-K-01
 BSP-H-012;Unterflurhydrant;50,551658;9,671237;150;6,4;;;in Ordnung;25.08.2023;Lindenweg 3;Beispiel, frei erfunden;BSP-H-003, BSP-H-013
 BSP-H-013;Unterflurhydrant;50,552398;9,67139;150;5,2;1300;;in Ordnung;;Lindenweg 5;Beispiel, frei erfunden;BSP-H-012, BSP-H-014
 BSP-H-014;Unterflurhydrant;50,553146;9,671435;150;5,7;1600;;eingeschränkt;07.01.2026;Lindenweg 7;Beispiel, frei erfunden – Geringer Durchfluss gemessen;BSP-H-013, BSP-H-015
@@ -33,9 +33,10 @@ BSP-H-031;Unterflurhydrant;50,554228;9,672672;100;5,2;900;;eingeschränkt;10.02.
 BSP-H-032;Unterflurhydrant;50,554472;9,67383;100;5,9;1000;;in Ordnung;04.04.2025;Am Sportplatz 5;Beispiel, frei erfunden;BSP-H-031, BSP-H-033
 BSP-H-033;Unterflurhydrant;50,554825;9,674911;100;;900;;in Ordnung;07.07.2026;Am Sportplatz 7;Beispiel, frei erfunden;BSP-H-032, BSP-H-034
 BSP-H-034;Überflurhydrant;50,555176;9,675994;100;5,4;800;;in Ordnung;03.05.2026;Am Sportplatz 9;Beispiel, frei erfunden;BSP-H-033, BSP-H-021
-BSP-H-035;Unterflurhydrant;50,551746;9,681439;80;;500;;in Ordnung;27.05.2024;Birkenweg 3;Beispiel, frei erfunden;BSP-H-010, BSP-H-036
-BSP-H-036;Unterflurhydrant;50,550937;9,681581;80;4,6;;;in Ordnung;03.08.2026;Birkenweg 5;Beispiel, frei erfunden;BSP-H-035
+BSP-H-035;Unterflurhydrant;50,551746;9,682172;80;;500;;in Ordnung;27.05.2024;Birkenweg 3;Beispiel, frei erfunden;BSP-K-01, BSP-H-036
+BSP-H-036;Unterflurhydrant;50,550937;9,682314;80;4,6;;;in Ordnung;03.08.2026;Birkenweg 5;Beispiel, frei erfunden;BSP-H-035
 BSP-H-037;Unterflurhydrant;50,553566;9,670128;;6,5;700;;in Ordnung;28.05.2023;Feldweg (Aussiedlerhof);Beispiel, frei erfunden – Leitungsverlauf unbekannt;
 BSP-Z-01;Löschwasserbehälter;50,555273;9,678469;;;;100;in Ordnung;12.06.2025;Schulstraße, Pausenhof;Beispiel, frei erfunden – Unterirdischer Löschwasserbehälter, Saugrohr A;
 BSP-T-01;Offenes Gewässer;50,551141;9,666452;;;;600;in Ordnung;12.06.2025;Dorfteich, Ortseingang West;Beispiel, frei erfunden – Saugstelle befestigt, Saughöhe ca. 2 m;
 BSP-B-01;Löschwasserbrunnen;50,550961;9,684124;;;800;;in Ordnung;12.06.2025;Gewerbegebiet Ost;Beispiel, frei erfunden – Löschwasserbrunnen, ca. 800 l/min;
+BSP-K-01;Leitungsknoten;50,552676;9,6821;;;;;;;Hauptstraße / Birkenweg;Beispiel, frei erfunden – Abzweig Birkenweg, kein Hydrant;BSP-H-010, BSP-H-011, BSP-H-035
