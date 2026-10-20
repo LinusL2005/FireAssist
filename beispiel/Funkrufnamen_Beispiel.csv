@@ -1,19 +1,19 @@
-﻿Löschverbund;Ortschaft;Fahrzeugart;Funkname;Kennzeichen;Bemerkung
-Beispiel-Löschverbund Nord;Musterstadt (Mitte);KdoW;Florian Musterstadt 17-11-1;BSP-FW 111;Beispiel, frei erfunden – Wehrführung
-Beispiel-Löschverbund Nord;Musterstadt (Mitte);ELW 1;Florian Musterstadt 17-12-1;BSP-FW 121;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterstadt (Mitte);MTF;Florian Musterstadt 17-19-1;BSP-FW 191;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterstadt (Mitte);TLF 4000;Florian Musterstadt 17-24-1;BSP-FW 241;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterstadt (Mitte);DLK 23/12;Florian Musterstadt 17-33-1;BSP-FW 331;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterstadt (Mitte);HLF 20;Florian Musterstadt 17-46-1;BSP-FW 461;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterstadt (Mitte);HLF 20;Florian Musterstadt 17-46-2;BSP-FW 462;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterstadt (Mitte);RW;Florian Musterstadt 17-52-1;BSP-FW 521;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterstadt (Mitte);GW-L2;Florian Musterstadt 17-64-1;BSP-FW 641;Beispiel, frei erfunden – Schlauchwagen
-Beispiel-Löschverbund Nord;Musterdorf;MTF;Florian Musterstadt 18-19-1;;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterdorf;LF 10;Florian Musterstadt 18-43-1;;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterdorf;TSF-W;Florian Musterstadt 18-48-1;;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterberg;TLF 3000;Florian Musterstadt 19-23-1;;Beispiel, frei erfunden
-Beispiel-Löschverbund Nord;Musterberg;HLF 10;Florian Musterstadt 19-45-1;;Beispiel, frei erfunden
-Beispiel-Löschverbund Süd;Mustertal;MTF;Florian Musterstadt 20-19-1;;Beispiel, frei erfunden
-Beispiel-Löschverbund Süd;Mustertal;TSF-W;Florian Musterstadt 20-48-1;;Beispiel, frei erfunden
-Beispiel-Löschverbund Süd;Musterau;LF 20;Florian Musterstadt 21-44-1;;Beispiel, frei erfunden
-Beispiel-Löschverbund Süd;Musterau;GW-T;Florian Musterstadt 21-56-1;;Beispiel, frei erfunden – Gerätewagen Transport
+﻿Gemeinde;Löschverbund;Ortschaft;Fahrzeugart;Funkname;Kennzeichen;Bemerkung
+Musterstadt;Beispiel-Löschverbund Nord;Musterstadt (Mitte);KdoW;Florian Musterstadt 17-11-1;BSP-FW 111;Beispiel, frei erfunden – Wehrführung
+Musterstadt;Beispiel-Löschverbund Nord;Musterstadt (Mitte);ELW 1;Florian Musterstadt 17-12-1;BSP-FW 121;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterstadt (Mitte);MTF;Florian Musterstadt 17-19-1;BSP-FW 191;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterstadt (Mitte);TLF 4000;Florian Musterstadt 17-24-1;BSP-FW 241;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterstadt (Mitte);DLK 23/12;Florian Musterstadt 17-33-1;BSP-FW 331;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterstadt (Mitte);HLF 20;Florian Musterstadt 17-46-1;BSP-FW 461;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterstadt (Mitte);HLF 20;Florian Musterstadt 17-46-2;BSP-FW 462;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterstadt (Mitte);RW;Florian Musterstadt 17-52-1;BSP-FW 521;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterstadt (Mitte);GW-L2;Florian Musterstadt 17-64-1;BSP-FW 641;Beispiel, frei erfunden – Schlauchwagen
+Musterstadt;Beispiel-Löschverbund Nord;Musterdorf;MTF;Florian Musterstadt 18-19-1;;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterdorf;LF 10;Florian Musterstadt 18-43-1;;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterdorf;TSF-W;Florian Musterstadt 18-48-1;;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterberg;TLF 3000;Florian Musterstadt 19-23-1;;Beispiel, frei erfunden
+Musterstadt;Beispiel-Löschverbund Nord;Musterberg;HLF 10;Florian Musterstadt 19-45-1;;Beispiel, frei erfunden
+Mustertal;Beispiel-Löschverbund Süd;Mustertal;MTF;Florian Musterstadt 20-19-1;;Beispiel, frei erfunden
+Mustertal;Beispiel-Löschverbund Süd;Mustertal;TSF-W;Florian Musterstadt 20-48-1;;Beispiel, frei erfunden
+Mustertal;Beispiel-Löschverbund Süd;Musterau;LF 20;Florian Musterstadt 21-44-1;;Beispiel, frei erfunden
+Mustertal;Beispiel-Löschverbund Süd;Musterau;GW-T;Florian Musterstadt 21-56-1;;Beispiel, frei erfunden – Gerätewagen Transport

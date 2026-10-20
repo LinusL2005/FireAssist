@@ -93,7 +93,7 @@ function cleanPipe(o) {
 const str = v => String(v ?? '').trim();
 
 function cleanVehicle(o) {
-  return { verbund: str(o.verbund), ort: str(o.ort), art: str(o.art), funkname: str(o.funkname), kennzeichen: str(o.kennzeichen), bemerkung: str(o.bemerkung) };
+  return { gemeinde: str(o.gemeinde), verbund: str(o.verbund), ort: str(o.ort), art: str(o.art), funkname: str(o.funkname), kennzeichen: str(o.kennzeichen), bemerkung: str(o.bemerkung) };
 }
 
 function cleanUn(v) {

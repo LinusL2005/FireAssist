@@ -79,7 +79,7 @@ function startListImport() {
   $('#file-input').click();
 }
 
-/* ---------- Funkrufnamen: Löschverbund → Ortschaft → Fahrzeuge ---------- */
+/* ---------- Funkrufnamen: Gemeinde → Löschverbund → Ortschaft → Fahrzeuge ---------- */
 
 const funkState = { q: '', edit: false };
 let funkTree = [];
@@ -87,10 +87,16 @@ let funkRowIndex = new Map();
 
 const ORT_LEER = 'Ohne Ortschaft';
 const VERBUND_LEER = 'Ohne Löschverbund';
+const GEMEINDE_LEER = 'Ohne Gemeinde';
+const LEVEL_LABEL = { gemeinde: 'Gemeinde', verbund: 'Löschverbund', ort: 'Ortschaft' };
+const LEVEL_LEER = { gemeinde: GEMEINDE_LEER, verbund: VERBUND_LEER, ort: ORT_LEER };
 const FUNK_GROUPS = [
+  ['gemeinde-verbund-ort', 'Gemeinde › Löschverbund › Ortschaft'],
   ['verbund-ort', 'Löschverbund › Ortschaft'],
+  ['gemeinde-ort', 'Gemeinde › Ortschaft'],
   ['ort', 'Nur Ortschaft'],
   ['verbund', 'Nur Löschverbund'],
+  ['gemeinde', 'Nur Gemeinde'],
   ['none', 'Ohne Gliederung (eine Liste)'],
 ];
 const FUNK_SORTS = [['name', 'Funkname'], ['art', 'Fahrzeugart']];
@@ -98,17 +104,19 @@ const FUNK_SORTS = [['name', 'Funkname'], ['art', 'Fahrzeugart']];
 const emptyLast = (a, b) => (a === '') - (b === '') || naturalCompare(a, b);
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
-function hasVerbuende() { return state.vehicles.some(v => v.verbund); }
+/* Gemeinde und Löschverbund sind optional, die Ortschaft ist immer eine Ebene */
+function hasLevel(level) { return level === 'ort' || state.vehicles.some(v => v[level]); }
 
-function funkView() { return Object.assign({ group: 'verbund-ort', sort: 'name' }, settings.funkView || {}); }
+function funkView() {
+  const fv = Object.assign({ group: 'gemeinde-verbund-ort', sort: 'name' }, settings.funkView || {});
+  /* bis zur Einführung der Gemeinden war „Löschverbund › Ortschaft“ die Vorgabe und wurde mitgespeichert */
+  if (!fv.mitGemeinde && fv.group === 'verbund-ort') fv.group = 'gemeinde-verbund-ort';
+  return fv;
+}
 
-/* Welche Gliederungsebenen angezeigt werden (Löschverbund nur, wenn es welche gibt) */
-function funkLevels() {
-  const g = funkView().group;
-  const levels = [];
-  if ((g === 'verbund-ort' || g === 'verbund') && hasVerbuende()) levels.push('verbund');
-  if (g === 'verbund-ort' || g === 'ort') levels.push('ort');
-  return levels;
+/* Welche Gliederungsebenen angezeigt werden (Gemeinde und Löschverbund nur, wenn es welche gibt) */
+function funkLevels(group = funkView().group) {
+  return group === 'none' ? [] : group.split('-').filter(hasLevel);
 }
 
 function compareVehicles(a, b) {
@@ -129,32 +137,37 @@ function groupBy(list, levels) {
 
 const vehiclesIn = node => (node.level ? node.children.flatMap(vehiclesIn) : [node]);
 
-/* Struktur für die Auswahl: Löschverbünde mit ihren Ortschaften (Schlüssel = Name der Ortschaft) */
+/* Struktur für die Auswahl als flache Zeilenliste: Gemeinden und Löschverbünde (mit den Ortschaften darunter)
+   und Ortschaften, jeweils mit Einrücktiefe. Schlüssel einer Ortschaft ist ihr Name. */
 function vehicleTree() {
-  const levels = hasVerbuende() ? ['verbund', 'ort'] : ['ort'];
-  const tree = groupBy(state.vehicles, levels);
-  const toOrte = nodes => nodes.map(o => ({ key: o.key, label: o.key || ORT_LEER, n: vehiclesIn(o).length }));
-  return levels.length === 2
-    ? tree.map(g => ({ verbund: g.key, label: g.key || VERBUND_LEER, orte: toOrte(g.children) }))
-    : [{ verbund: '', label: VERBUND_LEER, orte: toOrte(tree) }];
+  const rows = [];
+  const walk = (nodes, depth) => {
+    for (const n of nodes) {
+      if (n.level === 'ort') { rows.push({ level: 'ort', key: n.key, label: n.key || ORT_LEER, n: vehiclesIn(n).length, depth }); continue; }
+      rows.push({ level: n.level, key: n.key, label: n.key || LEVEL_LEER[n.level], depth, keys: [...new Set(vehiclesIn(n).map(v => v.ort))] });
+      walk(n.children, depth + 1);
+    }
+  };
+  walk(groupBy(state.vehicles, ['gemeinde', 'verbund'].filter(hasLevel).concat('ort')), 0);
+  return rows;
 }
 
 function vehicleOrte() {
   const seen = new Map();
-  for (const g of vehicleTree()) for (const o of g.orte) if (!seen.has(o.key)) seen.set(o.key, o);
+  for (const r of vehicleTree()) if (r.level === 'ort' && !seen.has(r.key)) seen.set(r.key, r);
   return [...seen.values()];
 }
 
 function vehicleMatches(q) {
   const n = q.trim().toLowerCase(), nk = normKey(q);
   if (!n) return state.vehicles;
-  return state.vehicles.filter(v => `${v.funkname} ${v.art} ${v.ort} ${v.verbund} ${v.kennzeichen} ${v.bemerkung}`.toLowerCase().includes(n)
+  return state.vehicles.filter(v => `${v.funkname} ${v.art} ${v.ort} ${v.verbund} ${v.gemeinde} ${v.kennzeichen} ${v.bemerkung}`.toLowerCase().includes(n)
     || (nk.length >= 2 && normKey(v.funkname).includes(nk)));
 }
 
-/* Sortierung für Trefferlisten außerhalb der Funk-Seite: Löschverbund, Ortschaft, Funkname */
+/* Sortierung für Trefferlisten außerhalb der Funk-Seite: Gemeinde, Löschverbund, Ortschaft, Funkname */
 function compareByPlace(a, b) {
-  return emptyLast(a.verbund, b.verbund) || emptyLast(a.ort, b.ort) || naturalCompare(a.funkname, b.funkname);
+  return emptyLast(a.gemeinde, b.gemeinde) || emptyLast(a.verbund, b.verbund) || emptyLast(a.ort, b.ort) || naturalCompare(a.funkname, b.funkname);
 }
 
 /* „Florian Musterstadt 17-44-2“ -> Name normal, Kennzahl hervorgehoben */
@@ -169,6 +182,7 @@ function vehRow(v, levels) {
   const place = [];
   if (!levels.includes('ort') && v.ort) place.push(v.ort);
   if (!levels.includes('verbund') && v.verbund) place.push(v.verbund);
+  if (!levels.includes('gemeinde') && v.gemeinde) place.push(v.gemeinde);
   const meta = [place.join(' · '), v.bemerkung].filter(Boolean).join(' – ');
   /* Kennzeichen nur als Zusatzinfo, bewusst unauffällig */
   const kz = v.kennzeichen ? `<span class="veh-kz${meta ? ' sep' : ''}">${esc(v.kennzeichen)}</span>` : '';
@@ -181,19 +195,26 @@ function vehRow(v, levels) {
 
 function groupEditBtn(level, key) {
   if (!funkState.edit) return '';
-  return `<button class="icon-btn head-edit" data-act="veh-group" data-level="${level}" data-key="${esc(key)}" aria-label="${level === 'ort' ? 'Ortschaft' : 'Löschverbund'} bearbeiten">${IC.edit}</button>`;
+  return `<button class="icon-btn head-edit" data-act="veh-group" data-level="${level}" data-key="${esc(key)}" aria-label="${LEVEL_LABEL[level]} bearbeiten">${IC.edit}</button>`;
 }
 
 function renderNodes(nodes, levels, ctx) {
   if (!nodes.length || !nodes[0].level) {
     const add = funkState.edit
-      ? `<button class="veh-add" data-act="veh-new" data-verbund="${esc(ctx.verbund ?? '')}" data-ort="${esc(ctx.ort ?? '')}">${IC.plus} Fahrzeug hinzufügen</button>`
+      ? `<button class="veh-add" data-act="veh-new" data-gemeinde="${esc(ctx.gemeinde ?? '')}" data-verbund="${esc(ctx.verbund ?? '')}" data-ort="${esc(ctx.ort ?? '')}">${IC.plus} Fahrzeug hinzufügen</button>`
       : '';
     return `<div class="veh-list">${nodes.map(v => vehRow(v, levels)).join('')}${add}</div>`;
   }
   return nodes.map(g => {
     const sub = Object.assign({}, ctx, { [g.level]: g.key });
     const all = vehiclesIn(g);
+    if (g.level === 'gemeinde') {
+      const count = (level, one, many) => (levels.includes(level) ? `${plural(new Set(all.map(v => v[level])).size, one, many)} · ` : '');
+      return `<section class="gemeinde">
+        <div class="gemeinde-head"><span class="verbund-title"><span class="gemeinde-name">${esc(g.key || GEMEINDE_LEER)}</span>
+          <span class="small">${count('verbund', 'Löschverbund', 'Löschverbünde')}${count('ort', 'Ortschaft', 'Ortschaften')}${plural(all.length, 'Fahrzeug', 'Fahrzeuge')}</span></span>${groupEditBtn('gemeinde', g.key)}</div>
+        ${renderNodes(g.children, levels, sub)}</section>`;
+    }
     if (g.level === 'verbund') {
       const nOrte = new Set(all.map(v => v.ort)).size;
       return `<section class="verbund">
@@ -201,7 +222,8 @@ function renderNodes(nodes, levels, ctx) {
           <span class="small">${levels.includes('ort') ? `${plural(nOrte, 'Ortschaft', 'Ortschaften')} · ` : ''}${plural(all.length, 'Fahrzeug', 'Fahrzeuge')}</span></span>${groupEditBtn('verbund', g.key)}</div>
         ${renderNodes(g.children, levels, sub)}</section>`;
     }
-    const verbundHint = !levels.includes('verbund') ? [...new Set(all.map(v => v.verbund).filter(Boolean))].join(', ') : '';
+    const verbundHint = ['verbund', 'gemeinde'].filter(l => !levels.includes(l))
+      .flatMap(l => [...new Set(all.map(v => v[l]).filter(Boolean))]).join(', ');
     return `<section class="veh-group">
       <div class="veh-group-head"><span>${esc(g.key || ORT_LEER)}${verbundHint ? ` <small class="muted">${esc(verbundHint)}</small>` : ''}</span>
         <span class="head-right"><span class="muted small">${plural(all.length, 'Fahrzeug', 'Fahrzeuge')}</span>${groupEditBtn('ort', g.key)}</span></div>
@@ -209,18 +231,30 @@ function renderNodes(nodes, levels, ctx) {
   }).join('');
 }
 
+/* Ist genau eine Gemeinde vollständig ausgewählt und sonst nichts, ihr Name für den Auswahl-Knopf */
+function singleShownGemeinde(hidden) {
+  const shownG = vehicleTree().filter(r => r.level === 'gemeinde' && r.keys.some(k => !hidden.has(k)));
+  if (shownG.length !== 1 || shownG[0].keys.some(k => hidden.has(k))) return null;
+  const keep = new Set(shownG[0].keys);
+  return vehicleOrte().every(o => keep.has(o.key) || hidden.has(o.key)) ? shownG[0].label : null;
+}
+
 function renderFunkPage() {
   const orte = vehicleOrte();
   const nVerbund = new Set(state.vehicles.map(v => v.verbund).filter(Boolean)).size;
+  const nGemeinde = new Set(state.vehicles.map(v => v.gemeinde).filter(Boolean)).size;
   const hidden = new Set(settings.hiddenOrte);
   const shown = orte.filter(o => !hidden.has(o.key));
   $('#funk-count').textContent = state.vehicles.length
     ? [plural(state.vehicles.length, 'Fahrzeug', 'Fahrzeuge'), plural(orte.length, 'Ortschaft', 'Ortschaften'),
-      nVerbund ? plural(nVerbund, 'Löschverbund', 'Löschverbünde') : ''].filter(Boolean).join(' · ')
+      nVerbund ? plural(nVerbund, 'Löschverbund', 'Löschverbünde') : '', nGemeinde ? plural(nGemeinde, 'Gemeinde', 'Gemeinden') : ''].filter(Boolean).join(' · ')
     : '';
   const btn = $('#funk-orte-btn');
   btn.hidden = orte.length < 2;
-  btn.innerHTML = `${IC.filter}<span>Ortschaften <b>${shown.length}/${orte.length}</b></span>`;
+  const onlyG = shown.length < orte.length ? singleShownGemeinde(hidden) : null;
+  btn.innerHTML = onlyG
+    ? `${IC.filter}<span><b>${esc(onlyG)}</b></span>`
+    : `${IC.filter}<span>Ortschaften <b>${shown.length}/${orte.length}</b></span>`;
   btn.classList.toggle('active', shown.length < orte.length);
   $('#funk-tools').hidden = !state.vehicles.length;
   $('#funk-editbar').hidden = !funkState.edit;
@@ -228,7 +262,7 @@ function renderFunkPage() {
   renderFunkList();
 }
 
-const FUNK_COLUMNS = '<b>Löschverbund</b> (optional); <b>Ortschaft; Fahrzeugart; Funkname</b>; <b>Bemerkung</b> (optional)';
+const FUNK_COLUMNS = '<b>Gemeinde</b> (optional); <b>Löschverbund</b> (optional); <b>Ortschaft; Fahrzeugart; Funkname</b>; <b>Kennzeichen</b> (optional); <b>Bemerkung</b> (optional)';
 
 function renderFunkList() {
   const box = $('#funk-list');
@@ -270,10 +304,9 @@ function renderFunkList() {
 
 function funkViewHtml() {
   const fv = funkView();
-  const hasV = hasVerbuende();
-  const groups = FUNK_GROUPS.filter(([k]) => hasV || !k.includes('verbund'));
-  let cur = fv.group;
-  if (!hasV) cur = cur === 'verbund-ort' || cur === 'ort' ? 'ort' : 'none';
+  /* nur Gliederungen anbieten, deren Ebenen es gibt; ohne Daten für eine Ebene fällt sie weg */
+  const groups = FUNK_GROUPS.filter(([k]) => k === 'none' || funkLevels(k).length === k.split('-').length);
+  const cur = funkLevels().join('-') || 'none';
   const radio = (name, k, label, on) => `<label class="radio"><input type="radio" name="${name}" value="${k}" data-change="${name}"${on ? ' checked' : ''}><span>${esc(label)}</span></label>`;
   return `<div class="modal-head"><h2>Ansicht</h2><button class="icon-btn" data-act="modal-close" aria-label="Schließen">${IC.close}</button></div>
     <div class="modal-body">
@@ -287,7 +320,7 @@ function funkViewHtml() {
 }
 
 function setFunkView(patch) {
-  settings.funkView = Object.assign(funkView(), patch);
+  settings.funkView = Object.assign(funkView(), patch, { mitGemeinde: true });
   saveSettings();
   renderFunkPage();
 }
@@ -296,11 +329,11 @@ function setFunkView(patch) {
 
 function datalists() {
   const opts = key => [...new Set(state.vehicles.map(v => v[key]).filter(Boolean))].sort(naturalCompare).map(x => `<option value="${esc(x)}"></option>`).join('');
-  return `<datalist id="dl-art">${opts('art')}</datalist><datalist id="dl-ort">${opts('ort')}</datalist><datalist id="dl-verbund">${opts('verbund')}</datalist>`;
+  return ['art', 'ort', 'verbund', 'gemeinde'].map(k => `<datalist id="dl-${k}">${opts(k)}</datalist>`).join('');
 }
 
 function vehFormHtml(i, preset = {}) {
-  const v = i != null ? state.vehicles[i] : Object.assign({ verbund: '', ort: '', art: '', funkname: '', kennzeichen: '', bemerkung: '' }, preset);
+  const v = i != null ? state.vehicles[i] : Object.assign({ gemeinde: '', verbund: '', ort: '', art: '', funkname: '', kennzeichen: '', bemerkung: '' }, preset);
   return `<form id="veh-form" class="modal-form" data-i="${i ?? ''}" autocomplete="off" novalidate>
     <div class="modal-head"><h2>${i != null ? 'Fahrzeug bearbeiten' : 'Neues Fahrzeug'}</h2><button type="button" class="icon-btn" data-act="modal-close" aria-label="Schließen">${IC.close}</button></div>
     <div class="modal-body form">
@@ -309,11 +342,10 @@ function vehFormHtml(i, preset = {}) {
       <div class="grid2">
         <label class="fld">Ortschaft<input name="ort" list="dl-ort" value="${esc(v.ort)}"></label>
         <label class="fld">Löschverbund<input name="verbund" list="dl-verbund" value="${esc(v.verbund)}" placeholder="optional"></label>
-      </div>
-      <div class="grid2">
+        <label class="fld">Gemeinde<input name="gemeinde" list="dl-gemeinde" value="${esc(v.gemeinde)}" placeholder="optional"></label>
         <label class="fld">Kennzeichen<input name="kennzeichen" value="${esc(v.kennzeichen)}" placeholder="optional" spellcheck="false" autocapitalize="characters"></label>
-        <label class="fld">Bemerkung<input name="bemerkung" value="${esc(v.bemerkung)}" placeholder="optional"></label>
       </div>
+      <label class="fld">Bemerkung<input name="bemerkung" value="${esc(v.bemerkung)}" placeholder="optional"></label>
       ${datalists()}
     </div>
     <div class="modal-foot">
@@ -326,7 +358,7 @@ function vehFormHtml(i, preset = {}) {
 
 function saveVehForm(form) {
   const val = n => form.elements[n].value.trim();
-  const rec = cleanVehicle({ verbund: val('verbund'), ort: val('ort'), art: val('art'), funkname: val('funkname'), kennzeichen: val('kennzeichen'), bemerkung: val('bemerkung') });
+  const rec = cleanVehicle({ gemeinde: val('gemeinde'), verbund: val('verbund'), ort: val('ort'), art: val('art'), funkname: val('funkname'), kennzeichen: val('kennzeichen'), bemerkung: val('bemerkung') });
   if (!rec.funkname) { toast('Bitte einen Funknamen eingeben.'); return; }
   const i = form.dataset.i === '' ? null : +form.dataset.i;
   const dup = state.vehicles.findIndex((x, j) => j !== i && x.funkname.toLowerCase() === rec.funkname.toLowerCase());
@@ -338,16 +370,23 @@ function saveVehForm(form) {
   toast(i == null ? `${rec.funkname} angelegt.` : 'Gespeichert.', { action: { label: 'Rückgängig', fn: undo } });
 }
 
+/* Übergeordnete Ebenen, die sich beim Bearbeiten einer Gruppe mit ändern lassen */
+const LEVEL_PARENTS = { ort: ['verbund', 'gemeinde'], verbund: ['gemeinde'], gemeinde: [] };
+const PARENT_LABEL = { verbund: 'Gehört zum Löschverbund', gemeinde: 'Gehört zur Gemeinde' };
+const LEVEL_DIESE = { ort: 'dieser Ortschaft', verbund: 'dieses Löschverbunds', gemeinde: 'dieser Gemeinde' };
+
 function vehGroupHtml(level, key) {
-  const isOrt = level === 'ort';
   const members = state.vehicles.filter(v => v[level] === key);
-  const verbuende = [...new Set(members.map(v => v.verbund))];
+  const parentField = p => {
+    const vals = [...new Set(members.map(v => v[p]))];
+    return `<label class="fld">${PARENT_LABEL[p]}<input name="${p}" list="dl-${p}" value="${esc(vals.length === 1 ? vals[0] : '')}" placeholder="${vals.length > 1 ? 'mehrere – leer lassen = unverändert' : 'optional'}"></label>`;
+  };
   return `<form id="veh-group-form" class="modal-form" data-level="${level}" data-key="${esc(key)}" autocomplete="off" novalidate>
-    <div class="modal-head"><h2>${isOrt ? 'Ortschaft' : 'Löschverbund'} bearbeiten</h2><button type="button" class="icon-btn" data-act="modal-close" aria-label="Schließen">${IC.close}</button></div>
+    <div class="modal-head"><h2>${LEVEL_LABEL[level]} bearbeiten</h2><button type="button" class="icon-btn" data-act="modal-close" aria-label="Schließen">${IC.close}</button></div>
     <div class="modal-body form">
-      <p class="muted small">Gilt für alle ${plural(members.length, 'Fahrzeug', 'Fahrzeuge')} ${isOrt ? 'dieser Ortschaft' : 'dieses Löschverbunds'}.</p>
-      <label class="fld">Name<input name="name" value="${esc(key)}" placeholder="${isOrt ? ORT_LEER : VERBUND_LEER}"></label>
-      ${isOrt ? `<label class="fld">Gehört zum Löschverbund<input name="verbund" list="dl-verbund" value="${esc(verbuende.length === 1 ? verbuende[0] : '')}" placeholder="${verbuende.length > 1 ? 'mehrere – leer lassen = unverändert' : 'optional'}"></label>` : ''}
+      <p class="muted small">Gilt für alle ${plural(members.length, 'Fahrzeug', 'Fahrzeuge')} ${LEVEL_DIESE[level]}.</p>
+      <label class="fld">Name<input name="name" value="${esc(key)}" placeholder="${LEVEL_LEER[level]}"></label>
+      ${LEVEL_PARENTS[level].map(parentField).join('')}
       ${datalists()}
     </div>
     <div class="modal-foot">
@@ -359,17 +398,17 @@ function vehGroupHtml(level, key) {
 
 function saveVehGroupForm(form) {
   const level = form.dataset.level, key = form.dataset.key;
-  const isOrt = level === 'ort';
   const name = form.elements.name.value.trim();
-  const verbundField = isOrt ? form.elements.verbund : null;
   const members = state.vehicles.filter(v => v[level] === key);
-  const mixed = new Set(members.map(v => v.verbund)).size > 1;
-  pushUndo(`${isOrt ? 'Ortschaft' : 'Löschverbund'} geändert`);
+  /* bei gemischten Werten bedeutet ein leeres Feld „unverändert“ */
+  const parents = LEVEL_PARENTS[level].map(p => ({ p, val: form.elements[p].value.trim(), mixed: new Set(members.map(v => v[p])).size > 1 }))
+    .filter(x => !(x.mixed && !x.val));
+  pushUndo(`${LEVEL_LABEL[level]} geändert`);
   for (const v of members) {
     v[level] = name;
-    if (verbundField && !(mixed && !verbundField.value.trim())) v.verbund = verbundField.value.trim();
+    for (const x of parents) v[x.p] = x.val;
   }
-  if (isOrt && name !== key && settings.hiddenOrte.includes(key)) {
+  if (level === 'ort' && name !== key && settings.hiddenOrte.includes(key)) {
     settings.hiddenOrte = settings.hiddenOrte.map(k => (k === key ? name : k));
     saveSettings();
   }
@@ -383,23 +422,23 @@ function saveVehGroupForm(form) {
 function funkOrteHtml() {
   funkTree = vehicleTree();
   const hidden = new Set(settings.hiddenOrte);
-  const multi = hasVerbuende();
-  const ortRow = (o, gi, oi) => `<label class="check ort-check${multi ? ' indent' : ''}">
-      <input type="checkbox" data-change="funk-ort" data-g="${gi}" data-o="${oi}"${hidden.has(o.key) ? '' : ' checked'}>
-      <span>${esc(o.label)}</span><span class="muted small">${o.n}</span></label>`;
-  const body = funkTree.map((g, gi) => {
-    const rows = g.orte.map((o, oi) => ortRow(o, gi, oi)).join('');
-    if (!multi) return rows;
-    const nShown = g.orte.filter(o => !hidden.has(o.key)).length;
-    return `<div class="verbund-check">
-        <label class="check"><input type="checkbox" data-change="funk-verbund" data-g="${gi}"${nShown === g.orte.length ? ' checked' : ''}${nShown && nShown < g.orte.length ? ' data-mixed="1"' : ''}>
-          <span><b>${esc(g.label)}</b></span></label>
-        <button class="btn sm" data-act="funk-only" data-g="${gi}">nur dieser</button>
-      </div>${rows}`;
+  const body = funkTree.map((r, i) => {
+    if (r.level === 'ort') {
+      return `<label class="check ort-check d${r.depth}">
+        <input type="checkbox" data-change="funk-ort" data-r="${i}"${hidden.has(r.key) ? '' : ' checked'}>
+        <span>${esc(r.label)}</span><span class="muted small">${r.n}</span></label>`;
+    }
+    const nShown = r.keys.filter(k => !hidden.has(k)).length;
+    return `<div class="verbund-check ${r.level}-check d${r.depth}">
+        <label class="check"><input type="checkbox" data-change="funk-group" data-r="${i}"${nShown === r.keys.length ? ' checked' : ''}${nShown && nShown < r.keys.length ? ' data-mixed="1"' : ''}>
+          <span><b>${esc(r.label)}</b></span></label>
+        <button class="btn sm" data-act="funk-only" data-r="${i}">${r.level === 'gemeinde' ? 'nur diese' : 'nur dieser'}</button>
+      </div>`;
   }).join('');
+  const groupNames = [hasLevel('gemeinde') && 'Gemeinden', hasLevel('verbund') && 'Löschverbünde'].filter(Boolean);
   return `<div class="modal-head"><h2>Anzeige auswählen</h2><button class="icon-btn" data-act="modal-close" aria-label="Schließen">${IC.close}</button></div>
     <div class="modal-body">
-      <p class="muted small">Welche ${multi ? 'Löschverbünde und ' : ''}Ortschaften angezeigt werden. Die Auswahl wird auf diesem Gerät gespeichert.</p>
+      <p class="muted small">Welche ${groupNames.length ? groupNames.join(', ') + ' und ' : ''}Ortschaften angezeigt werden. Die Auswahl wird auf diesem Gerät gespeichert.</p>
       <div class="actions"><button class="btn sm" data-act="funk-orte-all">Alle</button><button class="btn sm" data-act="funk-orte-none">Keine</button></div>
       <div class="ort-list">${body}</div>
     </div>
@@ -435,15 +474,15 @@ Object.assign(ACT, {
   'funk-orte-all': () => { setHiddenOrte([]); openFunkOrte(); },
   'funk-orte-none': () => { setHiddenOrte(vehicleOrte().map(o => o.key)); openFunkOrte(); },
   'funk-only': d => {
-    const g = funkTree[+d.g];
-    if (!g) return;
-    const keep = new Set(g.orte.map(o => o.key));
+    const r = funkTree[+d.r];
+    if (!r) return;
+    const keep = new Set(r.keys);
     setHiddenOrte(vehicleOrte().map(o => o.key).filter(k => !keep.has(k)));
     openFunkOrte();
   },
   'funk-view': () => openModal(funkViewHtml()),
   'funk-edit-toggle': () => { funkState.edit = !funkState.edit; renderFunkPage(); },
-  'veh-new': d => { openModal(vehFormHtml(null, { verbund: d.verbund || '', ort: d.ort || '' })); $('#veh-form [name="funkname"]')?.focus(); },
+  'veh-new': d => { openModal(vehFormHtml(null, { gemeinde: d.gemeinde || '', verbund: d.verbund || '', ort: d.ort || '' })); $('#veh-form [name="funkname"]')?.focus(); },
   'veh-edit': d => openModal(vehFormHtml(+d.i)),
   'veh-group': d => openModal(vehGroupHtml(d.level, d.key)),
   'veh-delete': async d => {
@@ -456,7 +495,7 @@ Object.assign(ACT, {
   },
   'funk-manage': () => openModal(listManageHtml({
     title: 'Funkrufnamen verwalten', prefix: 'funk', count: state.vehicles.length,
-    intro: `Fahrzeuge lassen sich über <b>Bearbeiten</b> (Stift oben) direkt ändern. Alternativ eine CSV- oder Excel-Datei mit den Spalten ${FUNK_COLUMNS} importieren. Leere Zellen bei Löschverbund und Ortschaft übernehmen den Wert der Zeile darüber.`,
+    intro: `Fahrzeuge lassen sich über <b>Bearbeiten</b> (Stift oben) direkt ändern. Alternativ eine CSV- oder Excel-Datei mit den Spalten ${FUNK_COLUMNS} importieren. Leere Zellen bei Gemeinde, Löschverbund und Ortschaft übernehmen den Wert der Zeile darüber.`,
   })),
   'funk-import': startListImport,
   'funk-export': () => exportCsv('vehicles'),
@@ -467,12 +506,12 @@ Object.assign(ACT, {
 
 Object.assign(CHG, {
   'funk-ort': t => {
-    const o = funkTree[+t.dataset.g]?.orte[+t.dataset.o];
-    if (o) setOrteVisible([o.key], t.checked);
+    const r = funkTree[+t.dataset.r];
+    if (r) setOrteVisible([r.key], t.checked);
   },
-  'funk-verbund': t => {
-    const g = funkTree[+t.dataset.g];
-    if (g) setOrteVisible(g.orte.map(o => o.key), t.checked);
+  'funk-group': t => {
+    const r = funkTree[+t.dataset.r];
+    if (r) setOrteVisible(r.keys, t.checked);
   },
   'funk-view-group': t => setFunkView({ group: t.value }),
   'funk-view-sort': t => setFunkView({ sort: t.value }),
