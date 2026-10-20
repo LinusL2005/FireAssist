@@ -31,8 +31,9 @@ const PIPE_FIELDS = [
 ];
 
 const VEH_FIELDS = [
+  { key: 'gemeinde', label: 'Gemeinde', syn: ['gemeinde', 'gemeinden', 'kommune', 'gemeindename', 'stadtgemeinde', 'samtgemeinde', 'verbandsgemeinde', 'einheitsgemeinde', 'gemeindefeuerwehr', 'stadtfeuerwehr'] },
   { key: 'verbund', label: 'Löschverbund', syn: ['loeschverbund', 'loeschverbuende', 'verbund', 'loeschbezirk', 'loeschbereich', 'brandschutzbezirk', 'bezirk', 'ausrueckebereich', 'ausrueckbereich', 'einsatzabschnitt', 'abschnitt', 'gemeindeverbund'] },
-  { key: 'ort', label: 'Ortschaft', syn: ['ortschaft', 'ort', 'ortsteil', 'standort', 'wache', 'feuerwehr', 'einheit', 'loeschzug', 'loeschgruppe', 'loescheinheit', 'abteilung', 'gemeinde', 'ortsfeuerwehr', 'ortswehr', 'wehr', 'geraetehaus', 'stadtteil', 'gemeindeteil'] },
+  { key: 'ort', label: 'Ortschaft', syn: ['ortschaft', 'ort', 'ortsteil', 'standort', 'wache', 'feuerwehr', 'einheit', 'loeschzug', 'loeschgruppe', 'loescheinheit', 'abteilung', 'ortsfeuerwehr', 'ortswehr', 'wehr', 'geraetehaus', 'stadtteil', 'gemeindeteil'] },
   { key: 'art', label: 'Fahrzeugart', syn: ['fahrzeugart', 'fahrzeug', 'fahrzeugtyp', 'fahrzeugbezeichnung', 'typ', 'art', 'kurzbezeichnung', 'fzg', 'fzgart', 'fahrzeugklasse', 'type', 'bezeichnung'] },
   { key: 'funkname', label: 'Funkname', syn: ['funkname', 'funkrufname', 'funkrufnamen', 'funknamen', 'rufname', 'funkkenner', 'funkkennung', 'rufzeichen', 'taktischesrufzeichen', 'funk', 'opta', 'kennung'] },
   { key: 'kennzeichen', label: 'Kennzeichen', syn: ['kennzeichen', 'kfzkennzeichen', 'fahrzeugkennzeichen', 'amtlicheskennzeichen', 'polkennzeichen', 'nummernschild', 'kfz'] },
@@ -286,15 +287,18 @@ function convertSourceTable(t) {
 function convertVehicles(t) {
   const m = t.maps.vehicles;
   const items = [], skipped = [];
-  let lastVerbund = '', lastOrt = '';
+  let lastGemeinde = '', lastVerbund = '', lastOrt = '';
   t.data.forEach((r, i) => {
     const get = k => (m[k] != null ? String(r[m[k]] ?? '').trim() : '');
-    /* leere Zellen = wie Zeile darüber (verbundene Zellen in Excel); neuer Löschverbund beginnt ohne Ortschaft */
+    /* leere Zellen = wie Zeile darüber (verbundene Zellen in Excel); neue Gemeinde beginnt ohne Löschverbund,
+       neuer Löschverbund ohne Ortschaft */
+    let gemeinde = get('gemeinde');
+    if (gemeinde && gemeinde !== lastGemeinde) { lastGemeinde = gemeinde; lastVerbund = ''; lastOrt = ''; } else gemeinde = lastGemeinde;
     let verbund = get('verbund');
     if (verbund && verbund !== lastVerbund) { lastVerbund = verbund; lastOrt = ''; } else verbund = lastVerbund;
     let ort = get('ort');
     if (ort) lastOrt = ort; else ort = lastOrt;
-    const v = cleanVehicle({ verbund, ort, art: get('art'), funkname: get('funkname'), kennzeichen: get('kennzeichen'), bemerkung: get('bemerkung') });
+    const v = cleanVehicle({ gemeinde, verbund, ort, art: get('art'), funkname: get('funkname'), kennzeichen: get('kennzeichen'), bemerkung: get('bemerkung') });
     if (!v.funkname) {
       if (v.art) skipped.push({ line: t.lines[i], file: t.name, reason: 'kein Funkname' });
       return;
@@ -532,7 +536,7 @@ function previewHtml(t) {
     const { items } = convertVehicles(t);
     const orte = new Set(items.map(v => v.ort));
     const verbuende = new Set(items.map(v => v.verbund).filter(Boolean));
-    const ex = items.slice(0, 3).map(v => `<li>${v.verbund ? `${esc(v.verbund)} · ` : ''}${esc(v.ort || '–')} · ${esc(v.art || '–')} · <b>${esc(v.funkname)}</b></li>`).join('');
+    const ex = items.slice(0, 3).map(v => `<li>${v.gemeinde ? `${esc(v.gemeinde)} · ` : ''}${v.verbund ? `${esc(v.verbund)} · ` : ''}${esc(v.ort || '–')} · ${esc(v.art || '–')} · <b>${esc(v.funkname)}</b></li>`).join('');
     return `<p class="${items.length ? 'ok' : 'err'} small">${items.length} Fahrzeuge in ${orte.size} Ortschaft${orte.size === 1 ? '' : 'en'}${verbuende.size ? ` und ${verbuende.size === 1 ? '1 Löschverbund' : `${verbuende.size} Löschverbünden`}` : ''}</p><ul class="plain small">${ex}</ul>
       <p class="muted small">Ersetzt die bisherige Funkrufnamen-Liste${state.vehicles.length ? ` (${state.vehicles.length} Einträge)` : ''}.</p>`;
   }

@@ -4,7 +4,7 @@
 const EXPORT_SRC_HEADERS = ['ID', 'Typ', 'Breitengrad', 'Längengrad', 'Leitung DN', 'Druck bar', 'Durchfluss l/min', 'Volumen m³',
   'Status', 'Geprüft am', 'Adresse / Lage', 'Bemerkung', 'Verbunden mit'];
 const EXPORT_PIPE_HEADERS = ['Von', 'Nach', 'DN', 'Länge m', 'Verlauf', 'Bemerkung'];
-const EXPORT_VEH_HEADERS = ['Löschverbund', 'Ortschaft', 'Fahrzeugart', 'Funkname', 'Kennzeichen', 'Bemerkung'];
+const EXPORT_VEH_HEADERS = ['Gemeinde', 'Löschverbund', 'Ortschaft', 'Fahrzeugart', 'Funkname', 'Kennzeichen', 'Bemerkung'];
 const EXPORT_HAZ_HEADERS = ['UN-Nummer', 'Bezeichnung', 'Gefahrnummer', 'Klasse', 'Hinweise'];
 
 const hasAnyData = () => state.sources.length || state.vehicles.length || state.hazmats.length;
@@ -28,14 +28,14 @@ function pipeRow(p) {
 
 function sortedVehicles() {
   const emptyLast = (x, y) => (x === '') - (y === '') || naturalCompare(x, y);
-  return state.vehicles.slice().sort((a, b) => emptyLast(a.verbund, b.verbund) || emptyLast(a.ort, b.ort) || naturalCompare(a.funkname, b.funkname));
+  return state.vehicles.slice().sort((a, b) => emptyLast(a.gemeinde, b.gemeinde) || emptyLast(a.verbund, b.verbund) || emptyLast(a.ort, b.ort) || naturalCompare(a.funkname, b.funkname));
 }
 
 function sortedHazmats() {
   return state.hazmats.slice().sort((a, b) => naturalCompare(a.un, b.un) || naturalCompare(a.name, b.name));
 }
 
-const vehicleRow = v => [v.verbund, v.ort, v.art, v.funkname, v.kennzeichen, v.bemerkung];
+const vehicleRow = v => [v.gemeinde, v.verbund, v.ort, v.art, v.funkname, v.kennzeichen, v.bemerkung];
 const hazmatRow = h => [h.un, h.name, h.gefahrnr, h.klasse, h.hinweise];
 
 function sortedPipes() {
@@ -55,7 +55,7 @@ function buildWorkbook() {
       [10, 18, 12, 12, 10, 9, 15, 11, 13, 12, 28, 34, 24]), 'Entnahmestellen');
     XLSX.utils.book_append_sheet(wb, sheetFrom([EXPORT_PIPE_HEADERS, ...sortedPipes().map(pipeRow)], [10, 10, 8, 9, 40, 30]), 'Leitungen');
   }
-  if (state.vehicles.length) XLSX.utils.book_append_sheet(wb, sheetFrom([EXPORT_VEH_HEADERS, ...sortedVehicles().map(vehicleRow)], [22, 22, 14, 30, 14, 30]), 'Funkrufnamen');
+  if (state.vehicles.length) XLSX.utils.book_append_sheet(wb, sheetFrom([EXPORT_VEH_HEADERS, ...sortedVehicles().map(vehicleRow)], [18, 22, 22, 14, 30, 14, 30]), 'Funkrufnamen');
   if (state.hazmats.length) XLSX.utils.book_append_sheet(wb, sheetFrom([EXPORT_HAZ_HEADERS, ...sortedHazmats().map(hazmatRow)], [11, 40, 13, 12, 60]), 'Gefahrstoffe');
   return wb;
 }
@@ -149,10 +149,10 @@ function exportTemplate() {
 function exportListTemplate(kind) {
   if (kind === 'vehicles') {
     downloadBlob(csvBlob([EXPORT_VEH_HEADERS,
-      ['Beispiel-Löschverbund Nord', 'Musterstadt', 'HLF 20', 'Florian Musterstadt 17-46-1', 'BSP-FW 461', 'Beispielzeile, bitte ersetzen'],
-      ['Beispiel-Löschverbund Nord', 'Musterstadt', 'DLK 23/12', 'Florian Musterstadt 17-33-1', 'BSP-FW 331', 'Beispielzeile, bitte ersetzen'],
-      ['Beispiel-Löschverbund Nord', 'Musterdorf', 'LF 10', 'Florian Musterstadt 18-43-1', '', 'Beispielzeile, bitte ersetzen'],
-      ['Beispiel-Löschverbund Süd', 'Mustertal', 'TSF-W', 'Florian Musterstadt 20-48-1', '', 'Beispielzeile, bitte ersetzen'],
+      ['Musterstadt', 'Beispiel-Löschverbund Nord', 'Musterstadt', 'HLF 20', 'Florian Musterstadt 17-46-1', 'BSP-FW 461', 'Beispielzeile, bitte ersetzen'],
+      ['Musterstadt', 'Beispiel-Löschverbund Nord', 'Musterstadt', 'DLK 23/12', 'Florian Musterstadt 17-33-1', 'BSP-FW 331', 'Beispielzeile, bitte ersetzen'],
+      ['Musterstadt', 'Beispiel-Löschverbund Nord', 'Musterdorf', 'LF 10', 'Florian Musterstadt 18-43-1', '', 'Beispielzeile, bitte ersetzen'],
+      ['Mustertal', 'Beispiel-Löschverbund Süd', 'Mustertal', 'TSF-W', 'Florian Musterstadt 20-48-1', '', 'Beispielzeile, bitte ersetzen'],
     ]), 'Funkrufnamen_Vorlage.csv');
   } else {
     downloadBlob(csvBlob([EXPORT_HAZ_HEADERS,

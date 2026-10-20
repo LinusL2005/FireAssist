@@ -500,7 +500,20 @@ a.menu-item { color: inherit; text-decoration: none; }
 .verbund .veh-group-head { top: 56px; }
 .verbund-check { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; border-bottom: 2px solid var(--accent); }
 .verbund-check .check { flex: 1; }
-.ort-check.indent { padding-left: 26px; }
+.gemeinde-check { margin-top: 18px; border-bottom-width: 3px; }
+.gemeinde-check b { font-size: 1.08rem; }
+.ort-list .d1 { padding-left: 26px; }
+.ort-list .d2 { padding-left: 52px; }
+/* Gemeinde: farbiges Band, nicht klebend, damit Löschverbund und Ortschaft oben Platz behalten */
+.gemeinde { margin-top: 18px; }
+.gemeinde + .gemeinde { margin-top: 28px; }
+.gemeinde-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 52px;
+  padding: 6px 12px; border-radius: 12px; background: var(--accent); color: var(--accent-ink);
+}
+.gemeinde-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 800; font-size: 1.2rem; line-height: 1.2; }
+.gemeinde-head .small { font-weight: 600; font-size: .78rem; opacity: .85; }
+.gemeinde-head .head-edit { color: inherit; }
 .ort-list { margin-top: 8px; }
 .icon-btn.on { background: var(--accent); color: var(--accent-ink); }
 .page-editbar {

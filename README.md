@@ -137,7 +137,7 @@ So funktioniert später auch der Import eurer echten Daten. Die Dateien liegen i
 |---|---|
 | `Hydranten_Beispiel.csv` | 40 Entnahmestellen mit Koordinaten, Nennweite, Druck, Zustand … und 1 Leitungsknoten |
 | `Leitungen_Beispiel.csv` | 37 Leitungen (Von, Nach, DN) |
-| `Funkrufnamen_Beispiel.csv` | 18 Fahrzeuge in 5 Ortschaften und 2 Löschverbünden, teils mit Kennzeichen |
+| `Funkrufnamen_Beispiel.csv` | 18 Fahrzeuge in 5 Ortschaften, 2 Löschverbünden und 2 Gemeinden, teils mit Kennzeichen |
 | `Gefahrstoffe_Beispiel.csv` | 24 gängige Gefahrstoffe |
 
 1. **Dateien herunterladen:** Auf GitHub den Ordner `beispiel` öffnen → Datei anklicken → rechts oben **Download raw file** (Pfeil nach unten).
@@ -173,13 +173,15 @@ Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure e
   Schneller geht es beim Verbinden: statt einer Entnahmestelle eine Leitung antippen, dann entsteht dort ein Knoten mit Abzweig.
   Knoten lassen sich verschieben. Beim Löschen eines Knotens mit zwei Leitungen werden sie wieder zu einer.
   Knoten zählen nicht als Entnahmestelle und erscheinen nicht in Umkreissuche, Liste und Suche.
-- **Funkrufnamen** (Reiter Funk in der unteren Leiste): Fahrzeuge mit Fahrzeugart und Funkname, gruppiert nach **Löschverbund → Ortschaft**.
-  - **Ansicht** (Regler-Symbol): Gliederung wählen – Löschverbund › Ortschaft, nur Ortschaft, nur Löschverbund oder ohne Gliederung –
+- **Funkrufnamen** (Reiter Funk in der unteren Leiste): Fahrzeuge mit Fahrzeugart und Funkname, gruppiert nach **Gemeinde → Löschverbund → Ortschaft**
+  (Gemeinde und Löschverbund sind optional).
+  - **Ansicht** (Regler-Symbol): Gliederung wählen – z. B. Gemeinde › Löschverbund › Ortschaft, Löschverbund › Ortschaft, nur Ortschaft oder ohne Gliederung –
     und Sortierung nach Funkname oder Fahrzeugart. Was nicht als Überschrift erscheint, steht klein am Eintrag.
   - **Kennzeichen** (optional) steht ganz klein am Eintrag und wird in der Suche mit gefunden.
-  - **Ortschaften:** wählen, welche angezeigt werden – einzelne Ortschaften, ganze Löschverbünde oder mit „nur dieser“ genau einen Verbund.
+  - **Ortschaften:** wählen, welche angezeigt werden – einzelne Ortschaften, ganze Löschverbünde oder Gemeinden,
+    mit „nur diese“ bzw. „nur dieser“ genau eine Gemeinde oder einen Verbund.
   - **Bearbeiten** (Stift-Symbol): Fahrzeug antippen zum Ändern oder Löschen, „+ Fahrzeug hinzufügen“ in jeder Gruppe,
-    Stift an Ortschaft oder Löschverbund zum Umbenennen bzw. um eine Ortschaft einem anderen Verbund zuzuordnen.
+    Stift an Ortschaft, Löschverbund oder Gemeinde zum Umbenennen bzw. um sie einem anderen Verbund oder einer anderen Gemeinde zuzuordnen.
     Doppelte Funknamen werden abgelehnt, jede Änderung lässt sich rückgängig machen.
   - Ansicht und Auswahl werden pro Gerät gespeichert, die Fahrzeugliste selbst gehört zu den Daten (Sicherung, App-Datei, Excel).
   Die Suche durchsucht immer alle Ortschaften, auch ohne Schrägstrich („17442“ oder „44-2“ findet „17-44-2“).
@@ -228,14 +230,14 @@ Beispieldateien liegen in `beispiel/`. Eine Excel-Vorlage gibt es in der App unt
 
 ### Funkrufnamen
 
-| Löschverbund (optional) | Ortschaft | Fahrzeugart | Funkname | Kennzeichen (optional) | Bemerkung (optional) |
-|---|---|---|---|---|---|
-| Löschverbund Nord | Musterstadt | HLF 20 | Florian Musterstadt 17-46-1 | BSP-FW 461 | |
-| | | DLK 23/12 | Florian Musterstadt 17-33-1 | | leere Zelle = wie Zeile darüber |
-| | Musterdorf | LF 10 | Florian Musterstadt 18-43-1 | | |
-| Löschverbund Süd | Mustertal | TSF-W | Florian Musterstadt 20-48-1 | | |
+| Gemeinde (optional) | Löschverbund (optional) | Ortschaft | Fahrzeugart | Funkname | Kennzeichen (optional) | Bemerkung (optional) |
+|---|---|---|---|---|---|---|
+| Musterstadt | Löschverbund Nord | Musterstadt | HLF 20 | Florian Musterstadt 17-46-1 | BSP-FW 461 | |
+| | | | DLK 23/12 | Florian Musterstadt 17-33-1 | | leere Zelle = wie Zeile darüber |
+| | | Musterdorf | LF 10 | Florian Musterstadt 18-43-1 | | |
+| Mustertal | Löschverbund Süd | Mustertal | TSF-W | Florian Musterstadt 20-48-1 | | |
 
-Ohne Spalte „Löschverbund“ wird nur nach Ortschaft gruppiert. Sortiert wird alphabetisch nach Löschverbund, dann Ortschaft, dann Funkname.
+Ohne Spalten „Gemeinde“ und „Löschverbund“ wird nur nach Ortschaft gruppiert. Sortiert wird alphabetisch nach Gemeinde, Löschverbund, Ortschaft, dann Funkname.
 
 Ein Import ersetzt die bisherige Liste. Vorlage und Beispiel: Seite Funkrufnamen → ⋮.
 

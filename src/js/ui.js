@@ -796,7 +796,7 @@ function renderSearchResults() {
   const vehHits = q.length >= 2 ? vehicleMatches(q).slice().sort(compareByPlace).slice(0, 6) : [];
   if (vehHits.length) {
     parts.push('<div class="sr-head">Funkrufnamen</div>');
-    parts.push(...vehHits.map(v => `<button class="sr" data-act="sr-funk" data-q="${esc(v.funkname)}">${IC.radio}<span><b>${esc(v.funkname)}</b><small>${esc([v.art, v.ort, v.verbund].filter(Boolean).join(' · '))}</small></span></button>`));
+    parts.push(...vehHits.map(v => `<button class="sr" data-act="sr-funk" data-q="${esc(v.funkname)}">${IC.radio}<span><b>${esc(v.funkname)}</b><small>${esc([v.art, v.ort, v.verbund, v.gemeinde].filter(Boolean).join(' · '))}</small></span></button>`));
   }
   if (searchState.geo && searchState.geo.length) {
     parts.push('<div class="sr-head">Adressen</div>');
