@@ -35,7 +35,8 @@ const VEH_FIELDS = [
   { key: 'ort', label: 'Ortschaft', syn: ['ortschaft', 'ort', 'ortsteil', 'standort', 'wache', 'feuerwehr', 'einheit', 'loeschzug', 'loeschgruppe', 'loescheinheit', 'abteilung', 'gemeinde', 'ortsfeuerwehr', 'ortswehr', 'wehr', 'geraetehaus', 'stadtteil', 'gemeindeteil'] },
   { key: 'art', label: 'Fahrzeugart', syn: ['fahrzeugart', 'fahrzeug', 'fahrzeugtyp', 'fahrzeugbezeichnung', 'typ', 'art', 'kurzbezeichnung', 'fzg', 'fzgart', 'fahrzeugklasse', 'type', 'bezeichnung'] },
   { key: 'funkname', label: 'Funkname', syn: ['funkname', 'funkrufname', 'funkrufnamen', 'funknamen', 'rufname', 'funkkenner', 'funkkennung', 'rufzeichen', 'taktischesrufzeichen', 'funk', 'opta', 'kennung'] },
-  { key: 'bemerkung', label: 'Bemerkung', syn: ['bemerkung', 'bemerkungen', 'hinweis', 'hinweise', 'notiz', 'info', 'anmerkung', 'kennzeichen'] },
+  { key: 'kennzeichen', label: 'Kennzeichen', syn: ['kennzeichen', 'kfzkennzeichen', 'fahrzeugkennzeichen', 'amtlicheskennzeichen', 'polkennzeichen', 'nummernschild', 'kfz'] },
+  { key: 'bemerkung', label: 'Bemerkung', syn: ['bemerkung', 'bemerkungen', 'hinweis', 'hinweise', 'notiz', 'info', 'anmerkung'] },
 ];
 
 const HAZ_FIELDS = [
@@ -293,7 +294,7 @@ function convertVehicles(t) {
     if (verbund && verbund !== lastVerbund) { lastVerbund = verbund; lastOrt = ''; } else verbund = lastVerbund;
     let ort = get('ort');
     if (ort) lastOrt = ort; else ort = lastOrt;
-    const v = cleanVehicle({ verbund, ort, art: get('art'), funkname: get('funkname'), bemerkung: get('bemerkung') });
+    const v = cleanVehicle({ verbund, ort, art: get('art'), funkname: get('funkname'), kennzeichen: get('kennzeichen'), bemerkung: get('bemerkung') });
     if (!v.funkname) {
       if (v.art) skipped.push({ line: t.lines[i], file: t.name, reason: 'kein Funkname' });
       return;

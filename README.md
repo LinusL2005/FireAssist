@@ -135,17 +135,17 @@ So funktioniert später auch der Import eurer echten Daten. Die Dateien liegen i
 
 | Datei | Inhalt |
 |---|---|
-| `Hydranten_Beispiel.csv` | 40 Entnahmestellen mit Koordinaten, Nennweite, Druck, Zustand … |
-| `Leitungen_Beispiel.csv` | 36 Leitungen (Von, Nach, DN) |
-| `Funkrufnamen_Beispiel.csv` | 18 Fahrzeuge in 5 Ortschaften und 2 Löschverbünden |
+| `Hydranten_Beispiel.csv` | 40 Entnahmestellen mit Koordinaten, Nennweite, Druck, Zustand … und 1 Leitungsknoten |
+| `Leitungen_Beispiel.csv` | 37 Leitungen (Von, Nach, DN) |
+| `Funkrufnamen_Beispiel.csv` | 18 Fahrzeuge in 5 Ortschaften und 2 Löschverbünden, teils mit Kennzeichen |
 | `Gefahrstoffe_Beispiel.csv` | 24 gängige Gefahrstoffe |
 
 1. **Dateien herunterladen:** Auf GitHub den Ordner `beispiel` öffnen → Datei anklicken → rechts oben **Download raw file** (Pfeil nach unten).
    Am PC geht auch **Code** → **Download ZIP** für alles auf einmal.
 2. In FireAssist: **☰ Mehr** → **Daten und Bearbeiten** → **Datei importieren** → alle vier Dateien **gleichzeitig** auswählen.
-3. Das Fenster „Daten importieren“ zeigt für jede Datei, was erkannt wurde (z. B. „36 Leitungen erkannt“) und welche Spalte wofür steht.
+3. Das Fenster „Daten importieren“ zeigt für jede Datei, was erkannt wurde (z. B. „37 Leitungen erkannt“) und welche Spalte wofür steht.
    → **Importieren**.
-4. Es erscheint „Import abgeschlossen“ mit 40 Entnahmestellen, 36 Leitungen, 18 Funkrufnamen und 24 Gefahrstoffen → **OK**.
+4. Es erscheint „Import abgeschlossen“ mit 40 Entnahmestellen, 1 Leitungsknoten, 37 Leitungen, 18 Funkrufnamen und 24 Gefahrstoffen → **OK**.
 
 Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure eigenen Listen.
 
@@ -176,6 +176,7 @@ Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure e
 - **Funkrufnamen** (Reiter Funk in der unteren Leiste): Fahrzeuge mit Fahrzeugart und Funkname, gruppiert nach **Löschverbund → Ortschaft**.
   - **Ansicht** (Regler-Symbol): Gliederung wählen – Löschverbund › Ortschaft, nur Ortschaft, nur Löschverbund oder ohne Gliederung –
     und Sortierung nach Funkname oder Fahrzeugart. Was nicht als Überschrift erscheint, steht klein am Eintrag.
+  - **Kennzeichen** (optional) steht ganz klein am Eintrag und wird in der Suche mit gefunden.
   - **Ortschaften:** wählen, welche angezeigt werden – einzelne Ortschaften, ganze Löschverbünde oder mit „nur dieser“ genau einen Verbund.
   - **Bearbeiten** (Stift-Symbol): Fahrzeug antippen zum Ändern oder Löschen, „+ Fahrzeug hinzufügen“ in jeder Gruppe,
     Stift an Ortschaft oder Löschverbund zum Umbenennen bzw. um eine Ortschaft einem anderen Verbund zuzuordnen.
@@ -227,12 +228,12 @@ Beispieldateien liegen in `beispiel/`. Eine Excel-Vorlage gibt es in der App unt
 
 ### Funkrufnamen
 
-| Löschverbund (optional) | Ortschaft | Fahrzeugart | Funkname | Bemerkung (optional) |
-|---|---|---|---|---|
-| Löschverbund Nord | Musterstadt | HLF 20 | Florian Musterstadt 17-46-1 | |
-| | | DLK 23/12 | Florian Musterstadt 17-33-1 | leere Zelle = wie Zeile darüber |
-| | Musterdorf | LF 10 | Florian Musterstadt 18-43-1 | |
-| Löschverbund Süd | Mustertal | TSF-W | Florian Musterstadt 20-48-1 | |
+| Löschverbund (optional) | Ortschaft | Fahrzeugart | Funkname | Kennzeichen (optional) | Bemerkung (optional) |
+|---|---|---|---|---|---|
+| Löschverbund Nord | Musterstadt | HLF 20 | Florian Musterstadt 17-46-1 | BSP-FW 461 | |
+| | | DLK 23/12 | Florian Musterstadt 17-33-1 | | leere Zelle = wie Zeile darüber |
+| | Musterdorf | LF 10 | Florian Musterstadt 18-43-1 | | |
+| Löschverbund Süd | Mustertal | TSF-W | Florian Musterstadt 20-48-1 | | |
 
 Ohne Spalte „Löschverbund“ wird nur nach Ortschaft gruppiert. Sortiert wird alphabetisch nach Löschverbund, dann Ortschaft, dann Funkname.
 

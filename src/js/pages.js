@@ -148,7 +148,7 @@ function vehicleOrte() {
 function vehicleMatches(q) {
   const n = q.trim().toLowerCase(), nk = normKey(q);
   if (!n) return state.vehicles;
-  return state.vehicles.filter(v => `${v.funkname} ${v.art} ${v.ort} ${v.verbund} ${v.bemerkung}`.toLowerCase().includes(n)
+  return state.vehicles.filter(v => `${v.funkname} ${v.art} ${v.ort} ${v.verbund} ${v.kennzeichen} ${v.bemerkung}`.toLowerCase().includes(n)
     || (nk.length >= 2 && normKey(v.funkname).includes(nk)));
 }
 
@@ -170,8 +170,10 @@ function vehRow(v, levels) {
   if (!levels.includes('ort') && v.ort) place.push(v.ort);
   if (!levels.includes('verbund') && v.verbund) place.push(v.verbund);
   const meta = [place.join(' · '), v.bemerkung].filter(Boolean).join(' – ');
+  /* Kennzeichen nur als Zusatzinfo, bewusst unauffällig */
+  const kz = v.kennzeichen ? `<span class="veh-kz${meta ? ' sep' : ''}">${esc(v.kennzeichen)}</span>` : '';
   const inner = `<span class="veh-art">${esc(v.art || '–')}</span>
-    <span class="veh-main"><span class="veh-name">${funknameHtml(v.funkname)}</span>${meta ? `<span class="veh-bem">${esc(meta)}</span>` : ''}</span>`;
+    <span class="veh-main"><span class="veh-name">${funknameHtml(v.funkname)}</span>${meta || kz ? `<span class="veh-bem">${esc(meta)}${kz}</span>` : ''}</span>`;
   return funkState.edit
     ? `<button class="veh veh-edit" data-act="veh-edit" data-i="${funkRowIndex.get(v)}">${inner}${IC.edit}</button>`
     : `<div class="veh">${inner}</div>`;
@@ -298,7 +300,7 @@ function datalists() {
 }
 
 function vehFormHtml(i, preset = {}) {
-  const v = i != null ? state.vehicles[i] : Object.assign({ verbund: '', ort: '', art: '', funkname: '', bemerkung: '' }, preset);
+  const v = i != null ? state.vehicles[i] : Object.assign({ verbund: '', ort: '', art: '', funkname: '', kennzeichen: '', bemerkung: '' }, preset);
   return `<form id="veh-form" class="modal-form" data-i="${i ?? ''}" autocomplete="off" novalidate>
     <div class="modal-head"><h2>${i != null ? 'Fahrzeug bearbeiten' : 'Neues Fahrzeug'}</h2><button type="button" class="icon-btn" data-act="modal-close" aria-label="Schließen">${IC.close}</button></div>
     <div class="modal-body form">
@@ -308,7 +310,10 @@ function vehFormHtml(i, preset = {}) {
         <label class="fld">Ortschaft<input name="ort" list="dl-ort" value="${esc(v.ort)}"></label>
         <label class="fld">Löschverbund<input name="verbund" list="dl-verbund" value="${esc(v.verbund)}" placeholder="optional"></label>
       </div>
-      <label class="fld">Bemerkung<input name="bemerkung" value="${esc(v.bemerkung)}" placeholder="optional"></label>
+      <div class="grid2">
+        <label class="fld">Kennzeichen<input name="kennzeichen" value="${esc(v.kennzeichen)}" placeholder="optional" spellcheck="false" autocapitalize="characters"></label>
+        <label class="fld">Bemerkung<input name="bemerkung" value="${esc(v.bemerkung)}" placeholder="optional"></label>
+      </div>
       ${datalists()}
     </div>
     <div class="modal-foot">
@@ -321,7 +326,7 @@ function vehFormHtml(i, preset = {}) {
 
 function saveVehForm(form) {
   const val = n => form.elements[n].value.trim();
-  const rec = cleanVehicle({ verbund: val('verbund'), ort: val('ort'), art: val('art'), funkname: val('funkname'), bemerkung: val('bemerkung') });
+  const rec = cleanVehicle({ verbund: val('verbund'), ort: val('ort'), art: val('art'), funkname: val('funkname'), kennzeichen: val('kennzeichen'), bemerkung: val('bemerkung') });
   if (!rec.funkname) { toast('Bitte einen Funknamen eingeben.'); return; }
   const i = form.dataset.i === '' ? null : +form.dataset.i;
   const dup = state.vehicles.findIndex((x, j) => j !== i && x.funkname.toLowerCase() === rec.funkname.toLowerCase());
