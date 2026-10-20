@@ -590,7 +590,7 @@ button.veh:hover { background: var(--surface-2); }
 
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 1400; height: var(--tab-h); padding-bottom: var(--safe-b);
-  display: grid; grid-template-columns: repeat(4, minmax(0, 160px)); justify-content: center;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 160px)); justify-content: center;
   background: var(--surface); border-top: 1px solid var(--border);
 }
 .tabbar button {

@@ -1,5 +1,5 @@
 'use strict';
-/* Oberfläche: Bottom-Sheet, Dialoge, Auswahl, Bearbeiten, Umkreissuche, Suche, GPS, Menü „Mehr“, untere Leiste */
+/* Oberfläche: Bottom-Sheet, Dialoge, Auswahl, Bearbeiten, Umkreissuche, Suche, GPS, Menü „Mehr“ (☰), untere Leiste */
 
 const icon = p => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
 const IC = {
@@ -798,7 +798,7 @@ function clearSearch() {
 
 const menuItem = (act, ic, label, extra = '') => `<button class="menu-item" data-act="${act}">${ic}<span>${label}</span>${extra}</button>`;
 
-/* Unterseiten, die zum Reiter „Mehr“ gehören */
+/* Unterseiten des Menüs „Mehr“ (☰); „Karte“ in der unteren Leiste schließt sie */
 const MEHR_SHEETS = ['menu', 'daten', 'settings', 'list', 'legend', 'about'];
 
 function subHead(title) {
@@ -897,9 +897,7 @@ function settingsHtml() {
 /* ---------- Untere Leiste ---------- */
 
 function activeTab() {
-  const page = currentPage();
-  if (page) return page;
-  return MEHR_SHEETS.includes(sheet.name) ? 'mehr' : 'karte';
+  return currentPage() || 'karte';
 }
 
 function renderTabbar() {
@@ -913,10 +911,8 @@ function renderTabbar() {
 
 function openTab(tab) {
   if (tab === 'funk' || tab === 'gefahr') { if (sheet.name) closeSheet(); openPage(tab); return; }
-  const wasMehr = activeTab() === 'mehr';
   closePage();
-  if (tab === 'mehr' && !wasMehr) ACT['open-menu']();
-  else if (MEHR_SHEETS.includes(sheet.name)) closeSheet();
+  if (MEHR_SHEETS.includes(sheet.name)) closeSheet();
 }
 
 const APP_COPYRIGHT = '© 2026 LinusL2005';
