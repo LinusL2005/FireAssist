@@ -178,6 +178,7 @@ function sourceSvg(s, size = 32) {
     case 'square': shape = `<rect x="4" y="4" width="24" height="24" rx="1.5" ${st}/>`; break;
     case 'triangle': shape = `<path d="M16 2.5 30 28H2z" ${st} stroke-linejoin="round"/>`; ty = 19.5; break;
     case 'diamond': shape = `<path d="M16 1.5 30.5 16 16 30.5 1.5 16z" ${st} stroke-linejoin="round"/>`; break;
+    case 'node': shape = `<circle cx="16" cy="16" r="8" fill="${fill}" stroke="#fff" stroke-width="3"/>`; break;
     default: shape = `<circle cx="16" cy="16" r="13.5" ${st}/>`;
   }
   const fs = txt.length >= 3 ? 10.5 : txt.length === 2 ? 12.5 : 14;
@@ -225,6 +226,23 @@ function makeDot(s) {
   return m;
 }
 
+/* Leitungsknoten: beim Bearbeiten verschiebbar und antippbar, sonst nur ein Punkt auf der Leitung */
+function makeNode(s) {
+  if (!ui.editMode) {
+    return L.circleMarker([s.lat, s.lon], {
+      renderer: pipeRenderer, radius: 4, color: '#fff', weight: 2, fillColor: TYPES.KNOTEN.color, fillOpacity: 1, interactive: false,
+    });
+  }
+  const selected = ui.selSource === s.id || ui.connectFrom === s.id;
+  const m = L.marker([s.lat, s.lon], {
+    icon: L.divIcon({ className: 'node-wrap', html: `<div class="node${selected ? ' sel' : ''}"></div>`, iconSize: [32, 32], iconAnchor: [16, 16] }),
+    draggable: true, keyboard: false, autoPan: true, zIndexOffset: selected ? 1000 : 0,
+  });
+  m.on('click', () => onSourceClick(s.id));
+  m.on('dragend', () => onSourceDragged(s.id, m.getLatLng()));
+  return m;
+}
+
 function renderSources(force = false) {
   const cls = sizeClass(map.getZoom());
   if (force || cls !== markerSizeClass) {
@@ -244,8 +262,9 @@ function renderSources(force = false) {
   }
   for (const s of state.sources) {
     if (shownMarkers.has(s.id) || !bounds.contains([s.lat, s.lon])) continue;
-    const m = cls === 's' ? makeDot(s) : makeMarker(s, cls);
-    (cls === 's' ? layers.dots : layers.markers).addLayer(m);
+    if (isNode(s) && (!settings.showPipes || (cls === 's' && !ui.editMode))) continue;
+    const m = isNode(s) ? makeNode(s) : cls === 's' ? makeDot(s) : makeMarker(s, cls);
+    (m instanceof L.CircleMarker ? layers.dots : layers.markers).addLayer(m);
     shownMarkers.set(s.id, m);
   }
 }
@@ -276,7 +295,7 @@ function renderPipes() {
     }
     for (const [p, pts, st, casing] of lines) {
       const line = L.polyline(pts, Object.assign({ renderer: pipeRenderer, lineCap: 'round', lineJoin: 'round', opacity: 1, bubblingMouseEvents: false }, st));
-      line.on('click', () => onPipeClick(p));
+      line.on('click', e => onPipeClick(p, e.latlng));
       line.addTo(layers.pipes);
       pipeLayers.set(pipeKey(p.a, p.b), { line, casing });
     }
@@ -355,7 +374,7 @@ function vtxIcon(ghost) {
 
 function renderPipeHandles() {
   layers.handles.clearLayers();
-  if (!ui.editMode || !ui.selPipe || !settings.showPipes) return;
+  if (!ui.editMode || !ui.selPipe || !settings.showPipes || ui.mode !== 'view') return;
   const key = ui.selPipe;
   const p = state.pipes.find(x => pipeKey(x.a, x.b) === key);
   const pts = p && pipePoints(p);
@@ -388,6 +407,21 @@ function renderPipeHandles() {
     g.on('click', () => { pushUndo('Knickpunkt eingefügt'); p.via.splice(i, 0, [round(mid[0]), round(mid[1])]); commit(); });
     g.addTo(layers.handles);
   }
+}
+
+/* Nächster Punkt auf dem Leitungsverlauf: Abschnitt (wie splitPipe), Position, nächstes Ende und Abstand dorthin in Pixeln */
+function snapToPipe(p, latlng) {
+  const pts = pipePoints(p);
+  if (!pts) return null;
+  const px = pts.map(q => map.latLngToLayerPoint(q)), tap = map.latLngToLayerPoint(latlng);
+  let best = null;
+  for (let i = 0; i < px.length - 1; i++) {
+    const c = L.LineUtil.closestPointOnSegment(tap, px[i], px[i + 1]), d = c.distanceTo(tap);
+    if (!best || d < best.d) best = { d, seg: i, pt: c };
+  }
+  const ll = map.layerPointToLatLng(best.pt);
+  const dA = best.pt.distanceTo(px[0]), dB = best.pt.distanceTo(px[px.length - 1]);
+  return { seg: best.seg, lat: +ll.lat.toFixed(7), lon: +ll.lng.toFixed(7), end: dA <= dB ? p.a : p.b, endDist: Math.min(dA, dB) };
 }
 
 function renderAll() {

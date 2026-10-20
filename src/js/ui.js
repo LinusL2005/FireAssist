@@ -184,7 +184,9 @@ function renderPills() {
   if (ui.mode === 'pickRadius') {
     out.push(`<div class="pill pill-act">${IC.target}<span>Einsatzstelle auf der Karte antippen</span><button data-act="radius-gps">Mein Standort</button><button data-act="mode-cancel">Abbrechen</button></div>`);
   } else if (ui.mode === 'connect') {
-    out.push(`<div class="pill pill-act">${IC.link}<span>Leitung ab <b>${esc(ui.connectFrom)}</b>: nächste Entnahmestelle antippen</span><button data-act="mode-cancel">Fertig</button></div>`);
+    out.push(`<div class="pill pill-act">${IC.link}<span>Leitung ab <b>${esc(ui.connectFrom)}</b>: nächste Entnahmestelle antippen – oder eine Leitung für einen Abzweig</span><button data-act="mode-cancel">Fertig</button></div>`);
+  } else if (ui.mode === 'addNode') {
+    out.push(`<div class="pill pill-act">${IC.route}<span>Knoten: Stelle auf einer Leitung antippen, z. B. an der Kreuzung</span><button data-act="mode-cancel">Abbrechen</button></div>`);
   } else if (ui.editMode) {
     out.push(`<div class="pill pill-edit">${IC.edit}<span>Bearbeiten: Karte antippen = neue Entnahmestelle, Symbole verschiebbar</span><button data-act="edit-off">Fertig</button></div>`);
   }
@@ -229,20 +231,40 @@ function clearSelection() {
 
 function onSourceClick(id) {
   if (ui.mode === 'connect') { connectTo(id); return; }
+  if (ui.mode === 'addNode') { toast('Bitte eine Leitung antippen – oder „Abbrechen“.'); return; }
   if (ui.mode === 'pickRadius') { const s = byId.get(id); setRadiusPoint(s.lat, s.lon, `bei ${s.id}`); return; }
   selectSource(id);
 }
 
-function onPipeClick(p) {
+function onPipeClick(p, latlng) {
+  if (ui.mode === 'connect') { connectToPipe(p, latlng); return; }
+  if (ui.mode === 'addNode') {
+    const id = insertNode(p, latlng, 'Knoten eingefügt');
+    if (!id) return;
+    endMode();
+    selectSource(id);
+    toast(`Knoten ${id} eingefügt. Mit „Verbinden“ geht ein Abzweig ab.`, { action: { label: 'Rückgängig', fn: undo } });
+    return;
+  }
   if (ui.mode !== 'view') return;
   selectPipe(p);
+}
+
+/* Leitung an der angetippten Stelle teilen; null, wenn die Stelle zu nah an einem Ende liegt */
+function insertNode(p, latlng, undoLabel) {
+  const sn = snapToPipe(p, latlng);
+  if (!sn) return null;
+  if (sn.endDist < 16) { toast(`Zu nah an ${sn.end} – dort ist schon ein Punkt.`); return null; }
+  pushUndo(undoLabel);
+  return splitPipe(p, sn.seg, sn.lat, sn.lon);
 }
 
 function onMapClick(e) {
   if (!$('#search-results').hidden) { hideSearch(); return; }
   if (!$('#layer-pop').hidden) { $('#layer-pop').hidden = true; return; }
   if (ui.mode === 'pickRadius') { setRadiusPoint(e.latlng.lat, e.latlng.lng, null); return; }
-  if (ui.mode === 'connect') { toast('Bitte eine Entnahmestelle antippen – oder „Fertig“.'); return; }
+  if (ui.mode === 'connect') { toast('Bitte eine Entnahmestelle oder Leitung antippen – oder „Fertig“.'); return; }
+  if (ui.mode === 'addNode') { toast('Bitte eine Leitung antippen – oder „Abbrechen“.'); return; }
   if (ui.editMode) {
     /* erst offenes Panel schließen, erst der nächste Tipp legt etwas an */
     if (sheet.name && !(sheet.name === 'edit' && ui.draft)) { closeSheet(); return; }
@@ -278,12 +300,41 @@ function navUrl(s) {
   return `https://www.openstreetmap.org/directions?to=${s.lat}%2C${s.lon}`;
 }
 
+function connListHtml(id) {
+  const conns = pipesOf(id).map(p => ({ p, other: p.a === id ? p.b : p.a, len: pipeLength(p) }))
+    .sort((x, y) => naturalCompare(x.other, y.other));
+  return `<div class="section-title">Verbunden mit ${conns.length ? `(${conns.length})` : ''}</div>
+    ${conns.length ? `<div class="conn-list">${conns.map(c => {
+      const o = byId.get(c.other);
+      return `<button class="conn" data-act="select-source" data-id="${esc(c.other)}">
+        <span class="conn-ic">${o ? sourceSvg(o, 24) : ''}</span>
+        <span class="conn-id">${esc(c.other)}</span>
+        <span class="conn-meta"><span class="pipe-sw" style="--c:${pipeStyle(c.p.dn).color}"></span>${c.p.dn ? `DN ${c.p.dn}` : 'DN ?'} · ${fmtDist(c.len)}</span>
+        ${IC.chevron}</button>`;
+    }).join('')}</div>` : '<p class="muted small">Keine Leitungen erfasst.</p>'}`;
+}
+
+function nodeSheetHtml(s) {
+  return `
+    <div class="sh-head">
+      <div class="sh-icon">${sourceSvg(s, 44)}</div>
+      <div class="sh-title"><h2>${esc(s.id)}</h2><div class="sub">Leitungsknoten (Abzweig, Kreuzung)</div></div>
+      <button class="icon-btn" data-act="close-sheet" aria-label="Schließen">${IC.close}</button>
+    </div>
+    ${connListHtml(s.id)}
+    ${ui.editMode ? `
+      <p class="muted small">Knoten auf der Karte ziehen = verschieben.</p>
+      <div class="actions wrap">
+        <button class="btn" data-act="connect-start" data-id="${esc(s.id)}">${IC.link} Verbinden</button>
+        <button class="btn danger" data-act="delete-source" data-id="${esc(s.id)}">${IC.trash} Löschen</button>
+      </div>` : ''}`;
+}
+
 function sourceSheetHtml(id) {
   const s = byId.get(id);
   if (!s) return null;
+  if (isNode(s)) return nodeSheetHtml(s);
   const t = TYPES[s.typ];
-  const conns = pipesOf(id).map(p => ({ p, other: p.a === id ? p.b : p.a, len: pipeLength(p) }))
-    .sort((x, y) => naturalCompare(x.other, y.other));
   let distInfo = '';
   if (ui.radius) {
     const d = distance(ui.radius.lat, ui.radius.lon, s.lat, s.lon);
@@ -307,15 +358,7 @@ function sourceSheetHtml(id) {
     </div>
     ${s.adresse ? `<div class="line">${IC.pin}<span>${esc(s.adresse)}</span></div>` : ''}
     ${s.bemerkung ? `<div class="note">${esc(s.bemerkung)}</div>` : ''}
-    <div class="section-title">Verbunden mit ${conns.length ? `(${conns.length})` : ''}</div>
-    ${conns.length ? `<div class="conn-list">${conns.map(c => {
-      const o = byId.get(c.other);
-      return `<button class="conn" data-act="select-source" data-id="${esc(c.other)}">
-        <span class="conn-ic">${o ? sourceSvg(o, 24) : ''}</span>
-        <span class="conn-id">${esc(c.other)}</span>
-        <span class="conn-meta"><span class="pipe-sw" style="--c:${pipeStyle(c.p.dn).color}"></span>${c.p.dn ? `DN ${c.p.dn}` : 'DN ?'} · ${fmtDist(c.len)}</span>
-        ${IC.chevron}</button>`;
-    }).join('')}</div>` : '<p class="muted small">Keine Leitungen erfasst.</p>'}
+    ${connListHtml(id)}
     <div class="coords"><span>${fmtCoord(s.lat)}, ${fmtCoord(s.lon)}</span><button class="btn sm ghost" data-act="copy-coords" data-id="${esc(s.id)}">${IC.copy} Kopieren</button></div>
     <div class="actions wrap">
       <a class="btn" href="${navUrl(s)}"${navUrl(s).startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${IC.nav} Navigation</a>
@@ -358,6 +401,7 @@ function pipeSheetHtml(key) {
       <div class="section-title">Verlauf</div>
       <div class="route-help">${IC.route}<span>${nVia ? `<b>${nVia} Knickpunkt${nVia > 1 ? 'e' : ''}.</b> ` : '<b>Gerade Linie.</b> '}Auf der Karte: <span class="vtx-demo ghost"></span> ziehen oder antippen = neuer Knickpunkt, <span class="vtx-demo"></span> ziehen = verschieben, antippen = löschen.</span></div>
       <div class="actions wrap">
+        <button class="btn" data-act="node-add">${IC.link} Knoten einfügen</button>
         ${nVia ? `<button class="btn" data-act="pipe-straight">${IC.route} Verlauf begradigen</button>` : ''}
         <button class="btn danger" data-act="pipe-delete">${IC.trash} Leitung löschen</button>
       </div>` : ''}`;
@@ -370,7 +414,7 @@ function currentPipe() { return state.pipes.find(x => pipeKey(x.a, x.b) === ui.s
 function setEditMode(on) {
   ui.editMode = on;
   if (!on) {
-    if (ui.mode === 'connect') endMode();
+    if (ui.mode === 'connect' || ui.mode === 'addNode') endMode();
     if (ui.draft) closeSheet();
   }
   renderPills();
@@ -428,7 +472,7 @@ function editFormHtml(id) {
     </div>
     <div class="grid2">
       <label class="fld">ID / Nummer<input name="sid" value="${esc(s.id)}" autocapitalize="characters" spellcheck="false"></label>
-      <label class="fld">Typ<select name="typ" data-change="form-typ">${Object.entries(TYPES).map(([k, v]) => `<option value="${k}"${k === s.typ ? ' selected' : ''}>${esc(v.label)}</option>`).join('')}</select></label>
+      <label class="fld">Typ<select name="typ" data-change="form-typ">${Object.entries(TYPES).filter(([, v]) => !v.node).map(([k, v]) => `<option value="${k}"${k === s.typ ? ' selected' : ''}>${esc(v.label)}</option>`).join('')}</select></label>
       <label class="fld only-hyd">Leitung DN<select name="dn"><option value="">unbekannt</option>${dnOpts.map(d => `<option value="${d}"${d === s.dn ? ' selected' : ''}>DN ${d}</option>`).join('')}</select></label>
       <label class="fld only-other">Volumen (m³)<input name="volumen" inputmode="decimal" value="${numIn(s.volumen)}"></label>
       <label class="fld">Status<select name="status">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}"${k === s.status ? ' selected' : ''}>${esc(v.label)}</option>`).join('')}</select></label>
@@ -509,12 +553,25 @@ function connectTo(id) {
   renderPills();
 }
 
+/* Beim Verbinden eine Leitung angetippt: dort einen Knoten einfügen und als Abzweig anschließen */
+function connectToPipe(p, latlng) {
+  const from = ui.connectFrom;
+  if (!from) return;
+  if (p.a === from || p.b === from) { toast(`Diese Leitung ist schon an ${from} angeschlossen.`); return; }
+  const id = insertNode(p, latlng, 'Abzweig angelegt');
+  if (!id) return;
+  const np = addPipe(from, id);
+  endMode();
+  toast(`Abzweig ${from} ↔ ${id}${np && np.dn ? ` (DN ${np.dn})` : ''} angelegt.`, { action: { label: 'Rückgängig', fn: undo } });
+}
+
 function endMode() {
   const prev = ui.connectFrom;
   ui.mode = 'view';
   ui.connectFrom = null;
   if (prev) refreshMarkers(prev);
   renderPills();
+  renderHighlight();
 }
 
 /* ---------- Umkreissuche ---------- */
@@ -522,7 +579,7 @@ function endMode() {
 const RADIUS_STEPS = [100, 200, 300, 500, 1000];
 
 function enterPickMode() {
-  if (ui.mode === 'connect') endMode();
+  if (ui.mode === 'connect' || ui.mode === 'addNode') endMode();
   ui.mode = 'pickRadius';
   if (sheet.name === 'radius') closeSheet();
   renderPills();
@@ -545,7 +602,7 @@ function clearRadius() {
 
 function radiusResults() {
   if (!ui.radius) return { inside: [], outside: [] };
-  const all = state.sources.map(s => ({
+  const all = waterSources().map(s => ({
     s, d: distance(ui.radius.lat, ui.radius.lon, s.lat, s.lon), b: bearing(ui.radius.lat, ui.radius.lon, s.lat, s.lon),
   })).sort((x, y) => x.d - y.d);
   const inside = all.filter(x => x.d <= settings.radius);
@@ -685,7 +742,7 @@ function localMatches(q) {
   const n = q.toLowerCase();
   const nk = normKey(q);
   const scored = [];
-  for (const s of state.sources) {
+  for (const s of waterSources()) {
     const id = s.id.toLowerCase();
     let score = 0;
     if (id === n || normKey(s.id) === nk) score = 100;
@@ -811,9 +868,10 @@ function subHead(title) {
 }
 
 function menuHtml() {
-  const n = state.sources.length;
-  const defekt = state.sources.filter(s => s.status === 'defekt').length;
-  const faellig = state.sources.filter(pruefungFaellig).length;
+  const ws = waterSources();
+  const n = ws.length;
+  const defekt = ws.filter(s => s.status === 'defekt').length;
+  const faellig = ws.filter(pruefungFaellig).length;
   const status = n
     ? [`${state.pipes.length} Leitungen`, defekt ? `<span class="danger-text">${defekt} defekt</span>` : '', faellig ? `<span class="warn-text">${faellig} Prüfung fällig</span>` : ''].filter(Boolean).join(' · ')
     : 'Unter „Daten und Bearbeiten“ importieren';
@@ -971,7 +1029,7 @@ const LIST_FILTERS = [
 
 function listItems() {
   const q = listState.q.toLowerCase();
-  return state.sources.filter(s => {
+  return waterSources().filter(s => {
     if (listState.f === 'hyd' && !isHydrant(s)) return false;
     if (listState.f === 'other' && isHydrant(s)) return false;
     if (listState.f === 'problem' && !['defekt', 'eingeschraenkt'].includes(s.status)) return false;
@@ -1005,7 +1063,7 @@ function listHtml() {
 }
 
 function legendHtml() {
-  const types = Object.entries(TYPES).map(([k, t]) => `<div class="lg-row">${sourceSvg({ typ: k, status: 'ok', dn: t.hydrant ? 100 : null }, 28)}<span>${esc(t.label)}</span></div>`).join('');
+  const types = Object.entries(TYPES).filter(([, t]) => !t.node).map(([k, t]) => `<div class="lg-row">${sourceSvg({ typ: k, status: 'ok', dn: t.hydrant ? 100 : null }, 28)}<span>${esc(t.label)}</span></div>`).join('');
   const sts = `
     <div class="lg-row">${sourceSvg({ typ: 'UFH', status: 'eingeschraenkt', dn: 100 }, 28)}<span>eingeschränkt</span></div>
     <div class="lg-row">${sourceSvg({ typ: 'UFH', status: 'defekt', dn: 100 }, 28)}<span>defekt / außer Betrieb</span></div>`;
@@ -1023,7 +1081,8 @@ function legendHtml() {
     <p class="muted small">Die Zahl im Hydrantensymbol ist die Nennweite (DN) der Versorgungsleitung.</p>
     <div class="lg">${types}</div>
     <div class="section-title">Zustand</div><div class="lg">${sts}</div>
-    <div class="section-title">Leitungen</div><div class="lg">${pipes}</div>
+    <div class="section-title">Leitungen</div><div class="lg">${pipes}
+      <div class="lg-row">${sourceSvg({ typ: 'KNOTEN', status: 'ok' }, 28)}<span>Leitungsknoten (Abzweig, Kreuzung)</span></div></div>
     <div class="section-title">Umkreissuche</div>
     <div class="lg"><div class="lg-row">${EINSATZ_SVG.replace('width="44" height="44"', 'width="30" height="30"')}<span>Einsatzstelle (verschiebbar)</span></div></div>`;
 }
@@ -1120,6 +1179,17 @@ const ACT = {
   'connect-start': d => startConnect(d.id),
   'delete-source': async d => {
     const n = pipesOf(d.id).length;
+    if (isNode(byId.get(d.id))) {
+      const merge = mergeablePipes(d.id);
+      const text = merge ? '<p>Die beiden Leitungen werden wieder zu einer verbunden.</p>'
+        : n ? `<p>${n} angeschlossene Leitung${n > 1 ? 'en werden' : ' wird'} mit gelöscht.</p>` : '';
+      if (!(await confirmDialog({ title: `Knoten ${d.id} löschen?`, text, ok: 'Löschen', danger: true }))) return;
+      pushUndo(`${d.id} gelöscht`);
+      deleteNode(d.id);
+      closeSheet();
+      toast(`${d.id} gelöscht.`, { action: { label: 'Rückgängig', fn: undo } });
+      return;
+    }
     if (!(await confirmDialog({ title: `${d.id} löschen?`, text: `<p>Die Entnahmestelle${n ? ` und ${n} angeschlossene Leitung${n > 1 ? 'en' : ''}` : ''} werden gelöscht.</p>`, ok: 'Löschen', danger: true }))) return;
     pushUndo(`${d.id} gelöscht`);
     deleteSource(d.id);
@@ -1145,6 +1215,12 @@ const ACT = {
     deletePipe(p);
     closeSheet();
     toast('Leitung gelöscht.', { action: { label: 'Rückgängig', fn: undo } });
+  },
+  'node-add': () => {
+    closeSheet();
+    ui.mode = 'addNode';
+    renderPills();
+    toast('Stelle auf einer Leitung antippen.');
   },
   'pipe-straight': () => {
     const p = currentPipe();
@@ -1205,7 +1281,7 @@ const ACT = {
 
 const CHG = {
   'basemap': t => { setBasemap(t.value); renderPipes(); },
-  'set-showPipes': t => { settings.showPipes = t.checked; saveSettings(); renderPipes(); },
+  'set-showPipes': t => { settings.showPipes = t.checked; saveSettings(); renderPipes(); renderSources(true); },
   'set-showLabels': t => { settings.showLabels = t.checked; saveSettings(); renderLabels(); },
   'set-dim': t => { settings.dim = t.checked; saveSettings(); applyDim(); },
   'set-onlineSearch': t => { settings.onlineSearch = t.checked; saveSettings(); },
@@ -1269,7 +1345,7 @@ function bindUI() {
   search.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const exact = state.sources.find(s => normKey(s.id) === normKey(searchState.q));
+      const exact = waterSources().find(s => normKey(s.id) === normKey(searchState.q));
       if (exact) { ACT['sr-source']({ id: exact.id }); return; }
       const online = $('#search-results [data-act="sr-geocode"]');
       const first = $('#search-results .sr');

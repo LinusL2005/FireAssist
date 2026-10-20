@@ -111,7 +111,7 @@ function exportAppHtml() {
   const json = JSON.stringify(payload).replace(/</g, '\\u003c');
   const html = PRISTINE_HTML.replace(/(<script id="fa-data" type="application\/json">)[\s\S]*?(<\/script>)/, (_, a, b) => a + json + b);
   downloadBlob(new Blob([html], { type: 'text/html;charset=utf-8' }), `FireAssist_${fileStamp()}.html`);
-  infoDialog('App-Datei erstellt', `<p>Die heruntergeladene Datei enthält die App <b>mit ${state.sources.length} Entnahmestellen, ${state.pipes.length} Leitungen, ${state.vehicles.length} Funkrufnamen und ${state.hazmats.length} Gefahrstoffen</b>.</p>
+  infoDialog('App-Datei erstellt', `<p>Die heruntergeladene Datei enthält die App <b>mit ${waterSources().length} Entnahmestellen, ${state.pipes.length} Leitungen, ${state.vehicles.length} Funkrufnamen und ${state.hazmats.length} Gefahrstoffen</b>.</p>
     <p>Diese eine Datei kann an die Einsatzkräfte verteilt werden. Beim ersten Öffnen wird der Datenstand automatisch übernommen.</p>`);
 }
 
@@ -132,7 +132,7 @@ function exportTemplate() {
   XLSX.utils.book_append_sheet(wb, sheetFrom([
     ['Spalte', 'Pflicht', 'Beschreibung'],
     ['ID', 'empfohlen', 'Eindeutige Nummer, z. B. H-001. Wird für „Verbunden mit“ und das Blatt „Leitungen“ benötigt.'],
-    ['Typ', 'nein', 'Unterflurhydrant, Überflurhydrant, Löschwasserbehälter, Offenes Gewässer, Löschwasserbrunnen, Sonstige'],
+    ['Typ', 'nein', 'Unterflurhydrant, Überflurhydrant, Löschwasserbehälter, Offenes Gewässer, Löschwasserbrunnen, Sonstige – oder Leitungsknoten für einen Abzweig bzw. eine Kreuzung ohne Entnahmestelle (nur ID und Koordinaten nötig)'],
     ['Breitengrad / Längengrad', 'ja', 'WGS84 in Grad (z. B. 50,5515 und 9,6755). Alternativ UTM (Ostwert/Nordwert) oder Gauß-Krüger (Rechtswert/Hochwert).'],
     ['Leitung DN', 'nein', 'Nennweite der Versorgungsleitung in mm, z. B. 100 oder 150'],
     ['Druck bar / Durchfluss l/min', 'nein', 'Gemessene Leistungsdaten'],
