@@ -49,7 +49,7 @@ const ui = {
   offline: !navigator.onLine,
 };
 
-let map, baseLayer, gridLayer, pipeRenderer, hlRenderer, dotRenderer;
+let map, baseLayer, gridLayer, pipeRenderer, hlRenderer;
 const layers = {};
 const shownMarkers = new Map();
 let markerSizeClass = null;
@@ -93,13 +93,13 @@ function initMap() {
   createPane('radiusPane', 380, true);
   createPane('hlPane', 395, true);
   createPane('pipePane', 400);
-  createPane('dotPane', 450);
   createPane('labelPane', 460, true);
 
   gridLayer = new OfflineGrid({ zIndex: 0 }).addTo(map);
+  /* Leitungen und Punkte teilen sich eine Zeichenfläche: ein zweites Canvas darüber würde
+     alle Tipps auf Leitungen abfangen (Leaflet prüft nur die eigenen Formen) */
   pipeRenderer = L.canvas({ pane: 'pipePane', tolerance: 10, padding: 0.3 });
   hlRenderer = L.canvas({ pane: 'hlPane', padding: 0.3 });
-  dotRenderer = L.canvas({ pane: 'dotPane', tolerance: 8, padding: 0.3 });
 
   for (const k of ['radius', 'hl', 'casing', 'pipes', 'dots', 'markers', 'labels', 'gps', 'draft', 'handles']) layers[k] = L.layerGroup().addTo(map);
 
@@ -217,7 +217,7 @@ function makeDot(s) {
   const t = TYPES[s.typ] || TYPES.SONST;
   const selected = ui.selSource === s.id || ui.connectFrom === s.id;
   const m = L.circleMarker([s.lat, s.lon], {
-    renderer: dotRenderer, radius: selected ? 8 : 5.5,
+    renderer: pipeRenderer, radius: selected ? 8 : 5.5,
     color: selected ? '#ffd400' : '#fff', weight: selected ? 4 : 1.5,
     fillColor: s.status === 'defekt' ? '#80858e' : t.color, fillOpacity: 1, bubblingMouseEvents: false,
   });
@@ -281,6 +281,7 @@ function renderPipes() {
       pipeLayers.set(pipeKey(p.a, p.b), { line, casing });
     }
   }
+  layers.dots.eachLayer(d => d.bringToFront());
   renderHighlight();
 }
 
