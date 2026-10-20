@@ -8,7 +8,8 @@ BSP-H-006;BSP-H-007;200;Beispiel, frei erfunden
 BSP-H-007;BSP-H-008;200;Beispiel, frei erfunden
 BSP-H-008;BSP-H-009;200;Beispiel, frei erfunden
 BSP-H-009;BSP-H-010;200;Beispiel, frei erfunden
-BSP-H-010;BSP-H-011;200;Beispiel, frei erfunden
+BSP-H-010;BSP-K-01;200;Beispiel, frei erfunden
+BSP-K-01;BSP-H-011;200;Beispiel, frei erfunden
 BSP-H-003;BSP-H-012;150;Beispiel, frei erfunden
 BSP-H-012;BSP-H-013;150;Beispiel, frei erfunden
 BSP-H-013;BSP-H-014;150;Beispiel, frei erfunden
@@ -33,5 +34,5 @@ BSP-H-031;BSP-H-032;100;Beispiel, frei erfunden
 BSP-H-032;BSP-H-033;100;Beispiel, frei erfunden
 BSP-H-033;BSP-H-034;100;Beispiel, frei erfunden
 BSP-H-034;BSP-H-021;100;Beispiel, frei erfunden – Ringschluss
-BSP-H-010;BSP-H-035;80;Beispiel, frei erfunden
+BSP-K-01;BSP-H-035;80;Beispiel, frei erfunden – Abzweig Birkenweg
 BSP-H-035;BSP-H-036;80;Beispiel, frei erfunden
