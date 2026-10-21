@@ -188,7 +188,7 @@ function renderPills() {
   } else if (ui.mode === 'addNode') {
     out.push(`<div class="pill pill-act">${IC.route}<span>Knoten: Stelle auf einer Leitung antippen, z. B. an der Kreuzung</span><button data-act="mode-cancel">Abbrechen</button></div>`);
   } else if (ui.editMode) {
-    out.push(`<div class="pill pill-edit">${IC.edit}<span>Bearbeiten: Karte antippen = neue Entnahmestelle, Symbole verschiebbar</span><button data-act="edit-off">Fertig</button></div>`);
+    out.push(`<div class="pill pill-edit">${IC.edit}<span>Bearbeiten: Karte antippen = neue Entnahmestelle, Symbole verschiebbar</span><button data-act="edit-gps">Am Standort</button><button data-act="edit-off">Fertig</button></div>`);
   }
   $('#pills').innerHTML = out.join('');
   updateSheetOffset();
@@ -424,7 +424,7 @@ function setEditMode(on) {
   if (on) toast('Bearbeitungsmodus an.');
 }
 
-function startNewSource(ll) {
+function startNewSource(ll, { expand = true } = {}) {
   if (ui.draft) {
     ui.draft.lat = ll.lat; ui.draft.lon = ll.lng;
     drawDraft();
@@ -434,7 +434,18 @@ function startNewSource(ll) {
   clearSelection();
   ui.draft = { lat: ll.lat, lon: ll.lng };
   drawDraft();
-  openSheet('edit', () => editFormHtml(null), { live: false, expand: true });
+  openSheet('edit', () => editFormHtml(null), { live: false, expand });
+}
+
+/* Neue Entnahmestelle an der eigenen Position; Formular nur halb offen, damit das Symbol zum Feinjustieren sichtbar bleibt */
+function startNewSourceHere() {
+  withPosition(p => {
+    if (!ui.editMode) return;
+    if (ui.mode !== 'view') endMode();
+    startNewSource(L.latLng(p.lat, p.lon), { expand: false });
+    focusLatLng([p.lat, p.lon], Math.max(map.getZoom(), 19));
+    toast(`Am Standort gesetzt (Genauigkeit ca. ${Math.round(p.acc)} m). Symbol ziehen oder Karte antippen zum Anpassen.`, { ms: 5000 });
+  });
 }
 
 function drawDraft() {
@@ -1248,6 +1259,7 @@ const ACT = {
   'locate': () => withPosition(p => focusLatLng([p.lat, p.lon], Math.max(map.getZoom(), 17))),
   'mode-cancel': () => endMode(),
   'edit-off': () => setEditMode(false),
+  'edit-gps': () => startNewSourceHere(),
   'toggle-edit': () => { setEditMode(!ui.editMode); if (sheet.name === 'welcome' || sheet.name === 'daten') closeSheet(); },
   'tab': d => openTab(d.tab),
   'open-menu': () => { clearSelection(); openSheet('menu', menuHtml, { expand: true }); },

@@ -162,7 +162,9 @@ Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure e
   Wenn die letzte Prüfung länger als 12 Monate her ist, wird „Prüfung fällig“ angezeigt.
 - **Bearbeiten** (☰ Mehr → Daten und Bearbeiten → Karte bearbeiten): Karte antippen legt eine neue Entnahmestelle an, Symbole lassen sich verschieben.
   Mit „Verbinden“ legst du Leitungen an. Danach tippst du einfach die nächste Entnahmestelle an und die Kette geht weiter.
-  Mit „Meinen Standort übernehmen“ kannst du Hydranten direkt vor Ort erfassen. Jede Änderung lässt sich rückgängig machen.
+  Hydranten direkt vor Ort erfassen: In der blauen Leiste **Am Standort** tippen. Dann liegt sofort ein neuer Hydrant an deiner Position.
+  Symbol ziehen oder Karte antippen zum Feinjustieren, im Formular Typ, DN usw. eintragen und speichern. Leitungen werden dabei nicht angelegt.
+  Im Formular übernimmt „Meinen Standort übernehmen“ die Position ebenfalls. Jede Änderung lässt sich rückgängig machen.
 - **Leitungsverlauf:** Leitungen können Knickpunkte haben, damit sie der Straße folgen oder quer durchs Gelände laufen.
   Im Bearbeitungsmodus die Leitung antippen. Dann:
   - den gestrichelten Punkt ziehen oder antippen = neuer Knickpunkt
