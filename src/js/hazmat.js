@@ -150,6 +150,20 @@ function gnrCardHtml(d) {
   </div>`;
 }
 
+/* Ohne eigenen Link: CAMEO Chemicals, weil es dort feste Seiten je UN-Nummer gibt (GESTIS hat keine solchen Adressen) */
+function hazLinkHtml(un, link) {
+  const url = link || (/^\d{4}$/.test(un) ? `https://cameochemicals.noaa.gov/unna/${un}` : '');
+  if (!url) return '';
+  return `<p class="small"><a href="${esc(url)}" target="_blank" rel="noopener">${link ? 'Stoff nachschlagen' : `UN ${esc(un)} bei CAMEO Chemicals nachschlagen (englisch)`}</a></p>`;
+}
+
+/* Für Stoffe, die nicht in der Liste stehen: UN-Nummer direkt bei CAMEO, Namen über die deutsche Wikipedia-Suche */
+function hazLookupHtml(q) {
+  const s = String(q || '').trim(), un = s.replace(/^UN\s*/i, '');
+  if (/^\d{4}$/.test(un)) return hazLinkHtml(un, '');
+  return `<p class="small"><a href="https://de.wikipedia.org/w/index.php?search=${encodeURIComponent(s)}" target="_blank" rel="noopener">„${esc(s)}“ bei Wikipedia nachschlagen</a></p>`;
+}
+
 function hazCardHtml(h, open = true) {
   const cls = classInfo(h.klasse);
   const d = decodeGefahrnummer(h.gefahrnr);
@@ -160,6 +174,7 @@ function hazCardHtml(h, open = true) {
       ${d && !d.invalid ? `<div class="kv-line"><span class="k">Gefahrnummer ${esc(d.code)}</span><span>${esc(d.special || d.parts.map(p => p.t).join(', '))}</span></div>` : ''}
       ${d && d.water ? '<div class="water-warn">Reagiert gefährlich mit Wasser!</div>' : ''}
       ${cls.map(c => `<div class="kv-line"><span class="k">Klasse ${esc(c.k)}</span><span>${esc(c.t)}</span></div>`).join('')}
+      ${hazLinkHtml(h.un, h.link)}
     </div>
   </details>`;
 }
@@ -174,7 +189,8 @@ function tafelResultHtml() {
     const hits = state.hazmats.filter(h => h.un === un);
     if (hits.length) out.push(`<div class="section-title">UN ${esc(un)} in der Stoffliste</div>` + hits.map(h => hazCardHtml(h, true)).join(''));
     else out.push(`<div class="card"><p><b>UN ${esc(un)}</b> ist nicht in der Stoffliste${state.hazmats.length ? '' : ' (noch keine Liste importiert)'}.</p>
-      <p class="small muted">Nachschlagen z. B. in der <a href="https://gestis.dguv.de" target="_blank" rel="noopener">GESTIS-Stoffdatenbank</a> oder bei der Leitstelle / Fachberatung.</p></div>`);
+      ${hazLinkHtml(un, '')}
+      <p class="small muted">Außerdem z. B. in der <a href="https://gestis.dguv.de" target="_blank" rel="noopener">GESTIS-Stoffdatenbank</a> oder bei der Leitstelle / Fachberatung.</p></div>`);
   } else if (un) {
     out.push('<p class="hint">Die UN-Nummer hat 4 Ziffern.</p>');
   }
@@ -191,7 +207,7 @@ function tafelResultHtml() {
 function stoffListHtml() {
   const list = gefState.q ? hazmatMatches(gefState.q) : state.hazmats.slice();
   list.sort((a, b) => naturalCompare(a.un, b.un) || naturalCompare(a.name, b.name));
-  if (!list.length) return '<p class="muted small pad">Keine Treffer.</p>';
+  if (!list.length) return `<div class="pad"><p class="muted small">Keine Treffer.</p>${gefState.q ? hazLookupHtml(gefState.q) : ''}</div>`;
   return `<p class="muted small">${list.length} Stoffe</p>` + list.slice(0, 300).map(h => hazCardHtml(h, false)).join('')
     + (list.length > 300 ? '<p class="muted small">… bitte Suche eingrenzen.</p>' : '');
 }

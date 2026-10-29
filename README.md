@@ -245,9 +245,11 @@ Ein Import ersetzt die bisherige Liste. Vorlage und Beispiel: Seite Funkrufnamen
 
 ### Gefahrstoffe
 
-| UN-Nummer | Bezeichnung | Gefahrnummer | Klasse | Hinweise |
-|---|---|---|---|---|
-| 1203 | Benzin oder Ottokraftstoff | 33 | 3 | Dämpfe schwerer als Luft |
+| UN-Nummer | Bezeichnung | Gefahrnummer | Klasse | Hinweise | Link |
+|---|---|---|---|---|---|
+| 1203 | Benzin oder Ottokraftstoff | 33 | 3 | Dämpfe schwerer als Luft | https://cameochemicals.noaa.gov/unna/1203 |
+
+Der Link ist freiwillig. Ohne Link zeigt die Stoffkarte einen Link zu CAMEO Chemicals (englisch) passend zur UN-Nummer.
 
 Ein Import ersetzt die bisherige Liste. Die mitgelieferte Beispielliste (`beispiel/Gefahrstoffe_Beispiel.csv`) enthält nur gängige Stoffe
 und ersetzt keine vollständige Datenbank. Vor dem Einsatz mit aktueller Quelle prüfen (ADR, GESTIS, ERICards).
