@@ -5,7 +5,7 @@ const EXPORT_SRC_HEADERS = ['ID', 'Typ', 'Breitengrad', 'Längengrad', 'Leitung 
   'Status', 'Geprüft am', 'Adresse / Lage', 'Bemerkung', 'Verbunden mit'];
 const EXPORT_PIPE_HEADERS = ['Von', 'Nach', 'DN', 'Länge m', 'Verlauf', 'Bemerkung'];
 const EXPORT_VEH_HEADERS = ['Gemeinde', 'Löschverbund', 'Ortschaft', 'Fahrzeugart', 'Funkname', 'Kennzeichen', 'Bemerkung'];
-const EXPORT_HAZ_HEADERS = ['UN-Nummer', 'Bezeichnung', 'Gefahrnummer', 'Klasse', 'Hinweise'];
+const EXPORT_HAZ_HEADERS = ['UN-Nummer', 'Bezeichnung', 'Gefahrnummer', 'Klasse', 'Hinweise', 'Link'];
 
 const hasAnyData = () => state.sources.length || state.vehicles.length || state.hazmats.length;
 
@@ -36,7 +36,7 @@ function sortedHazmats() {
 }
 
 const vehicleRow = v => [v.gemeinde, v.verbund, v.ort, v.art, v.funkname, v.kennzeichen, v.bemerkung];
-const hazmatRow = h => [h.un, h.name, h.gefahrnr, h.klasse, h.hinweise];
+const hazmatRow = h => [h.un, h.name, h.gefahrnr, h.klasse, h.hinweise, h.link];
 
 function sortedPipes() {
   return state.pipes.slice().sort((x, y) => naturalCompare(x.a, y.a) || naturalCompare(x.b, y.b));
@@ -56,7 +56,7 @@ function buildWorkbook() {
     XLSX.utils.book_append_sheet(wb, sheetFrom([EXPORT_PIPE_HEADERS, ...sortedPipes().map(pipeRow)], [10, 10, 8, 9, 40, 30]), 'Leitungen');
   }
   if (state.vehicles.length) XLSX.utils.book_append_sheet(wb, sheetFrom([EXPORT_VEH_HEADERS, ...sortedVehicles().map(vehicleRow)], [18, 22, 22, 14, 30, 14, 30]), 'Funkrufnamen');
-  if (state.hazmats.length) XLSX.utils.book_append_sheet(wb, sheetFrom([EXPORT_HAZ_HEADERS, ...sortedHazmats().map(hazmatRow)], [11, 40, 13, 12, 60]), 'Gefahrstoffe');
+  if (state.hazmats.length) XLSX.utils.book_append_sheet(wb, sheetFrom([EXPORT_HAZ_HEADERS, ...sortedHazmats().map(hazmatRow)], [11, 40, 13, 12, 60, 40]), 'Gefahrstoffe');
   return wb;
 }
 
@@ -156,8 +156,8 @@ function exportListTemplate(kind) {
     ]), 'Funkrufnamen_Vorlage.csv');
   } else {
     downloadBlob(csvBlob([EXPORT_HAZ_HEADERS,
-      ['1202', 'Dieselkraftstoff oder Gasöl oder Heizöl, leicht', '30', '3', 'Beispielzeile, bitte ersetzen – Gewässer schützen'],
-      ['1203', 'Benzin oder Ottokraftstoff', '33', '3', 'Beispielzeile, bitte ersetzen – Dämpfe schwerer als Luft, Explosionsgefahr'],
+      ['1202', 'Dieselkraftstoff oder Gasöl oder Heizöl, leicht', '30', '3', 'Beispielzeile, bitte ersetzen – Gewässer schützen', ''],
+      ['1203', 'Benzin oder Ottokraftstoff', '33', '3', 'Beispielzeile, bitte ersetzen – Dämpfe schwerer als Luft, Explosionsgefahr', 'https://cameochemicals.noaa.gov/unna/1203'],
     ]), 'Gefahrstoffe_Vorlage.csv');
   }
 }

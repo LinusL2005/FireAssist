@@ -105,6 +105,7 @@ function cleanHazmat(o) {
   return {
     un: cleanUn(o.un), name: str(o.name), gefahrnr: str(o.gefahrnr).toUpperCase().replace(/\s+/g, ''),
     klasse: str(o.klasse).replace(/(\d),(\d)/g, '$1.$2'), hinweise: str(o.hinweise),
+    link: /^https?:\/\//i.test(str(o.link)) ? str(o.link) : '',
   };
 }
 

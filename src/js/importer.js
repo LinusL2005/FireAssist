@@ -46,6 +46,7 @@ const HAZ_FIELDS = [
   { key: 'gefahrnr', label: 'Gefahrnummer', syn: ['gefahrnummer', 'gefahrnr', 'kemler', 'kemlerzahl', 'kemlernummer', 'gefahrzahl', 'gefahrennummer', 'gefahrkennzahl', 'gefahrkennziffer', 'nummerzurkennzeichnungdergefahr'] },
   { key: 'klasse', label: 'Klasse', syn: ['klasse', 'gefahrklasse', 'adrklasse', 'gefahrgutklasse', 'class', 'gefahrzettel', 'zettel'] },
   { key: 'hinweise', label: 'Hinweise / Maßnahmen', syn: ['hinweise', 'hinweis', 'massnahmen', 'bemerkung', 'bemerkungen', 'gefahren', 'eigenschaften', 'info', 'erstmassnahmen', 'merkmale', 'beschreibung'] },
+  { key: 'link', label: 'Link', syn: ['link', 'url', 'quelle', 'webseite', 'website', 'datenblatt', 'nachschlagen'] },
 ];
 
 const ROLES = {
@@ -313,7 +314,7 @@ function convertHazmats(t) {
   const items = [], skipped = [];
   t.data.forEach((r, i) => {
     const get = k => (m[k] != null ? r[m[k]] : '');
-    const h = cleanHazmat({ un: get('un'), name: get('name'), gefahrnr: get('gefahrnr'), klasse: get('klasse'), hinweise: get('hinweise') });
+    const h = cleanHazmat({ un: get('un'), name: get('name'), gefahrnr: get('gefahrnr'), klasse: get('klasse'), hinweise: get('hinweise'), link: get('link') });
     if (!h.un && !h.name) { skipped.push({ line: t.lines[i], file: t.name, reason: 'weder UN-Nummer noch Bezeichnung' }); return; }
     items.push(h);
   });
