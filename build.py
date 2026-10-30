@@ -9,6 +9,7 @@ Aufruf:
   python3 build.py                                   App ohne Daten
   python3 build.py --daten FireAssist_Sicherung.json Datenstand fest einbauen (Sicherung aus der App)
 """
+import base64
 import datetime
 import hashlib
 import json
@@ -137,6 +138,20 @@ def embed_licenses(html):
     return html
 
 
+def embed_handbuch(html):
+    """Handbuch (Menü → Handbuch) mit den Bildern aus src/handbuch/ als data-URL einsetzen."""
+    def image(m):
+        path = SRC / m.group(1)
+        if not path.exists():
+            print(f"Warnung: Bild für das Handbuch fehlt: {m.group(1)} (python3 tools/handbuch.py bilder)")
+            return m.group(0)
+        return 'src="data:image/jpeg;base64,' + base64.b64encode(path.read_bytes()).decode("ascii") + '"'
+    content = re.sub(r'src="(handbuch/[^"]+\.jpg)"', image, read("handbuch.html"))
+    if "<!-- build:handbuch -->" not in html:
+        raise SystemExit("Fehler: Platzhalter für das Handbuch nicht gefunden")
+    return html.replace("<!-- build:handbuch -->", content, 1)
+
+
 def embed_data(html, path):
     """Baut eine Sicherung (Menü → Sicherung speichern) als Datenstand in die App ein."""
     obj = json.loads(pathlib.Path(path).read_text(encoding="utf-8-sig"))
@@ -162,6 +177,7 @@ def main():
     if "<script src=" in html or 'rel="stylesheet"' in html:
         raise SystemExit("Fehler: nicht alle Dateien wurden eingebettet")
     html = embed_licenses(html)
+    html = embed_handbuch(html)
     if "--daten" in sys.argv:
         i = sys.argv.index("--daten")
         if i + 1 >= len(sys.argv):

@@ -8,11 +8,13 @@ Wie Änderungen abgesprochen werden, steht in [`CONTRIBUTING.md`](CONTRIBUTING.m
 ```
 src/index.html      Grundgerüst
 src/style.css       Gestaltung
-src/js/*.js         App-Logik (util, coords, data, map, importer, exporter, ui, pages, hazmat, pwa, main)
+src/js/*.js         App-Logik (util, coords, data, map, importer, exporter, ui, pages, hazmat, handbuch, pwa, main)
 src/js/demo.js      Beispieldaten der App (passend zu beispiel/)
+src/handbuch.html   Handbuch für Nutzer (Menü → Handbuch), Screenshots in src/handbuch/
 src/sw.js           Service Worker der Web-App (Offline-Start, Offline-Karte)
 vendor/             Leaflet 1.9.4 (BSD-2), SheetJS 0.20.3 (Apache 2.0), lokal, damit die App offline startet; Lizenzen in vendor/LICENSE-*.txt
 build.py            baut FireAssist.html und den Ordner web/
+tools/              Hilfsskripte für die Entwicklung (handbuch.py: Screenshots und PDF des Handbuchs)
 beispiel/           ausgedachte Beispieldateien
 android/            Android-App (Java, ohne Gradle), optional
 ios/                iPhone-App (Xcode-Projekt), optional
@@ -39,6 +41,18 @@ Dann entweder Xcode einmal öffnen und der Lizenz zustimmen, oder Python direkt 
 /Library/Developer/CommandLineTools/usr/bin/python3 build.py
 ```
 
+## Handbuch
+
+Das Handbuch steht in `src/handbuch.html` und wird beim Bauen mit den Bildern aus `src/handbuch/` in die App eingesetzt.
+Kapitel sind `<section class="hb-sec">` mit `<h2>`, Themen `<div class="hb-topic">` mit `<h3>`. Inhaltsverzeichnis und Suche entstehen daraus.
+Ändert sich die Oberfläche, das Handbuch mit anpassen und die Screenshots neu erzeugen (braucht Google Chrome und Internet für die Karte):
+
+```bash
+python3 tools/handbuch.py bilder           # alle Screenshots, Handy-Format, dunkel, mit Beispieldaten
+python3 tools/handbuch.py bilder karte     # nur einzelne
+python3 tools/handbuch.py pdf              # FireAssist_Handbuch.pdf, nur lokal (steht in der .gitignore)
+```
+
 ## Was nie ins Repository gehört
 
 Im Repository liegt nur der **Quellcode**. Diese Dateien werden nie hochgeladen (festgelegt in `.gitignore`):
@@ -46,7 +60,7 @@ Im Repository liegt nur der **Quellcode**. Diese Dateien werden nie hochgeladen 
 | Was | Warum |
 |---|---|
 | `daten/`, Excel-, CSV- und GeoJSON-Dateien, Sicherungen, Exporte mit Datum | eigene Daten (Leitungsnetz, Funkrufnamen …). Nur `beispiel/` wird hochgeladen. |
-| `FireAssist.html`, `web/`, `FireAssist.apk` | gebaute Dateien, können mit `--daten` eingebaute Einsatzdaten enthalten |
+| `FireAssist.html`, `web/`, `FireAssist.apk`, `FireAssist_Handbuch.pdf` | gebaute Dateien, können mit `--daten` eingebaute Einsatzdaten enthalten |
 | `android/signing/` (Signaturschlüssel und Passwort) | Wer ihn hat, kann „echte“ Updates der Android-App bauen. Getrennt sichern! |
 
 Eigene Daten am besten im Ordner **`daten/`** ablegen, z. B. `daten/FireAssist_Sicherung.json`.
