@@ -16,6 +16,7 @@
 <!-- /build:css -->
 <script id="fa-data" type="application/json">null</script>
 <script id="fa-licenses" type="application/json">null</script>
+<template id="fa-handbuch"><!-- build:handbuch --></template>
 </head>
 <body>
 <div id="app">
@@ -84,6 +85,18 @@
     <div id="gefahr-body" class="page-body"></div>
   </section>
 
+  <section id="page-handbuch" class="page" hidden aria-label="Handbuch">
+    <header class="page-head">
+      <button class="icon-btn" data-act="page-close" aria-label="Zurück"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+      <div class="page-title"><h1>Handbuch</h1><span class="muted small">Bedienung Schritt für Schritt</span></div>
+      <button class="icon-btn" data-act="hb-toc" aria-label="Inhaltsverzeichnis"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg></button>
+    </header>
+    <div class="page-tools">
+      <div class="field-search"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="hb-q" type="search" placeholder="Im Handbuch suchen …" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="Im Handbuch suchen"></div>
+    </div>
+    <div id="hb-body" class="page-body"></div>
+  </section>
+
   <nav id="tabbar" class="tabbar" aria-label="Bereiche">
     <button data-act="tab" data-tab="karte">
       <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13M15 6.5v13"/></svg>
@@ -118,6 +131,7 @@
 <script src="js/ui.js"></script>
 <script src="js/pages.js"></script>
 <script src="js/hazmat.js"></script>
+<script src="js/handbuch.js"></script>
 <script src="js/pwa.js"></script>
 <script src="js/main.js"></script>
 <!-- /build:js -->

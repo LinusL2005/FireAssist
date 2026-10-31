@@ -1,0 +1,697 @@
+<!-- Handbuch für Nutzer (Menü → Handbuch). Wird von build.py in die App eingesetzt, Bilder aus src/handbuch/.
+     Aufbau: <section class="hb-sec"> mit <h2> je Kapitel, darin <div class="hb-topic"> mit <h3> je Thema.
+     Inhaltsverzeichnis und Suche entstehen daraus automatisch. Screenshots neu erzeugen: python3 tools/handbuch.py bilder -->
+
+<section class="hb-sec" id="hb-start">
+<h2>Erste Schritte</h2>
+
+<div class="hb-topic" id="hb-was">
+<h3>Was ist FireAssist?</h3>
+<p>FireAssist ist ein digitaler Hydrantenplan für die Feuerwehr. Die App zeigt auf einer Karte alle <b>Hydranten und anderen Löschwasser-Entnahmestellen</b> mit dem Leitungsnetz. Sie findet mit der <b>Umkreissuche</b> die nächsten Entnahmestellen zur Einsatzstelle. Außerdem enthält sie die <b>Funkrufnamen</b> der Fahrzeuge und eine Hilfe für <b>Gefahrstoffe</b> (Warntafel, Stoffliste, Grundwissen).</p>
+<p>FireAssist läuft im Browser und lässt sich auf Android und iPhone wie eine App installieren. Sie funktioniert auch <b>ohne Netz</b>. Die Einsatzdaten bleiben auf deinem Gerät und werden nie ins Internet hochgeladen.</p>
+<div class="hb-warn"><p><b>Alle Angaben ohne Gewähr.</b> FireAssist ist ein Hilfsmittel und ersetzt weder Ortskenntnis noch Erkundung oder amtliche Pläne. Lage, Zustand und Leistung der Entnahmestellen immer vor Ort prüfen. Angaben zu Gefahrstoffen mit aktuellen Quellen abgleichen.</p></div>
+</div>
+
+<div class="hb-topic" id="hb-installieren">
+<h3>App installieren</h3>
+<p>FireAssist kommt nicht aus dem App-Store, sondern direkt aus dem Browser. Die Adresse bekommst du von der Person, die bei euch die Daten pflegt (öffentlich: <b>linusl2005.github.io/FireAssist</b>). Das Installieren ist nur einmal nötig und braucht einmal Internet.</p>
+<h4>Android (Chrome)</h4>
+<ol>
+<li>Die Adresse in <b>Chrome</b> öffnen.</li>
+<li>Oben rechts auf das Menü <span class="ui">⋮</span> tippen → <span class="ui">App installieren</span> (auf manchen Geräten „Zum Startbildschirm hinzufügen“) → <span class="ui">Installieren</span>.</li>
+<li>FireAssist ab jetzt über das neue Symbol auf dem Startbildschirm öffnen.</li>
+</ol>
+<h4>iPhone (Safari)</h4>
+<ol>
+<li>Die Adresse in <b>Safari</b> öffnen.</li>
+<li>Unten auf das <b>Teilen-Symbol</b> tippen (Quadrat mit Pfeil nach oben) → <span class="ui">Zum Home-Bildschirm</span> → <span class="ui">Hinzufügen</span>.</li>
+<li>FireAssist ab jetzt <b>nur noch über das Symbol</b> auf dem Home-Bildschirm öffnen, nicht mehr in Safari.</li>
+</ol>
+<div class="hb-tip"><p>Die installierte App hat auf dem iPhone ihren eigenen Speicher. Was du in Safari importiert hast, ist in der App nicht zu sehen. Deshalb Daten immer in der installierten App importieren.</p></div>
+<h4>PC oder Laptop</h4>
+<p>Die Adresse in Chrome oder Edge öffnen. Über das Installieren-Symbol rechts in der Adressleiste lässt sich FireAssist auch dort als App anlegen. Alternativ gibt es FireAssist als einzelne Datei <b>FireAssist.html</b>, die man per Doppelklick öffnet.</p>
+</div>
+
+<div class="hb-topic" id="hb-daten-holen">
+<h3>Daten aufs Handy bringen</h3>
+<p>Die Daten deiner Feuerwehr (Hydranten, Leitungen, Funkrufnamen, Gefahrstoffe) kommen <b>nie aus dem Internet</b>. Du bekommst sie als Datei von der Person, die die Daten pflegt, z. B. <b>FireAssist_Sicherung_2026-10-16.json</b> per Messenger, interner E-Mail oder USB-Stick.</p>
+<ol>
+<li>Die Datei auf dem Handy speichern.<br><b>iPhone:</b> in der Nachricht bzw. Mail auf die Datei tippen → Teilen-Symbol → <span class="ui">In Dateien sichern</span>.<br><b>Android:</b> Die Datei landet meist automatisch unter <b>Downloads</b>.</li>
+<li>FireAssist über das App-Symbol öffnen.</li>
+<li><span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Datei importieren</span> → die Datei auswählen.</li>
+<li>Fragt die App „Vorhandene Daten ersetzen oder ergänzen?“, dann <span class="ui">Ersetzen</span> wählen.</li>
+</ol>
+<p>Kommt ein neuer Datenstand, wiederholst du diese Schritte. Wie die Datei entsteht, steht unter <a data-act="hb-goto" data-to="hb-sicherung">Sicherung speichern und verteilen</a>.</p>
+</div>
+
+<div class="hb-topic" id="hb-aufbau">
+<h3>Der Bildschirm im Überblick</h3>
+<p>Nach dem Start siehst du die Karte. Alle wichtigen Funktionen erreichst du mit einem Tipp:</p>
+<figure class="hb-shot"><img src="handbuch/karte.jpg" alt="Startbildschirm mit Karte, Suchleiste, Umkreis-Knopf und unterer Leiste" loading="lazy"><figcaption>Startbildschirm mit Beispieldaten</figcaption></figure>
+<ul class="hb-legend">
+<li><span class="hb-num">1</span><span><b>Menü ☰ („Mehr“)</b>: Liste, Legende, Offline-Karte, Daten und Bearbeiten, Einstellungen, Handbuch.</span></li>
+<li><span class="hb-num">2</span><span><b>Suche</b>: Hydrant, Adresse, Koordinate, Funkrufname oder Gefahrstoff suchen.</span></li>
+<li><span class="hb-num">3</span><span><b>Kartenebenen</b>: Hintergrundkarte wählen, Leitungen und Nennweiten ein- oder ausblenden, Karte abdunkeln.</span></li>
+<li><span class="hb-num">4</span><span><b>Umkreis</b>: Einsatzstelle setzen und die nächsten Entnahmestellen finden.</span></li>
+<li><span class="hb-num">5</span><span><b>Mein Standort</b>: Karte auf deine Position setzen.</span></li>
+<li><span class="hb-num">6</span><span><b>Untere Leiste</b>: zwischen <b>Karte</b>, <b>Funk</b> (Funkrufnamen) und <b>Gefahrstoffe</b> wechseln.</span></li>
+</ul>
+<p>Tippst du etwas an, öffnet sich unten ein <b>Panel</b> mit den Details. Den grauen Strich oben am Panel kannst du antippen oder nach oben ziehen, dann wird es größer. Ziehst du ihn nach unten, schließt sich das Panel. Mit <span class="ui">✕</span> schließt du es ebenfalls.</p>
+<p>Die <b>Zurück-Taste</b> des Handys (Android) schließt der Reihe nach Dialog, Suche, Seite, Modus und Panel.</p>
+</div>
+
+<div class="hb-topic" id="hb-beispiel">
+<h3>Mit Beispieldaten ausprobieren</h3>
+<p>Zum Kennenlernen gibt es erfundene Beispieldaten rund um die „Musterstadt“. Alle Beispiele sind gekennzeichnet: Nummern beginnen mit <b>BSP-</b>, Bemerkungen mit „Beispiel“, und oben auf der Karte steht der gelbe Hinweis <b>Beispieldaten</b>.</p>
+<ul>
+<li><b>Hydrantenplan:</b> beim ersten Start <span class="ui">Beispieldaten ansehen</span>, sonst <span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Beispieldaten laden</span>.</li>
+<li><b>Funkrufnamen:</b> unten <span class="ui">Funk</span> → <span class="ui">Beispiel ansehen</span>.</li>
+<li><b>Gefahrstoffe:</b> unten <span class="ui">Gefahrstoffe</span> → Reiter <span class="ui">Stoffliste</span> → <span class="ui">Beispielliste</span>.</li>
+</ul>
+<div class="hb-warn"><p>Beispieldaten <b>ersetzen</b> vorhandene Daten (mit <span class="ui">Rückgängig</span> zurückholbar). Vor dem Import der echten Daten über <span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Alle Daten löschen</span> aufräumen.</p></div>
+</div>
+
+<div class="hb-topic" id="hb-updates">
+<h3>Updates</h3>
+<p><b>Die App</b> aktualisiert sich selbst: Beim nächsten Start mit Internet lädt sie die neue Version im Hintergrund und zeigt unten <span class="ui">Neu laden</span>. Tippst du darauf, startet die neue Version.</p>
+<p><b>Die Daten</b> ändern sich dadurch nicht. Ein neuer Datenstand kommt immer als Datei (siehe <a data-act="hb-goto" data-to="hb-daten-holen">Daten aufs Handy bringen</a>).</p>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-karte">
+<h2>Karte und Hydranten</h2>
+
+<div class="hb-topic" id="hb-bewegen">
+<h3>Karte bewegen und zoomen</h3>
+<p>Mit einem Finger verschiebst du die Karte, mit zwei Fingern zoomst du. Doppeltippen zoomt hinein. Ab einer bestimmten Zoomstufe stehen die <b>Nummern an den Hydranten</b> und die <b>Nennweiten an den Leitungen</b>.</p>
+<p>Die Karte merkt sich den letzten Ausschnitt. Über <span class="ui">☰</span> → <span class="ui">Alle Daten auf der Karte zeigen</span> siehst du wieder das ganze Einsatzgebiet.</p>
+</div>
+
+<div class="hb-topic" id="hb-symbole">
+<h3>Symbole und Farben (Legende)</h3>
+<p>Was die Symbole bedeuten, zeigt jederzeit <span class="ui">☰</span> → <span class="ui">Legende</span>.</p>
+<figure class="hb-shot"><img src="handbuch/legende.jpg" alt="Legende mit Symbolen für Entnahmestellen, Zustand und Leitungen" loading="lazy"><figcaption>☰ → Legende</figcaption></figure>
+<ul>
+<li><b>Form und Farbe</b> zeigen die Art der Entnahmestelle: Unterflurhydrant (rot, rund), Überflurhydrant (rot, eckig), Löschwasserbehälter/Zisterne (blau), offenes Gewässer/Saugstelle (türkis), Löschwasserbrunnen (grün), sonstige (grau).</li>
+<li>Die <b>Zahl im Hydrantensymbol</b> ist die Nennweite (DN) der Versorgungsleitung.</li>
+<li><b>Eingeschränkte</b> Entnahmestellen haben ein orangefarbenes Ausrufezeichen, <b>defekte</b> sind grau und rot durchgestrichen.</li>
+<li><b>Leitungen</b> haben je nach Nennweite eine andere Farbe und Strichstärke. Kleine dunkle Punkte auf den Leitungen sind <b>Leitungsknoten</b> (Abzweig, Kreuzung ohne Hydrant).</li>
+</ul>
+</div>
+
+<div class="hb-topic" id="hb-details">
+<h3>Hydrant antippen: alle Angaben</h3>
+<p>Tippe auf ein Symbol. Unten öffnet sich ein Panel mit allen Angaben zur Entnahmestelle.</p>
+<figure class="hb-shot"><img src="handbuch/hydrant.jpg" alt="Panel eines Hydranten mit Nennweite, Druck, Durchfluss und Navigation" loading="lazy"><figcaption>Angaben zu einem Hydranten</figcaption></figure>
+<ul class="hb-legend">
+<li><span class="hb-num">1</span><span><b>Nummer und Art</b>, rechts daneben das Hinweisschild (H bzw. ÜH mit Nennweite).</span></li>
+<li><span class="hb-num">2</span><span><b>Zustand</b>: in Ordnung, eingeschränkt, defekt oder unbekannt. <b>Prüfung fällig</b> erscheint, wenn die letzte Prüfung länger als 12 Monate her ist oder nie stattgefunden hat.</span></li>
+<li><span class="hb-num">3</span><span><b>Leitung (DN), Druck, Durchfluss, geprüft am</b>. Bei Behältern steht statt der Leitung das Volumen in m³.</span></li>
+</ul>
+<p>Darunter stehen Adresse bzw. Lage, die Bemerkung und die <b>verbundenen Entnahmestellen</b> (antippen springt dorthin). Ganz unten im Panel (nach oben wischen):</p>
+<ul>
+<li>die Koordinaten mit <span class="ui">Kopieren</span>, z. B. zum Weitergeben an die Leitstelle,</li>
+<li><span class="ui">Navigation</span>: öffnet die Karten-App des Handys mit der Entnahmestelle als Ziel (Android: Karten-App, iPhone: Apple Karten).</li>
+</ul>
+<p>Tippst du auf eine <b>Leitung</b>, zeigt das Panel Nennweite, die beiden Enden und die Länge.</p>
+</div>
+
+<div class="hb-topic" id="hb-standort">
+<h3>Eigener Standort</h3>
+<p>Der runde Knopf mit dem Pfeil rechts unten (<span class="ui">Mein Standort</span>) zeigt deine Position als blauen Punkt und setzt die Karte dorthin. Der hellblaue Kreis zeigt die Genauigkeit.</p>
+<p>Beim ersten Mal fragt das Handy, ob FireAssist den Standort verwenden darf. Bitte <b>erlauben</b>. Hast du es abgelehnt, kannst du es in den Einstellungen des Handys bzw. Browsers nachträglich erlauben (siehe <a data-act="hb-goto" data-to="hb-faq">Häufige Fragen</a>).</p>
+</div>
+
+<div class="hb-topic" id="hb-ebenen">
+<h3>Kartenebenen: Hintergrundkarte, Leitungen, Nacht</h3>
+<p>Das Ebenen-Symbol rechts in der Suchleiste öffnet die Auswahl:</p>
+<figure class="hb-shot"><img src="handbuch/ebenen.jpg" alt="Auswahl der Hintergrundkarte und Anzeige-Optionen" loading="lazy"><figcaption>Kartenebenen</figcaption></figure>
+<ul>
+<li><b>Hintergrundkarte:</b> amtliche Karte von basemap.de (bunt oder grau), Straßenkarte oder Luftbild von Esri, OpenStreetMap oder <b>Keine Hintergrundkarte</b> (dann nur ein Raster, ohne Verbindung zu Kartendiensten).</li>
+<li><b>Leitungen</b> ein- oder ausblenden.</li>
+<li><b>Nennweiten an Leitungen</b> ein- oder ausblenden.</li>
+<li><b>Karte abdunkeln (Nacht)</b>: dunklere Karte, damit sie nachts nicht blendet.</li>
+</ul>
+</div>
+
+<div class="hb-topic" id="hb-hinweise">
+<h3>Hinweisleisten oben auf der Karte</h3>
+<ul>
+<li><b>Beispieldaten</b> (gelb): Es sind erfundene Beispieldaten geladen, nicht für den Einsatz.</li>
+<li><b>Offline</b>: Kein Netz. Hydranten und Leitungen bleiben verfügbar, die Hintergrundkarte nur dort, wo sie gespeichert ist (siehe <a data-act="hb-goto" data-to="hb-offline-karte">Offline-Karte speichern</a>).</li>
+<li>In <b>Umkreissuche</b> und <b>Bearbeitungsmodus</b> zeigt eine farbige Leiste, was als Nächstes zu tun ist, mit Knöpfen zum Beenden.</li>
+</ul>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-suche-kap">
+<h2>Suchen</h2>
+
+<div class="hb-topic" id="hb-suche">
+<h3>Die Suche oben auf der Karte</h3>
+<p>Tippe in das Suchfeld <b>„Adresse oder Hydrant suchen“</b>. Schon beim Tippen erscheinen die Treffer, geordnet nach Art:</p>
+<figure class="hb-shot"><img src="handbuch/suche.jpg" alt="Suchergebnisse mit Entnahmestellen und Adresssuche" loading="lazy"><figcaption>Suche nach „Haupt“</figcaption></figure>
+<div class="hb-tbl-wrap"><table class="tbl">
+<thead><tr><th>Eingabe</th><th>findet</th></tr></thead>
+<tbody>
+<tr><td><b>H-012</b>, <b>12</b></td><td>Entnahmestelle mit dieser Nummer (auch Teile davon)</td></tr>
+<tr><td><b>Hauptstraße</b></td><td>Entnahmestellen mit dieser Adresse oder Bemerkung und, auf Wunsch, Adressen (siehe unten)</td></tr>
+<tr><td><b>50,5515 9,6755</b></td><td>diese Koordinate auf der Karte</td></tr>
+<tr><td><b>33/1203</b></td><td>Warntafel: Gefahrnummer und UN-Nummer auswerten</td></tr>
+<tr><td><b>1203</b>, <b>Benzin</b></td><td>Gefahrstoff aus der Stoffliste</td></tr>
+<tr><td><b>17-44</b>, <b>HLF</b></td><td>Funkrufnamen und Fahrzeuge</td></tr>
+</tbody></table></div>
+<p>Ein Treffer wird angetippt. Eine Entnahmestelle öffnet sich auf der Karte, ein Gefahrstoff oder Funkrufname auf der passenden Seite. Eine <b>Adresse oder Koordinate</b> wird gleich als Einsatzstelle für die <a data-act="hb-goto" data-to="hb-umkreis">Umkreissuche</a> gesetzt.</p>
+<h4>Adresse suchen</h4>
+<p>Adressen werden erst gesucht, wenn du auf <span class="ui">Adresse „…“ suchen</span> tippst (oder die Eingabetaste drückst). Dafür braucht es Internet. Übertragen wird nur der Suchtext an den Dienst photon.komoot.io. Ausschalten lässt sich das unter <span class="ui">☰</span> → <span class="ui">Einstellungen</span> → <span class="ui">Online-Adresssuche erlauben</span>.</p>
+</div>
+
+<div class="hb-topic" id="hb-liste">
+<h3>Liste aller Entnahmestellen</h3>
+<p><span class="ui">☰</span> → <span class="ui">Alle Entnahmestellen</span> zeigt alle Entnahmestellen als Liste, sortiert nach Nummer.</p>
+<figure class="hb-shot"><img src="handbuch/liste.jpg" alt="Liste der Entnahmestellen mit Filtern" loading="lazy"><figcaption>☰ → Alle Entnahmestellen</figcaption></figure>
+<ul>
+<li>Oben nach <b>Nummer, Adresse oder Bemerkung</b> filtern.</li>
+<li>Mit den Knöpfen darunter nur <b>Hydranten</b>, nur <b>andere</b> Entnahmestellen, nur <b>defekte / eingeschränkte</b> oder nur die mit <b>fälliger Prüfung</b> zeigen. Praktisch, um Prüfungen und Mängel abzuarbeiten.</li>
+<li>Ein Eintrag öffnet die Entnahmestelle auf der Karte.</li>
+</ul>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-umkreis-kap">
+<h2>Umkreissuche</h2>
+
+<div class="hb-topic" id="hb-umkreis">
+<h3>Einsatzstelle setzen</h3>
+<p>Mit der Umkreissuche findest du die nächsten Entnahmestellen zu einer Einsatzstelle.</p>
+<ol>
+<li>Rechts unten auf <span class="ui">Umkreis</span> tippen.</li>
+<li>Oben erscheint die Leiste „Einsatzstelle auf der Karte antippen“. Jetzt die Einsatzstelle auf der Karte antippen, oder in der Leiste <span class="ui">Mein Standort</span> wählen.</li>
+</ol>
+<figure class="hb-shot"><img src="handbuch/umkreis-setzen.jpg" alt="Leiste: Einsatzstelle auf der Karte antippen" loading="lazy"><figcaption>Nach dem Tipp auf „Umkreis“</figcaption></figure>
+<p>Alternativ suchst du oben eine <b>Adresse</b> oder <b>Koordinate</b> und tippst sie an. Dann wird sie direkt als Einsatzstelle gesetzt.</p>
+<p>Die Einsatzstelle erscheint als rotes Symbol mit gestricheltem Kreis. Du kannst das Symbol mit dem Finger <b>verschieben</b>. Die Liste rechnet dann sofort neu.</p>
+</div>
+
+<div class="hb-topic" id="hb-umkreis-ergebnis">
+<h3>Ergebnis lesen</h3>
+<figure class="hb-shot"><img src="handbuch/umkreis.jpg" alt="Umkreissuche mit Radius-Auswahl und Liste der Entnahmestellen" loading="lazy"><figcaption>Entnahmestellen im Umkreis</figcaption></figure>
+<ul class="hb-legend">
+<li><span class="hb-num">1</span><span><b>Radius</b> wählen: 100 m, 200 m, 300 m, 500 m oder 1 km. Die Auswahl bleibt gespeichert.</span></li>
+<li><span class="hb-num">2</span><span><b>Zusammenfassung</b>: wie viele einsatzbereite Entnahmestellen im Umkreis liegen.</span></li>
+<li><span class="hb-num">3</span><span><b>Liste</b>, nach Entfernung sortiert: Nummer, Art, Nennweite bzw. Volumen, Zustand, Durchfluss und Adresse. Rechts die <b>Entfernung</b>, die <b>Himmelsrichtung</b> von der Einsatzstelle aus und die <b>Mindestzahl B-Schläuche</b> (z. B. „4× B“ = mindestens 4 Schläuche à 20 m).</span></li>
+</ul>
+<p>Defekte Entnahmestellen sind ausgegraut. Zu den fünf nächsten einsatzbereiten führt eine gestrichelte Linie auf der Karte. Gibt es im Umkreis weniger als drei einsatzbereite, zeigt die App zusätzlich die <b>nächsten außerhalb</b>.</p>
+<div class="hb-warn"><p>Entfernungen sind <b>Luftlinie</b>. Die tatsächliche Schlauchstrecke ist länger.</p></div>
+<p>Ein Eintrag öffnet die Entnahmestelle. Mit <span class="ui">Zurück zur Einsatzstelle</span> kommst du wieder zur Liste. <span class="ui">Neu setzen</span> wählt eine andere Einsatzstelle, <span class="ui">✕</span> beendet die Umkreissuche.</p>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-funk-kap">
+<h2>Funkrufnamen</h2>
+
+<div class="hb-topic" id="hb-funk">
+<h3>Funkrufnamen nachschlagen</h3>
+<p>Unten auf <span class="ui">Funk</span> tippen. Die Seite zeigt alle Fahrzeuge mit Fahrzeugart und Funkname, gegliedert nach <b>Gemeinde → Löschverbund → Ortschaft</b>.</p>
+<figure class="hb-shot"><img src="handbuch/funk.jpg" alt="Seite Funkrufnamen mit Suchfeld und Fahrzeugliste" loading="lazy"><figcaption>Seite Funk</figcaption></figure>
+<ul class="hb-legend">
+<li><span class="hb-num">1</span><span><b>Suche</b>: durchsucht immer alle Ortschaften. Schrägstriche und Bindestriche sind egal, „17442“ oder „44-2“ findet „17-44-2“. Auch Fahrzeugart, Ort und Kennzeichen werden gefunden.</span></li>
+<li><span class="hb-num">2</span><span><b>Ortschaften</b>: auswählen, welche Ortschaften angezeigt werden.</span></li>
+<li><span class="hb-num">3</span><span><b>Ansicht</b> (Regler-Symbol): Gliederung und Sortierung.</span></li>
+<li><span class="hb-num">4</span><span><b>Bearbeiten</b> (Stift) und <b>Liste verwalten</b> (⋮), siehe <a data-act="hb-goto" data-to="hb-funk-anlegen">Fahrzeuge anlegen</a>.</span></li>
+</ul>
+<p>Kennzeichen und Bemerkungen stehen klein unter dem Funknamen.</p>
+</div>
+
+<div class="hb-topic" id="hb-funk-ansicht">
+<h3>Gliederung und Sortierung ändern</h3>
+<p>Das Regler-Symbol oben öffnet <b>Ansicht</b>:</p>
+<figure class="hb-shot"><img src="handbuch/funk-ansicht.jpg" alt="Dialog Ansicht mit Gliederung und Sortierung" loading="lazy"><figcaption>Funk → Regler-Symbol</figcaption></figure>
+<ul>
+<li><b>Gliederung</b>: z. B. Gemeinde › Löschverbund › Ortschaft, Löschverbund › Ortschaft, nur Ortschaft oder ohne Gliederung (eine lange Liste). Angeboten wird nur, was es in euren Daten gibt.</li>
+<li><b>Sortierung</b> der Fahrzeuge nach Funkname oder nach Fahrzeugart.</li>
+</ul>
+<p>Was nicht als Überschrift erscheint, steht klein am Fahrzeug. Die Einstellung gilt nur für dieses Gerät.</p>
+</div>
+
+<div class="hb-topic" id="hb-funk-orte">
+<h3>Nur bestimmte Ortschaften zeigen</h3>
+<p>Mit dem Knopf <span class="ui">Ortschaften</span> neben dem Suchfeld wählst du, was angezeigt wird. Das ist praktisch, wenn du meist nur die eigene Gemeinde brauchst.</p>
+<figure class="hb-shot"><img src="handbuch/funk-orte.jpg" alt="Dialog Anzeige auswählen mit Gemeinden, Löschverbünden und Ortschaften" loading="lazy"><figcaption>Funk → Ortschaften</figcaption></figure>
+<ul>
+<li>Häkchen an einer Ortschaft blendet sie ein oder aus. Ein Häkchen an Gemeinde oder Löschverbund gilt für alle Ortschaften darin.</li>
+<li><span class="ui">nur diese</span> bzw. <span class="ui">nur dieser</span> zeigt genau eine Gemeinde bzw. einen Löschverbund.</li>
+<li><span class="ui">Alle</span> und <span class="ui">Keine</span> setzen alles auf einmal.</li>
+</ul>
+<p>Die Auswahl gilt nur für dieses Gerät. Die Suche findet trotzdem immer alle Fahrzeuge.</p>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-gefahr-kap">
+<h2>Gefahrstoffe</h2>
+
+<div class="hb-topic" id="hb-warntafel">
+<h3>Warntafel auswerten</h3>
+<p>Unten auf <span class="ui">Gefahrstoffe</span> tippen, Reiter <span class="ui">Warntafel</span>. Die beiden Felder sehen aus wie die orangefarbene Warntafel:</p>
+<ol>
+<li><b>Oben</b> die Gefahrnummer eintippen (z. B. <b>33</b>, bei Bedarf mit X davor, z. B. X423).</li>
+<li><b>Unten</b> die UN-Nummer eintippen (4 Ziffern, z. B. <b>1203</b>).</li>
+</ol>
+<figure class="hb-shot"><img src="handbuch/warntafel.jpg" alt="Warntafel 33 über 1203 mit Erklärung" loading="lazy"><figcaption>Warntafel 33 / 1203</figcaption></figure>
+<p>Die App erklärt die <b>Gefahrnummer Ziffer für Ziffer</b>. Steht ein <b>X</b> davor, erscheint die Warnung „Reagiert gefährlich mit Wasser!“. Steht die UN-Nummer in eurer <b>Stoffliste</b>, erscheint darunter der Stoff mit Klasse und Hinweisen. Sonst gibt es einen Link zum Nachschlagen (dafür braucht es Internet).</p>
+<div class="hb-tip"><p>Schneller geht es über die Suche auf der Karte: <b>33/1203</b> eingeben und den Treffer antippen.</p></div>
+<div class="hb-warn"><p>Erst Eigenschutz: Abstand halten, Wind im Rücken, GAMS-Regel. Angaben ohne Gewähr.</p></div>
+</div>
+
+<div class="hb-topic" id="hb-stoffliste">
+<h3>Stoffliste durchsuchen</h3>
+<p>Reiter <span class="ui">Stoffliste</span>: Die Liste enthält die Stoffe, die bei euch hinterlegt sind, z. B. aus Betrieben im Einsatzgebiet. Oben nach <b>UN-Nummer oder Stoffname</b> suchen. Ein Eintrag klappt beim Antippen auf und zeigt Gefahrnummer, Klasse, Hinweise und einen Link zum Nachschlagen.</p>
+<figure class="hb-shot"><img src="handbuch/stoffliste.jpg" alt="Stoffliste mit Suchfeld und aufgeklapptem Stoff" loading="lazy"><figcaption>Gefahrstoffe → Stoffliste</figcaption></figure>
+<p>Findet die Suche nichts, bietet die App einen Link zum Nachschlagen an (UN-Nummer bei CAMEO Chemicals, Name bei Wikipedia).</p>
+</div>
+
+<div class="hb-topic" id="hb-wissen">
+<h3>Wissen</h3>
+<p>Reiter <span class="ui">Wissen</span>: Grundwissen zum Aufklappen, auch ohne Netz verfügbar:</p>
+<ul>
+<li>Erstmaßnahmen nach der <b>GAMS-Regel</b></li>
+<li><b>Absperrbereiche</b> nach FwDV 500 (Gefahrenbereich 50 m, Absperrbereich 100 m)</li>
+<li>Gefahren an der Einsatzstelle: <b>AAAA-C-EEEE</b></li>
+<li><b>Warntafel lesen</b>, <b>Gefahrnummern</b> mit Bedeutung der Ziffern und häufigen Nummern</li>
+<li><b>Gefahrgutklassen</b> (ADR) und <b>GHS-Piktogramme</b></li>
+<li>Weitere Quellen (GESTIS, ERICards, TUIS)</li>
+</ul>
+<div class="hb-tip"><p>Für die Absperrbereiche hilft die <a data-act="hb-goto" data-to="hb-umkreis">Umkreissuche</a> auf der Karte mit 100 m Radius.</p></div>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-bearbeiten-kap">
+<h2>Hydranten und Leitungen anlegen</h2>
+
+<div class="hb-topic" id="hb-bearbeiten">
+<h3>Bearbeitungsmodus einschalten</h3>
+<p>Entnahmestellen und Leitungen legst du direkt auf der Karte an. Dazu muss der Bearbeitungsmodus an sein:</p>
+<ol>
+<li><span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span>.</li>
+<li><span class="ui">Karte bearbeiten</span> antippen.</li>
+</ol>
+<figure class="hb-shot"><img src="handbuch/daten.jpg" alt="Menü Daten und Bearbeiten mit Schalter Karte bearbeiten" loading="lazy"><figcaption>☰ → Daten und Bearbeiten</figcaption></figure>
+<p>Oben erscheint die blaue Leiste <b>„Bearbeiten: Karte antippen = neue Entnahmestelle, Symbole verschiebbar“</b>:</p>
+<figure class="hb-shot"><img src="handbuch/bearbeiten.jpg" alt="Karte im Bearbeitungsmodus mit blauer Leiste" loading="lazy"><figcaption>Bearbeitungsmodus</figcaption></figure>
+<ul class="hb-legend">
+<li><span class="hb-num">1</span><span><span class="ui">Am Standort</span>: neue Entnahmestelle an deiner GPS-Position.</span></li>
+<li><span class="hb-num">2</span><span><span class="ui">Fertig</span>: Bearbeitungsmodus beenden.</span></li>
+</ul>
+<p>Solange der Modus an ist, lassen sich alle Symbole mit dem Finger verschieben. Beende ihn deshalb nach der Arbeit mit <span class="ui">Fertig</span>.</p>
+</div>
+
+<div class="hb-topic" id="hb-neu">
+<h3>Neue Entnahmestelle anlegen</h3>
+<h4>Auf der Karte</h4>
+<ol>
+<li>Bearbeitungsmodus einschalten (siehe oben).</li>
+<li>Die Stelle auf der Karte antippen. Dort erscheint ein neues Symbol und unten das Formular <b>Neue Entnahmestelle</b>.</li>
+<li>Die Position passt du an, indem du das Symbol ziehst oder eine andere Stelle antippst.</li>
+<li>Formular ausfüllen (Felder siehe unten) und <span class="ui">Speichern</span> tippen.</li>
+</ol>
+<h4>Direkt vor Ort am eigenen Standort</h4>
+<ol>
+<li>Zum Hydranten gehen und den Bearbeitungsmodus einschalten.</li>
+<li>In der blauen Leiste <span class="ui">Am Standort</span> tippen. Die neue Entnahmestelle liegt sofort an deiner Position. Die App nennt die GPS-Genauigkeit.</li>
+<li>Bei Bedarf das Symbol genauer hinziehen, dann Formular ausfüllen und <span class="ui">Speichern</span>.</li>
+</ol>
+<figure class="hb-shot"><img src="handbuch/neu.jpg" alt="Formular Neue Entnahmestelle" loading="lazy"><figcaption>Formular „Neue Entnahmestelle“</figcaption></figure>
+<p>Leitungen werden dabei nicht angelegt, das geht mit <a data-act="hb-goto" data-to="hb-verbinden">Verbinden</a>. Ist ein Panel offen, schließt der erste Tipp auf die Karte zuerst das Panel. Erst der nächste Tipp legt etwas an.</p>
+</div>
+
+<div class="hb-topic" id="hb-felder">
+<h3>Die Felder im Formular</h3>
+<div class="hb-tbl-wrap"><table class="tbl">
+<thead><tr><th>Feld</th><th>Bedeutung</th></tr></thead>
+<tbody>
+<tr><td><b>ID / Nummer</b></td><td>Eindeutige Nummer, z. B. H-012. Wird vorgeschlagen, darf aber geändert werden. Jede Nummer gibt es nur einmal.</td></tr>
+<tr><td><b>Typ</b></td><td>Unterflurhydrant, Überflurhydrant, Löschwasserbehälter / Zisterne, offenes Gewässer / Saugstelle, Löschwasserbrunnen oder sonstige Entnahmestelle.</td></tr>
+<tr><td><b>Leitung DN</b></td><td>Nennweite der Versorgungsleitung (nur bei Hydranten). Steht als Zahl im Symbol.</td></tr>
+<tr><td><b>Volumen (m³)</b></td><td>Inhalt (nur bei Behältern, Gewässern, Brunnen).</td></tr>
+<tr><td><b>Status</b></td><td>in Ordnung, eingeschränkt, defekt oder unbekannt.</td></tr>
+<tr><td><b>Druck (bar)</b>, <b>Durchfluss (l/min)</b></td><td>Messwerte, falls bekannt.</td></tr>
+<tr><td><b>Geprüft am</b></td><td>Datum der letzten Prüfung. <span class="ui">Heute</span> trägt das heutige Datum ein. Nach 12 Monaten erscheint „Prüfung fällig“.</td></tr>
+<tr><td><b>Adresse / Lage</b></td><td>z. B. „Hauptstraße 12, Gehweg“. Wird von der Suche gefunden.</td></tr>
+<tr><td><b>Bemerkung</b></td><td>z. B. „oft zugeparkt“.</td></tr>
+<tr><td><b>Breitengrad, Längengrad</b></td><td>Position. Ändert sich beim Verschieben des Symbols mit. <span class="ui">Meinen Standort übernehmen</span> setzt die GPS-Position ein.</td></tr>
+</tbody></table></div>
+<p>Nur ID und Position sind Pflicht. Alles andere kannst du später ergänzen.</p>
+</div>
+
+<div class="hb-topic" id="hb-aendern">
+<h3>Entnahmestelle ändern, verschieben, löschen</h3>
+<p>Im Bearbeitungsmodus:</p>
+<ul>
+<li><b>Verschieben:</b> Symbol mit dem Finger an die neue Stelle ziehen.</li>
+<li><b>Ändern:</b> Symbol antippen → <span class="ui">Bearbeiten</span> → Felder ändern → <span class="ui">Speichern</span>.</li>
+<li><b>Löschen:</b> Symbol antippen → <span class="ui">Löschen</span> → bestätigen. Angeschlossene Leitungen werden mit gelöscht.</li>
+</ul>
+<p>Jede Änderung lässt sich <a data-act="hb-goto" data-to="hb-rueckgaengig">rückgängig machen</a>.</p>
+</div>
+
+<div class="hb-topic" id="hb-verbinden">
+<h3>Leitungen anlegen (Verbinden)</h3>
+<ol>
+<li>Im Bearbeitungsmodus die erste Entnahmestelle antippen → <span class="ui">Verbinden</span>.</li>
+<li>Oben steht „Leitung ab …: nächste Entnahmestelle antippen“. Die nächste Entnahmestelle antippen. Die Leitung entsteht sofort.</li>
+<li>Die Kette geht weiter: Einfach die übernächste antippen, und so fort.</li>
+<li>Zum Schluss in der Leiste <span class="ui">Fertig</span> tippen.</li>
+</ol>
+<figure class="hb-shot"><img src="handbuch/verbinden.jpg" alt="Leiste beim Verbinden von Leitungen" loading="lazy"><figcaption>Verbinden: nächste Entnahmestelle antippen</figcaption></figure>
+<p>Die Nennweite der neuen Leitung übernimmt die App von den Hydranten (die kleinere der beiden). Tippst du beim Verbinden statt einer Entnahmestelle auf eine <b>Leitung</b>, entsteht dort ein Abzweig (siehe <a data-act="hb-goto" data-to="hb-knoten">Leitungsknoten</a>).</p>
+</div>
+
+<div class="hb-topic" id="hb-leitung">
+<h3>Leitung bearbeiten: Nennweite und Verlauf</h3>
+<p>Im Bearbeitungsmodus eine Leitung antippen. Im Panel änderst du <b>Nennweite</b> und <b>Bemerkung</b>.</p>
+<figure class="hb-shot"><img src="handbuch/leitung.jpg" alt="Leitung im Bearbeitungsmodus mit Knickpunkten" loading="lazy"><figcaption>Leitung bearbeiten</figcaption></figure>
+<p>Damit die Leitung der Straße folgt, kannst du ihr <b>Knickpunkte</b> geben. Auf der Karte erscheinen dazu Punkte auf der Leitung:</p>
+<ul>
+<li><b>Gestrichelten Punkt</b> ziehen oder antippen = neuer Knickpunkt.</li>
+<li><b>Weißen Punkt</b> ziehen = verschieben, antippen = löschen.</li>
+<li><span class="ui">Verlauf begradigen</span> macht wieder eine gerade Linie.</li>
+<li><span class="ui">Leitung löschen</span> entfernt die Leitung.</li>
+</ul>
+</div>
+
+<div class="hb-topic" id="hb-knoten">
+<h3>Leitungsknoten: Abzweige und Kreuzungen</h3>
+<p>Wo eine Leitung abzweigt oder kreuzt, ohne dass dort ein Hydrant steht, setzt du einen <b>Leitungsknoten</b>.</p>
+<h4>Schneller Weg beim Verbinden</h4>
+<p>Beim <a data-act="hb-goto" data-to="hb-verbinden">Verbinden</a> statt einer Entnahmestelle die <b>Leitung</b> an der Abzweigstelle antippen. Dort entsteht ein Knoten, und die neue Leitung führt zu ihm.</p>
+<h4>Knoten einzeln einfügen</h4>
+<ol>
+<li>Im Bearbeitungsmodus die Leitung antippen → <span class="ui">Knoten einfügen</span>.</li>
+<li>Die Stelle auf der Leitung antippen, z. B. die Kreuzung. Die Leitung wird dort geteilt.</li>
+<li>Mit <span class="ui">Verbinden</span> am Knoten geht ein Abzweig ab.</li>
+</ol>
+<p>Knoten lassen sich verschieben. Wird ein Knoten mit genau zwei Leitungen gelöscht, werden sie wieder zu einer. Knoten zählen nicht als Entnahmestelle: Sie erscheinen nicht in Umkreissuche, Liste und Suche.</p>
+</div>
+
+<div class="hb-topic" id="hb-rueckgaengig">
+<h3>Rückgängig</h3>
+<p>Nach jeder Änderung erscheint unten kurz ein Hinweis mit <span class="ui">Rückgängig</span>. Hast du ihn verpasst: <span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Rückgängig</span>. Dort steht auch, was zurückgenommen wird.</p>
+<p>Die App merkt sich die letzten 15 Schritte, solange sie geöffnet ist. Das gilt auch für Import, Beispieldaten und „Alle Daten löschen“.</p>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-funk-pflege">
+<h2>Funkrufnamen und Stoffliste pflegen</h2>
+
+<div class="hb-topic" id="hb-funk-anlegen">
+<h3>Fahrzeuge anlegen</h3>
+<p><b>Liste noch leer:</b> Auf der Seite <span class="ui">Funk</span> auf <span class="ui">Fahrzeug anlegen</span> tippen.</p>
+<p><b>Liste vorhanden:</b></p>
+<ol>
+<li>Oben auf den <b>Stift</b> tippen. Eine blaue Leiste zeigt „Bearbeiten: Fahrzeug oder Stift antippen“.</li>
+<li>In der passenden Ortschaft auf <span class="ui">+ Fahrzeug hinzufügen</span> tippen. Gemeinde, Löschverbund und Ortschaft sind dann schon eingetragen.</li>
+<li>Funkname und Fahrzeugart eintragen, bei Bedarf Kennzeichen und Bemerkung → <span class="ui">Speichern</span>.</li>
+<li>Zum Schluss in der blauen Leiste <span class="ui">Fertig</span>.</li>
+</ol>
+<figure class="hb-shot"><img src="handbuch/funk-bearbeiten.jpg" alt="Funkrufnamen im Bearbeitungsmodus" loading="lazy"><figcaption>Funk im Bearbeitungsmodus</figcaption></figure>
+<figure class="hb-shot"><img src="handbuch/fahrzeug.jpg" alt="Formular Neues Fahrzeug" loading="lazy"><figcaption>Formular „Neues Fahrzeug“</figcaption></figure>
+<div class="hb-tbl-wrap"><table class="tbl">
+<thead><tr><th>Feld</th><th>Bedeutung</th></tr></thead>
+<tbody>
+<tr><td><b>Funkname</b></td><td>Pflicht, z. B. „Florian Musterstadt 17-44-2“. Jeder Funkname darf nur einmal vorkommen.</td></tr>
+<tr><td><b>Fahrzeugart</b></td><td>z. B. HLF 20, DLK 23/12, MTW.</td></tr>
+<tr><td><b>Ortschaft</b></td><td>Standort des Fahrzeugs (Ortsfeuerwehr, Wache).</td></tr>
+<tr><td><b>Löschverbund</b>, <b>Gemeinde</b></td><td>optional, für die Gliederung.</td></tr>
+<tr><td><b>Kennzeichen</b>, <b>Bemerkung</b></td><td>optional, stehen klein am Fahrzeug.</td></tr>
+</tbody></table></div>
+<p>Beim Tippen schlägt die App bereits vorhandene Fahrzeugarten, Ortschaften, Löschverbünde und Gemeinden vor.</p>
+</div>
+
+<div class="hb-topic" id="hb-funk-aendern">
+<h3>Fahrzeuge ändern, Ortschaften umbenennen</h3>
+<p>Im Bearbeitungsmodus (Stift oben):</p>
+<ul>
+<li><b>Fahrzeug antippen</b> → ändern → <span class="ui">Speichern</span>, oder <span class="ui">Löschen</span>.</li>
+<li><b>Stift an einer Ortschaft, einem Löschverbund oder einer Gemeinde</b>: umbenennen oder einem anderen Löschverbund bzw. einer anderen Gemeinde zuordnen. Das gilt für alle Fahrzeuge darin.</li>
+</ul>
+<p>Jede Änderung lässt sich rückgängig machen.</p>
+</div>
+
+<div class="hb-topic" id="hb-funk-verwalten">
+<h3>Funkrufnamen-Liste importieren und exportieren</h3>
+<p>Das Symbol <span class="ui">⋮</span> oben auf der Seite Funk öffnet <b>Funkrufnamen verwalten</b>:</p>
+<figure class="hb-shot"><img src="handbuch/funk-verwalten.jpg" alt="Dialog Funkrufnamen verwalten" loading="lazy"><figcaption>Funk → ⋮</figcaption></figure>
+<ul>
+<li><span class="ui">Liste importieren</span>: CSV- oder Excel-Datei einlesen. <b>Ersetzt die bisherige Liste.</b> Aufbau siehe <a data-act="hb-goto" data-to="hb-format-funk">Datenformat Funkrufnamen</a>.</li>
+<li><span class="ui">Als CSV exportieren</span>: die aktuelle Liste als Datei, z. B. zum Bearbeiten in Excel.</li>
+<li><span class="ui">CSV-Vorlage herunterladen</span>: leere Vorlage mit den richtigen Spalten.</li>
+<li><span class="ui">Beispielliste laden</span> und <span class="ui">Liste löschen</span>.</li>
+</ul>
+</div>
+
+<div class="hb-topic" id="hb-stoffe-pflegen">
+<h3>Stoffliste einrichten</h3>
+<p>Die Stoffliste wird über eine Datei eingerichtet, nicht Stoff für Stoff in der App. Auf der Seite <span class="ui">Gefahrstoffe</span> oben auf <span class="ui">⋮</span> tippen → <b>Stoffliste verwalten</b>:</p>
+<ul>
+<li><span class="ui">Liste importieren</span>: CSV- oder Excel-Datei einlesen. <b>Ersetzt die bisherige Liste.</b></li>
+<li><span class="ui">CSV-Vorlage herunterladen</span>, in Excel ausfüllen und wieder importieren. Aufbau siehe <a data-act="hb-goto" data-to="hb-format-stoffe">Datenformat Gefahrstoffe</a>.</li>
+<li><span class="ui">Als CSV exportieren</span>, <span class="ui">Beispielliste laden</span>, <span class="ui">Liste löschen</span>.</li>
+</ul>
+<div class="hb-warn"><p>Die Beispielliste enthält nur gängige Stoffe und ersetzt keine vollständige Datenbank. Vor dem Einsatz mit aktueller Quelle prüfen (ADR, GESTIS, ERICards).</p></div>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-datenpflege">
+<h2>Importieren, sichern, verteilen</h2>
+
+<div class="hb-topic" id="hb-datenmenue">
+<h3>Das Menü „Daten und Bearbeiten“</h3>
+<p><span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> enthält alles für die Datenpflege:</p>
+<ul>
+<li><b>Karte bearbeiten</b> und <b>Rückgängig</b></li>
+<li><b>Importieren:</b> Datei importieren, Excel-Vorlage herunterladen, Beispieldaten laden</li>
+<li><b>Exportieren und verteilen:</b> Sicherung speichern, App-Datei mit Daten erstellen, Excel- und CSV-Export</li>
+<li><b>Alle Daten löschen</b></li>
+</ul>
+<div class="hb-warn"><p>Die Daten liegen <b>nur auf diesem Gerät</b> bzw. in diesem Browser. Wer Daten pflegt, sollte regelmäßig eine Sicherung speichern.</p></div>
+</div>
+
+<div class="hb-topic" id="hb-import">
+<h3>Datei importieren</h3>
+<p>Am bequemsten geht das am PC. Die Daten stehen meist schon in einer Excel-Liste.</p>
+<ol>
+<li><span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Datei importieren</span>.</li>
+<li>Eine oder mehrere Dateien auswählen: <b>Excel</b> (.xlsx, .xls, .ods), <b>CSV</b>, <b>FireAssist-Sicherung</b> (.json) oder <b>GeoJSON</b>. Am PC kannst du Dateien auch einfach ins Fenster ziehen.</li>
+<li>Im Fenster <b>Daten importieren</b> prüfen, was erkannt wurde (siehe unten).</li>
+<li><span class="ui">Importieren</span> tippen. Danach zeigt die App, wie viele Einträge übernommen wurden, und weist auf Probleme hin, z. B. Zeilen ohne Koordinaten.</li>
+</ol>
+<figure class="hb-shot"><img src="handbuch/import.jpg" alt="Dialog Daten importieren mit erkannten Tabellen" loading="lazy"><figcaption>Daten importieren</figcaption></figure>
+<p>Für jede Datei bzw. jedes Excel-Blatt zeigt das Fenster:</p>
+<ul>
+<li><b>Inhalt</b>: Entnahmestellen, Leitungen, Funkrufnamen, Gefahrstoffliste oder „Nicht importieren“. Die App erkennt das an den Spalten. Falls nötig, hier umstellen.</li>
+<li><b>Spaltenzuordnung</b> (aufklappen): welche Spalte wofür steht. Spaltennamen wie „Hydrant-Nr.“, „Rechtswert“ oder „Nennweite (mm)“ werden automatisch erkannt.</li>
+<li><b>Koordinatensystem</b>: wird erkannt (WGS84, UTM, Gauß-Krüger). Liegen die Punkte falsch, hier wählen oder <span class="ui">Breite und Länge vertauschen</span>.</li>
+<li>Eine <b>Vorschau</b> der ersten Einträge, grün = in Ordnung, rot = es fehlt eine Pflichtspalte.</li>
+</ul>
+<p>Gibt es schon Hydrantendaten, wählst du:</p>
+<ul>
+<li><b>Ergänzen / aktualisieren</b>: Einträge mit gleicher ID werden überschrieben, neue kommen hinzu.</li>
+<li><b>Alles ersetzen</b>: Bisherige Entnahmestellen und Leitungen werden gelöscht.</li>
+</ul>
+<p>Funkrufnamen und Stoffliste werden beim Import immer <b>ersetzt</b>. Auch ein Import lässt sich rückgängig machen.</p>
+</div>
+
+<div class="hb-topic" id="hb-format">
+<h3>Datenformat: Entnahmestellen</h3>
+<p>Eine Tabelle, eine Zeile pro Entnahmestelle. Die Reihenfolge der Spalten ist egal. Am einfachsten startest du mit <span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Excel-Vorlage herunterladen</span>.</p>
+<div class="hb-tbl-wrap"><table class="tbl">
+<thead><tr><th>Spalte</th><th>Pflicht</th><th>Beispiel</th></tr></thead>
+<tbody>
+<tr><td>ID</td><td>empfohlen</td><td>H-001</td></tr>
+<tr><td>Typ</td><td>nein</td><td>Unterflurhydrant, Überflurhydrant, Löschwasserbehälter, Offenes Gewässer, Löschwasserbrunnen, Leitungsknoten</td></tr>
+<tr><td>Breitengrad, Längengrad</td><td><b>ja</b></td><td>50,5515 und 9,6755</td></tr>
+<tr><td>Leitung DN</td><td>nein</td><td>150</td></tr>
+<tr><td>Druck bar, Durchfluss l/min, Volumen m³</td><td>nein</td><td>5,5 · 1600 · 100</td></tr>
+<tr><td>Status</td><td>nein</td><td>in Ordnung, eingeschränkt, defekt</td></tr>
+<tr><td>Geprüft am</td><td>nein</td><td>14.03.2025</td></tr>
+<tr><td>Adresse / Lage, Bemerkung</td><td>nein</td><td>Freitext</td></tr>
+<tr><td>Verbunden mit</td><td>nein</td><td>H-002, H-005</td></tr>
+</tbody></table></div>
+<p><b>Koordinaten</b> dürfen in Grad (WGS84), in UTM/ETRS89 (Zone 32 oder 33) oder in Gauß-Krüger vorliegen. Das System wird automatisch erkannt.</p>
+</div>
+
+<div class="hb-topic" id="hb-format-leitungen">
+<h3>Datenformat: Leitungen</h3>
+<p>Leitungen gibst du auf eine von zwei Arten an:</p>
+<ul>
+<li>in der Spalte <b>Verbunden mit</b> der Entnahmestellen (die Nennweite ist dann die kleinere der beiden Hydranten), oder</li>
+<li>in einer eigenen Tabelle bzw. einem eigenen Excel-Blatt <b>Leitungen</b> mit den Spalten <b>Von</b>, <b>Nach</b> und <b>DN</b>. Diese Tabelle hat Vorrang.</li>
+</ul>
+<p>Optional hat die Leitungstabelle eine Spalte <b>Verlauf</b> mit Knickpunkten, z. B. „50.5524 9.6769; 50.5527 9.6770“ (Breite Länge, Punkte durch Semikolon getrennt). Abzweige ohne Hydrant sind Zeilen vom Typ <b>Leitungsknoten</b> in der Tabelle der Entnahmestellen.</p>
+</div>
+
+<div class="hb-topic" id="hb-format-funk">
+<h3>Datenformat: Funkrufnamen</h3>
+<div class="hb-tbl-wrap"><table class="tbl">
+<thead><tr><th>Spalte</th><th>Pflicht</th><th>Beispiel</th></tr></thead>
+<tbody>
+<tr><td>Gemeinde</td><td>nein</td><td>Musterstadt</td></tr>
+<tr><td>Löschverbund</td><td>nein</td><td>Löschverbund Nord</td></tr>
+<tr><td>Ortschaft</td><td>ja</td><td>Musterdorf</td></tr>
+<tr><td>Fahrzeugart</td><td>ja</td><td>HLF 20</td></tr>
+<tr><td>Funkname</td><td><b>ja</b></td><td>Florian Musterstadt 17-46-1</td></tr>
+<tr><td>Kennzeichen, Bemerkung</td><td>nein</td><td>Freitext</td></tr>
+</tbody></table></div>
+<p>Leere Zellen bei Gemeinde, Löschverbund und Ortschaft übernehmen den Wert aus der Zeile darüber. Ohne Gemeinde und Löschverbund wird nur nach Ortschaft gegliedert.</p>
+</div>
+
+<div class="hb-topic" id="hb-format-stoffe">
+<h3>Datenformat: Gefahrstoffe</h3>
+<div class="hb-tbl-wrap"><table class="tbl">
+<thead><tr><th>Spalte</th><th>Beispiel</th></tr></thead>
+<tbody>
+<tr><td>UN-Nummer</td><td>1203</td></tr>
+<tr><td>Bezeichnung</td><td>Benzin oder Ottokraftstoff</td></tr>
+<tr><td>Gefahrnummer</td><td>33</td></tr>
+<tr><td>Klasse</td><td>3</td></tr>
+<tr><td>Hinweise</td><td>Dämpfe schwerer als Luft</td></tr>
+<tr><td>Link (optional)</td><td>Adresse eines Datenblatts</td></tr>
+</tbody></table></div>
+<p>UN-Nummer oder Bezeichnung muss ausgefüllt sein. Ohne eigenen Link verweist die App auf CAMEO Chemicals (englisch).</p>
+<div class="hb-tip"><p>Alle Listen können auch zusammen in einer Excel-Datei stehen, ein Blatt je Liste. Die App erkennt die Blätter an den Spalten.</p></div>
+</div>
+
+<div class="hb-topic" id="hb-sicherung">
+<h3>Sicherung speichern und verteilen</h3>
+<p>Die <b>Sicherung</b> ist eine Datei mit allen Daten: Entnahmestellen, Leitungen, Funkrufnamen und Stoffliste. Mit ihr bringst du einen Datenstand auf andere Geräte.</p>
+<ol>
+<li><span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Sicherung speichern</span>. Es entsteht eine Datei wie <b>FireAssist_Sicherung_2026-10-16.json</b>.</li>
+<li>Die Datei an die Einsatzkräfte geben, z. B. per USB-Stick, interner E-Mail oder Messenger.</li>
+<li>Auf jedem Gerät importieren (siehe <a data-act="hb-goto" data-to="hb-daten-holen">Daten aufs Handy bringen</a>).</li>
+</ol>
+<div class="hb-warn"><p><b>Einsatzdaten nie öffentlich ins Internet stellen</b>, auch nicht verschlüsselt oder hinter einem Passwort.</p></div>
+<p>Beim Import einer Sicherung fragt die App, ob vorhandene Daten <b>ersetzt</b> oder <b>ergänzt</b> werden sollen. Für einen neuen Datenstand <span class="ui">Ersetzen</span> wählen.</p>
+</div>
+
+<div class="hb-topic" id="hb-appdatei">
+<h3>App-Datei mit Daten erstellen</h3>
+<p><span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">App-Datei mit Daten erstellen</span> erzeugt eine Kopie der App als <b>eine einzige HTML-Datei</b>, in der der aktuelle Datenstand fest eingebaut ist. Sie öffnet sich am PC oder Laptop per Doppelklick im Browser, ohne Installation und ohne Import.</p>
+<p>Sind auf einem Gerät schon eigene Änderungen gespeichert, fragt die App beim Öffnen, ob der neue Datenstand übernommen oder die eigenen Daten behalten werden sollen.</p>
+<p>Für Handys ist die <a data-act="hb-goto" data-to="hb-sicherung">Sicherung</a> der einfachere Weg.</p>
+</div>
+
+<div class="hb-topic" id="hb-export">
+<h3>Exportieren als Excel oder CSV</h3>
+<ul>
+<li><span class="ui">Exportieren als Excel</span>: eine Datei mit den Blättern Entnahmestellen, Leitungen, Funkrufnamen und Gefahrstoffe. Lässt sich bearbeiten und wieder importieren.</li>
+<li><span class="ui">Exportieren als CSV</span>: Entnahmestellen oder Leitungen einzeln, z. B. für andere Programme.</li>
+</ul>
+</div>
+
+<div class="hb-topic" id="hb-loeschen">
+<h3>Alle Daten löschen</h3>
+<p><span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Alle Daten löschen</span> entfernt Entnahmestellen, Leitungen, Funkrufnamen und Stoffliste von diesem Gerät. Die App fragt vorher nach. Solange sie geöffnet bleibt, geht es mit <span class="ui">Rückgängig</span> zurück. Speichere vorher besser eine Sicherung.</p>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-offline-kap">
+<h2>Ohne Netz arbeiten</h2>
+
+<div class="hb-topic" id="hb-offline-karte">
+<h3>Offline-Karte speichern</h3>
+<p>Damit die Karte auch im Einsatz ohne Netz erscheint, speicherst du das Einsatzgebiet einmal auf dem Handy, am besten im WLAN. Das geht in der installierten App bzw. der Web-Version.</p>
+<ol>
+<li>Zuerst die Daten importieren, denn gespeichert wird das Gebiet um alle Hydranten.</li>
+<li><span class="ui">☰</span> → <span class="ui">Offline-Karte</span> → <span class="ui">Einsatzgebiet speichern</span>. Die Größe (bis ca. 160 MB) steht vorher dabei.</li>
+<li>Warten, bis „Offline-Karte gespeichert“ erscheint.</li>
+</ol>
+<figure class="hb-shot"><img src="handbuch/offline.jpg" alt="Dialog Offline-Karte" loading="lazy"><figcaption>☰ → Offline-Karte</figcaption></figure>
+<ul>
+<li><span class="ui">Aktuellen Kartenausschnitt speichern</span>: nur den Ausschnitt, den du gerade siehst.</li>
+<li><span class="ui">Angesehene Kartenausschnitte offline behalten</span>: Die App merkt sich automatisch, was du dir angesehen hast. Ausschalten löscht diese Ausschnitte.</li>
+<li><span class="ui">Offline-Karte löschen</span>: gibt den Speicher wieder frei.</li>
+</ul>
+<p>Offline gespeichert wird die Karte von basemap.de (bunt oder grau, je nach gewählter Hintergrundkarte).</p>
+</div>
+
+<div class="hb-topic" id="hb-ohne-netz">
+<h3>Was ohne Netz funktioniert</h3>
+<p>Ohne Internet funktionieren: Hydranten und Leitungen, Suche nach Nummer, Umkreissuche, eigener Standort (GPS), Funkrufnamen, Gefahrstoffe mit Wissen, Bearbeiten, Import und Export.</p>
+<p>Nicht ohne Netz: die Hintergrundkarte außerhalb gespeicherter Gebiete (dann ist ein Raster zu sehen), die Adresssuche, die Navigation in der Karten-App und Links zu Datenbanken.</p>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-einstellungen-kap">
+<h2>Menü und Einstellungen</h2>
+
+<div class="hb-topic" id="hb-menue">
+<h3>Das Menü ☰ („Mehr“)</h3>
+<p>Das Symbol <span class="ui">☰</span> links in der Suchleiste öffnet das Menü:</p>
+<figure class="hb-shot"><img src="handbuch/menue.jpg" alt="Menü Mehr mit Schnellzugriff, Daten und Einstellungen" loading="lazy"><figcaption>☰ Mehr</figcaption></figure>
+<ul>
+<li>Oben steht der <b>Datenstand</b>: Anzahl Entnahmestellen und Leitungen, wie viele defekt sind und wie viele eine Prüfung brauchen.</li>
+<li><b>Schnellzugriff:</b> Alle Entnahmestellen, Legende, alle Daten auf der Karte zeigen, Offline-Karte.</li>
+<li><b>Daten und Einstellungen:</b> Daten und Bearbeiten, Einstellungen.</li>
+<li><b>Handbuch</b>, <b>Über FireAssist</b> (Version, Lizenz, Haftung) und der Link zu FireAssist auf GitHub (Fehler melden, Ideen).</li>
+</ul>
+</div>
+
+<div class="hb-topic" id="hb-einstellungen">
+<h3>Einstellungen</h3>
+<p><span class="ui">☰</span> → <span class="ui">Einstellungen</span>:</p>
+<figure class="hb-shot"><img src="handbuch/einstellungen.jpg" alt="Einstellungen mit Farbschema und Online-Adresssuche" loading="lazy"><figcaption>☰ → Einstellungen</figcaption></figure>
+<ul>
+<li><b>Farbschema:</b> Automatisch (wie das Handy), Hell oder Dunkel.</li>
+<li><b>Online-Adresssuche erlauben:</b> Ist der Haken aus, sucht die App keine Adressen im Internet.</li>
+<li>Darunter steht, mit welchen Diensten die App Verbindung aufnimmt.</li>
+</ul>
+</div>
+
+<div class="hb-topic" id="hb-handbuch">
+<h3>Dieses Handbuch</h3>
+<p><span class="ui">☰</span> → <span class="ui">Handbuch</span>. Das Handbuch ist in die App eingebaut und funktioniert auch ohne Netz.</p>
+<figure class="hb-shot"><img src="handbuch/handbuch.jpg" alt="Handbuch mit Suche nach Knoten" loading="lazy"><figcaption>Suche im Handbuch</figcaption></figure>
+<ul class="hb-legend">
+<li><span class="hb-num">1</span><span><b>Suche</b>: findet jedes Thema, z. B. „Knoten“ oder „Sicherung“. Ein Treffer bringt dich zur Stelle.</span></li>
+<li><span class="hb-num">2</span><span><b>Inhaltsverzeichnis</b>: springt zurück zum Inhalt am Anfang.</span></li>
+</ul>
+<p>Unterstrichene Verweise im Text springen zum genannten Thema.</p>
+</div>
+
+<div class="hb-topic" id="hb-datenschutz">
+<h3>Datenschutz</h3>
+<p>Hydranten, Leitungen, Funkrufnamen und Stoffliste bleiben <b>nur auf deinem Gerät</b>. Die App lädt keine Schriften, Skripte oder Statistikdienste von außen. Verbindungen gibt es nur in diesen Fällen:</p>
+<ul>
+<li><b>Hintergrundkarte</b>: Der Kartendienst sieht deine IP-Adresse und den Kartenausschnitt. Mit „Keine Hintergrundkarte“ abschaltbar.</li>
+<li><b>Adresssuche</b>: Nur wenn du „Adresse suchen“ antippst, wird der Suchtext übertragen.</li>
+<li><b>Navigation und Links</b>: nur beim Antippen.</li>
+<li><b>Updates</b>: Beim Start mit Internet wird nach einer neuen Version gesucht.</li>
+</ul>
+</div>
+</section>
+
+<section class="hb-sec" id="hb-faq-kap">
+<h2>Häufige Fragen</h2>
+
+<div class="hb-topic" id="hb-faq">
+<h3>Probleme und Lösungen</h3>
+<h4>Auf dem iPhone sind meine Daten weg.</h4>
+<p>Wurde in Safari importiert, aber die App über das Symbol geöffnet (oder umgekehrt)? Beide haben getrennte Speicher. Immer die installierte App benutzen und dort importieren. Seiten, die nur in Safari geöffnet werden, löscht iOS außerdem nach 7 Tagen ohne Besuch.</p>
+<h4>„Standortzugriff verweigert“</h4>
+<p>Erlaube den Standort in den Einstellungen des Handys. <b>iPhone:</b> Einstellungen → Datenschutz → Ortungsdienste → Safari bzw. FireAssist. <b>Android:</b> lange auf das App-Symbol drücken → App-Info → Berechtigungen → Standort.</p>
+<h4>Statt der Karte ist nur ein Raster zu sehen.</h4>
+<p>Es gibt kein Netz und für diesen Ort keine gespeicherte Karte, oder unter Kartenebenen ist „Keine Hintergrundkarte“ gewählt. Hydranten und Leitungen sind trotzdem da. Abhilfe: <a data-act="hb-goto" data-to="hb-offline-karte">Offline-Karte speichern</a>.</p>
+<h4>Nach dem Import liegen die Hydranten falsch, z. B. im Meer.</h4>
+<p>Import rückgängig machen, neu importieren und im Fenster <b>Daten importieren</b> das Koordinatensystem wählen oder „Breite und Länge vertauschen“ ankreuzen. Die Vorschau zeigt die Koordinaten der ersten Einträge.</p>
+<h4>Der Import erkennt eine Spalte nicht.</h4>
+<p>Im Fenster <b>Daten importieren</b> „Spaltenzuordnung“ aufklappen und die Spalte von Hand zuordnen.</p>
+<h4>Ich habe aus Versehen etwas gelöscht oder verschoben.</h4>
+<p>Sofort <span class="ui">Rückgängig</span> im Hinweis unten tippen, oder <span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Rückgängig</span>.</p>
+<h4>Beim Antippen der Karte entsteht ein neuer Hydrant.</h4>
+<p>Der Bearbeitungsmodus ist noch an. Oben in der blauen Leiste <span class="ui">Fertig</span> tippen.</p>
+<h4>Oben steht „Neue Version bzw. neuer Datenstand verfügbar“.</h4>
+<p><span class="ui">Neu laden</span> tippen, dann startet die neue Version. Deine Daten bleiben erhalten.</p>
+<h4>Was bedeutet der gelbe Hinweis „Beispieldaten“?</h4>
+<p>Es sind erfundene Beispieldaten geladen. Für echte Daten: <span class="ui">☰</span> → <span class="ui">Daten und Bearbeiten</span> → <span class="ui">Alle Daten löschen</span>, dann die eigene Sicherung importieren.</p>
+</div>
+</section>

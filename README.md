@@ -198,6 +198,7 @@ Die Dateien lassen sich mit Excel öffnen und sind eine gute Vorlage für eure e
 - **App-Datei mit Daten erstellen:** Das erzeugt eine Kopie der App als einzelne HTML-Datei, in der der aktuelle Datenstand fest eingebaut ist.
   Diese eine Datei kann an die Einsatzkräfte verteilt werden. Ist auf einem Gerät schon ein älterer, selbst geänderter Stand gespeichert, fragt die App vorher nach.
 - Hell- und Dunkelmodus, Karte abdunkeln für die Nacht, Navigation zum Hydranten (Karten-App des Handys).
+- **Handbuch** (☰ Mehr → Handbuch): alle Funktionen Schritt für Schritt mit Screenshots, Inhaltsverzeichnis und Suche, auch offline.
 
 ## Datenformat für den Import
 

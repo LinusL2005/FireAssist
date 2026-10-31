@@ -37,6 +37,7 @@ const IC = {
   plus: icon('<path d="M12 5v14M5 12h14"/>'),
   sliders: icon('<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>'),
   code: icon('<path d="m8 7-5 5 5 5M16 7l5 5-5 5"/>'),
+  book: icon('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M8 7.5h8M8 11h6"/>'),
   external: icon('<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'),
 };
 
@@ -910,6 +911,7 @@ function menuHtml() {
       ${menuItem('open-settings', IC.sliders, 'Einstellungen <small>Farbschema, Online-Suche, Datenschutz</small>', IC.chevron)}
     </div>
     <div class="menu-group quiet">
+      <button class="menu-item" data-act="open-page" data-page="handbuch">${IC.book}<span>Handbuch <small>Alle Funktionen erklärt, mit Suche</small></span>${IC.chevron}</button>
       ${menuItem('open-about', IC.info, 'Über FireAssist <small>Version, Lizenz, Haftung</small>', IC.chevron)}
       <a class="menu-item" href="${APP_REPO}" target="_blank" rel="noopener">${IC.code}<span>FireAssist auf GitHub <small>Quellcode, Fehler melden, Ideen</small></span>${IC.external}</a>
     </div>`;

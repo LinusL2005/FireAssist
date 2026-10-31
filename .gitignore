@@ -7,6 +7,8 @@ android/signing/
 # Sie können mit --daten eingebaute Einsatzdaten enthalten und werden deshalb nicht hochgeladen.
 # Die Web-Version baut GitHub selbst, immer ohne Daten (.github/workflows/pages.yml).
 /FireAssist.html
+# Handbuch als PDF (python3 tools/handbuch.py pdf), nur zum lokalen Gebrauch
+/FireAssist_Handbuch.pdf
 /web/
 *.apk
 *.idsig
